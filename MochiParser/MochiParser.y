@@ -15,7 +15,7 @@ extern int yylex(void);
     char* s;
 }
 
-
+%token invalid_character
 %token program_token main_token end_token print_token while_token do_token if_token else_token var_token void_token
 %token semicolon comma colon 
 %token string_token int_token float_token
@@ -34,11 +34,6 @@ program_declaration:
     program_token id semicolon opt_vars opt_funcs main_token body end_token
 ;
 
-opt_vars:
-    
-    | vars
-;
-
 opt_funcs:
 
     | funcs opt_funcs_
@@ -48,9 +43,15 @@ opt_funcs_:
     opt_funcs
 ;
 
+opt_vars:
+    
+    | vars
+;
+
 vars:
     var_token var_loop
 ;
+
 
 var_loop:
     id_loop colon type semicolon var_loop_
