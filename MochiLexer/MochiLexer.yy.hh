@@ -469,7 +469,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 70 "MochiLexer/MochiLexer.l"
+#line 76 "MochiLexer/MochiLexer.l"
 
 
 #line 476 "MochiLexer/MochiLexer.yy.hh"
