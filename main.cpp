@@ -1,14 +1,20 @@
 #include <iostream>
-#include <cstdio>
 #include "MochiParser/MochiParser.tab.hpp"
+#include "MochiLexer/MochiLexer.yy.hh"
 #include <vector>
 #include <string>
-#include <unistd.h>
+#include <stdexcept>
 
 extern FILE *yyin;
 extern int yyparse();
+extern int yylex();
+extern std::string token_name;
+extern char* yytext;
 
-bool check_case(std::string c) 
+std::vector<std::string> correct_cases;
+std::vector<std::string> incorrect_cases;
+
+bool check_parsing_case(std::string c) 
 {
     FILE *f = fmemopen((void *)c.c_str(), c.size(), "r");
     yyin = f;
@@ -19,9 +25,81 @@ bool check_case(std::string c)
     return !result;
 }
 
+void test_parser(int argc, char** argv){
+    if (argc > 2)
+    {
+        // Read from file
+        yyin = fopen(argv[2], "r");
+        if (!yyin)
+        {
+            std::cerr << "Error: Cannot open file: " << argv[1] << std::endl;
+            return;
+        }
+        std::cout << "Parsing file: " << argv[2] << std::endl;
+        
+        int result = yyparse();
+
+        if (result == 0)
+        {
+            std::cout << "Parse successful!" << std::endl;
+        }
+        else
+        {
+            std::cout << "Parse failed" << std::endl;
+        }
+
+        fclose(yyin);
+    }
+    else
+    {
+        int correct = 0;
+        int incorrect = 0;
+
+        for (std::string c : correct_cases)
+        {
+            if (check_parsing_case(c))
+                correct++;
+        }
+
+        std::cout << correct / correct_cases.size() << " precision for correct cases" << std::endl;
+
+        for (std::string c : incorrect_cases)
+        {
+            if (!check_parsing_case(c))
+                incorrect++;
+        }
+
+        std::cout << incorrect / incorrect_cases.size() << " precision for incorrect cases" << std::endl;
+    }
+}
+
+void test_lexer(int argc, char** argv) {
+    
+    if (argc > 2) {
+        yyin = fopen(argv[2], "r");
+        if (!yyin)
+        {
+            std::cerr << "Error: Cannot open file: " << argv[1] << std::endl;
+            return;
+        }
+        std::cout << "Scanning file: " << argv[2] << std::endl;
+
+        int token;
+        while ((token = yylex()) != 0) {
+            std::cout << token_name << ": " << yytext << std::endl;
+        }
+
+        fclose(yyin);
+    }
+    
+    else {
+        std::cerr << "Error: Missing input file" << std::endl;
+    }
+}
+
 int main(int argc, char **argv)
 {
-    std::vector<std::string> correct_cases = {
+    correct_cases = {
         // empty
         R"_(
 
@@ -184,7 +262,7 @@ int main(int argc, char **argv)
 
     };
 
-    std::vector<std::string> incorrect_cases = {
+    incorrect_cases = {
 
         // Missing 'end' before EOF
         R"_(
@@ -255,7 +333,7 @@ int main(int argc, char **argv)
         )_",
 
         // Trailing comma in print arguments
-                R"_(
+        R"_(
         program test;
         main {
             print("ok", ); 
@@ -327,52 +405,22 @@ int main(int argc, char **argv)
         )_"
     };
 
-    int result = 1;
-
-    if (argc > 1)
-    {
-        // Read from file
-        yyin = fopen(argv[1], "r");
-        if (!yyin)
-        {
-            std::cerr << "Error: Cannot open file: " << argv[1] << std::endl;
-            return 1;
-        }
-        std::cout << "Parsing file: " << argv[1] << std::endl;
-        
-        result = yyparse();
-
-        if (result == 0)
-        {
-            std::cout << "Parse successful!" << std::endl;
-        }
-        else
-        {
-            std::cout << "Parse failed" << std::endl;
-        }
-
-        fclose(yyin);
+    if (argc == 1){
+        throw std::runtime_error("missing argument parser/lexer");
     }
-    else
-    {
-        int correct = 0;
-        int incorrect = 0;
 
-        for (std::string c : correct_cases)
-        {
-            if (check_case(c))
-                correct++;
-        }
+    std::string test_case = argv[1]; // parser/lexer
 
-        std::cout << correct / correct_cases.size() << " precision for correct cases" << std::endl;
+    if (test_case == "parser") {
+        test_parser(argc, argv);
+    }
 
-        for (std::string c : incorrect_cases)
-        {
-            if (!check_case(c))
-                incorrect++;
-        }
+    else if (test_case == "lexer"){
+        test_lexer(argc, argv);
+    }
 
-        std::cout << incorrect / incorrect_cases.size() << " precision for incorrect cases" << std::endl;
+    else {
+        throw std::runtime_error("invalid argument");
     }
 
     return 0;

@@ -1,7 +1,30 @@
-program x;
+program myProgram;
+var x: int;
+
+void myFunc(y: int, z: float, s: string) [{
+    print("this is my func");
+    print("these are the params: ", y, ", ", z);
+}];
+
+void myMathFunc(n: float) [{
+    n = n * 3 + 2 / 3 + (n * 24 / 3.5);
+    @@;
+    n = -n;
+    print(n);
+}];
 
 main {
-    g = 10 * 23;
-}
+    x = 10;
+    print(x);
+    if (x > 4) {
+        print("x is bigger than 4");
+    };
 
+    while (x > 0) do {
+        x = x - 1;
+    };
+
+    myFunc(x, 3.0, "hola");
+    myMathFunc(5.3);
+}
 end
