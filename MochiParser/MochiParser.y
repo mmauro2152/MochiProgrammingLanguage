@@ -52,7 +52,13 @@ program_declaration:
             semanticErrors++;
         }
     } 
-    semicolon opt_vars opt_funcs main_token body end_token {funcDir.printAll();}
+    semicolon opt_vars opt_funcs main_token body end_token {
+        funcDir.printAll();
+        if (semanticErrors > 0) {
+            std::cerr << "Found " << semanticErrors << " semantic errors" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
 ;
 
 opt_funcs:

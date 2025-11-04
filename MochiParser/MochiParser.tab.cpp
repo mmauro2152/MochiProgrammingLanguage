@@ -86,9 +86,10 @@ std::string globalScope;
 std::string currScope;
 std::queue<char*> idQueue;
 VarType currType;
+int semanticErrors = 0;
 
 
-#line 92 "MochiParser/MochiParser.tab.cpp"
+#line 93 "MochiParser/MochiParser.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -596,15 +597,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    47,    47,    47,    55,    57,    61,    64,    66,    70,
-      74,    74,    83,    85,    89,    89,    93,    95,    99,   100,
-     101,   105,   106,   110,   110,   117,   119,   123,   123,   129,
-     131,   135,   138,   140,   144,   145,   146,   147,   148,   152,
-     156,   159,   161,   165,   169,   173,   176,   178,   182,   183,
-     187,   190,   192,   196,   197,   200,   202,   206,   209,   211,
-     215,   216,   217,   218,   219,   220,   224,   227,   229,   233,
-     234,   238,   241,   243,   247,   248,   252,   253,   256,   258,
-     259,   263,   264,   268,   269
+       0,    48,    48,    48,    64,    66,    70,    73,    75,    79,
+      83,    83,    94,    96,   100,   100,   104,   106,   110,   111,
+     112,   116,   117,   121,   121,   130,   132,   136,   136,   142,
+     144,   148,   151,   153,   157,   158,   159,   160,   161,   165,
+     169,   172,   174,   178,   182,   186,   189,   191,   195,   196,
+     200,   203,   205,   209,   210,   213,   215,   219,   222,   224,
+     228,   229,   230,   231,   232,   233,   237,   240,   242,   246,
+     247,   251,   254,   256,   260,   261,   265,   266,   269,   271,
+     272,   276,   277,   281,   282
 };
 #endif
 
@@ -664,18 +665,18 @@ static const yytype_int8 yypact[] =
 {
       13,   -13,    32,  -101,  -101,    16,    22,    19,    30,  -101,
     -101,  -101,    35,  -101,  -101,  -101,  -101,    54,  -101,    27,
-      30,    45,    37,    46,  -101,  -101,  -101,    19,  -101,  -101,
-      -2,    61,    44,  -101,    55,    47,    48,    49,     0,    53,
-      -2,  -101,  -101,  -101,  -101,  -101,  -101,    38,    19,    -8,
+      30,    45,    37,    46,  -101,  -101,  -101,    19,  -101,    53,
+      -2,    62,    47,  -101,  -101,    48,    49,    50,     0,    55,
+      -2,  -101,  -101,  -101,  -101,  -101,  -101,    31,    19,    -8,
       26,    26,   -12,    26,  -101,  -101,    59,    52,  -101,  -101,
     -101,    26,  -101,  -101,  -101,    56,    63,  -101,     8,   -17,
       17,    24,    57,    58,    64,    60,  -101,    64,    66,    37,
-      62,    65,    72,    -8,  -101,  -101,  -101,  -101,  -101,  -101,
+      65,    61,    70,    -8,  -101,  -101,  -101,  -101,  -101,  -101,
     -101,  -101,    26,  -101,  -101,  -101,    26,  -101,  -101,  -101,
-      26,  -101,  -101,  -101,  -101,  -101,    78,    46,    -4,  -101,
-      74,  -101,  -101,  -101,    22,  -101,  -101,  -101,  -101,  -101,
-    -101,    46,    80,  -101,  -101,    77,    46,    75,    46,    79,
-      38,  -101,    71,  -101,  -101,  -101,  -101,    81,  -101
+      26,  -101,  -101,  -101,  -101,  -101,    79,    46,    -4,  -101,
+      75,  -101,  -101,  -101,    22,  -101,  -101,  -101,  -101,  -101,
+    -101,    46,    80,  -101,  -101,    77,    46,    76,    46,    81,
+      31,  -101,    71,  -101,  -101,  -101,  -101,    82,  -101
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -685,8 +686,8 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     2,     1,     0,     7,     0,     4,     8,
       14,     9,     0,    21,    20,    18,    19,     0,    22,     0,
-       4,    16,     0,     0,    23,     6,     5,     0,    15,    10,
-      32,     0,     0,    17,     0,     0,     0,     0,     0,     0,
+       4,    16,     0,     0,    23,     6,     5,     0,    15,     0,
+      32,     0,     0,    17,    10,     0,     0,     0,     0,     0,
       32,    34,    35,    36,    37,    38,     3,    25,    12,    78,
       78,    78,    78,    78,    31,    33,     0,     0,    26,    13,
       11,    78,    79,    80,    49,     0,    46,    48,    58,    67,
@@ -702,9 +703,9 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-    -101,  -101,  -101,    50,  -101,   -16,  -101,    51,  -101,  -101,
-      69,  -101,  -101,   -18,  -101,  -101,  -101,  -101,   -33,  -101,
-    -101,  -100,    67,  -101,  -101,  -101,  -101,  -101,  -101,    18,
+    -101,  -101,  -101,    73,  -101,   -44,  -101,    51,  -101,  -101,
+      74,  -101,  -101,   -18,  -101,  -101,  -101,  -101,   -33,  -101,
+    -101,  -100,    67,  -101,  -101,  -101,  -101,  -101,  -101,    15,
     -101,  -101,  -101,  -101,    -6,    23,   -50,  -101,  -101,   -65,
     -101,  -101,     3,  -101,  -101,  -101,  -101,  -101,  -101
 };
@@ -712,7 +713,7 @@ static const yytype_int8 yypgoto[] =
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
-       0,     2,     5,    17,    26,     8,     9,    11,    34,    60,
+       0,     2,     5,    17,    26,     8,     9,    11,    48,    60,
       12,    21,    28,    18,    19,    20,    32,    57,    58,   125,
      131,    31,    39,    40,    41,    42,   129,    43,    44,    65,
       84,    66,    45,    75,    76,   109,    67,    91,    92,    68,
@@ -730,11 +731,11 @@ static const yytype_int16 yytable[] =
        6,   119,     4,    64,     7,    53,    38,    74,    85,    86,
       87,    88,    89,    13,    90,    97,    98,    14,    15,    16,
       61,    22,    62,    63,    14,    15,    16,    10,    77,    23,
-      27,   113,   101,   102,   103,    24,    30,    46,    47,    48,
-      25,    49,    50,    51,    54,    79,    56,    80,    83,   108,
-     112,    82,   106,   107,   114,   110,   116,   121,   124,   133,
-     115,   128,   130,   135,   137,   138,    33,   136,   126,    59,
-     111,   117,   123,   120,     0,     0,     0,    55
+      27,   113,   101,   102,   103,    24,    30,    34,    46,    56,
+     126,    47,    49,    50,    51,    79,    54,    80,    83,   108,
+     112,    82,   106,   107,   116,   110,   115,   114,   121,   124,
+     133,   128,   130,    25,   137,   135,   138,   136,   117,    59,
+     111,    33,   123,   120,     0,     0,     0,    55
 };
 
 static const yytype_int16 yycheck[] =
@@ -745,11 +746,11 @@ static const yytype_int16 yycheck[] =
       14,    96,     0,    41,    12,    35,    38,    41,    30,    31,
       32,    33,    34,    13,    36,    28,    29,    17,    18,    19,
       24,    16,    26,    27,    17,    18,    19,    38,   108,     5,
-      15,    79,    38,    39,    40,    38,    20,     6,    24,    14,
-      20,    24,    24,    24,    21,    16,    38,    25,    15,    15,
-      14,    25,    25,    25,    22,    25,    14,     9,    14,    14,
-      25,    11,    15,    14,    23,    14,    27,   130,   114,    48,
-      77,    83,   108,   100,    -1,    -1,    -1,    40
+      15,    79,    38,    39,    40,    38,    20,    14,     6,    38,
+     114,    24,    24,    24,    24,    16,    21,    25,    15,    15,
+      14,    25,    25,    25,    14,    25,    25,    22,     9,    14,
+      14,    11,    15,    20,    23,    14,    14,   130,    83,    48,
+      77,    27,   108,   100,    -1,    -1,    -1,    40
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -759,8 +760,8 @@ static const yytype_int8 yystos[] =
        0,     4,    43,    38,     0,    44,    14,    12,    47,    48,
       38,    49,    52,    13,    17,    18,    19,    45,    55,    56,
       57,    53,    16,     5,    38,    45,    46,    15,    54,    55,
-      20,    63,    58,    52,    50,     7,     8,    10,    38,    64,
-      65,    66,    67,    69,    70,    74,     6,    24,    14,    24,
+      20,    63,    58,    52,    14,     7,     8,    10,    38,    64,
+      65,    66,    67,    69,    70,    74,     6,    24,    50,    24,
       24,    24,    24,    35,    21,    64,    38,    59,    60,    49,
       51,    24,    26,    27,    41,    71,    73,    78,    81,    84,
       87,    88,    78,    78,    41,    75,    76,    78,    78,    16,
@@ -1261,81 +1262,94 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 47 "MochiParser/MochiParser.y"
+#line 48 "MochiParser/MochiParser.y"
                      { 
         globalScope = (yyvsp[0].s);
         currScope = globalScope;
-        funcDir.insertFunction(currScope, VarType::VOID); 
+        if (!funcDir.insertFunction(currScope, VarType::VOID)) {
+            semanticErrors++;
+        }
     }
-#line 1271 "MochiParser/MochiParser.tab.cpp"
+#line 1274 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 3: /* program_declaration: program_token id $@1 semicolon opt_vars opt_funcs main_token body end_token  */
-#line 52 "MochiParser/MochiParser.y"
-                                                           {funcDir.printAll();}
-#line 1277 "MochiParser/MochiParser.tab.cpp"
+#line 55 "MochiParser/MochiParser.y"
+                                                           {
+        funcDir.printAll();
+        if (semanticErrors > 0) {
+            std::cerr << "Found " << semanticErrors << " semantic errors" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+#line 1286 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 10: /* $@2: %empty  */
-#line 74 "MochiParser/MochiParser.y"
-                       {
+#line 83 "MochiParser/MochiParser.y"
+                                 {
         while (!idQueue.empty()) {
-            funcDir.getFunction(currScope)->localVars.insert(idQueue.front(), currType);
+            if (!funcDir.getFunction(currScope)->localVars.insert(idQueue.front(), currType)) {
+                semanticErrors++;
+            }
+                 
             idQueue.pop();
         }
     }
-#line 1288 "MochiParser/MochiParser.tab.cpp"
-    break;
-
-  case 14: /* $@3: %empty  */
-#line 89 "MochiParser/MochiParser.y"
-       { idQueue.push((yyvsp[0].s)); }
-#line 1294 "MochiParser/MochiParser.tab.cpp"
-    break;
-
-  case 18: /* type: int_token  */
-#line 99 "MochiParser/MochiParser.y"
-              { currType = VarType::INT; }
 #line 1300 "MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 19: /* type: float_token  */
+  case 14: /* $@3: %empty  */
 #line 100 "MochiParser/MochiParser.y"
-                  { currType = VarType::FLOAT; }
+       { idQueue.push((yyvsp[0].s)); }
 #line 1306 "MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 20: /* type: string_token  */
-#line 101 "MochiParser/MochiParser.y"
-                   { currType = VarType::STRING; }
+  case 18: /* type: int_token  */
+#line 110 "MochiParser/MochiParser.y"
+              { currType = VarType::INT; }
 #line 1312 "MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 21: /* func_type: void_token  */
-#line 105 "MochiParser/MochiParser.y"
-               { currType = VarType::VOID; }
+  case 19: /* type: float_token  */
+#line 111 "MochiParser/MochiParser.y"
+                  { currType = VarType::FLOAT; }
 #line 1318 "MochiParser/MochiParser.tab.cpp"
     break;
 
+  case 20: /* type: string_token  */
+#line 112 "MochiParser/MochiParser.y"
+                   { currType = VarType::STRING; }
+#line 1324 "MochiParser/MochiParser.tab.cpp"
+    break;
+
+  case 21: /* func_type: void_token  */
+#line 116 "MochiParser/MochiParser.y"
+               { currType = VarType::VOID; }
+#line 1330 "MochiParser/MochiParser.tab.cpp"
+    break;
+
   case 23: /* $@4: %empty  */
-#line 110 "MochiParser/MochiParser.y"
+#line 121 "MochiParser/MochiParser.y"
                  { 
         currScope = (yyvsp[0].s);
-        funcDir.insertFunction(currScope, currType); 
+        if (!funcDir.insertFunction(currScope, currType)){
+            semanticErrors++;
+        }
     }
-#line 1327 "MochiParser/MochiParser.tab.cpp"
+#line 1341 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 27: /* $@5: %empty  */
-#line 123 "MochiParser/MochiParser.y"
+#line 136 "MochiParser/MochiParser.y"
                   { 
         funcDir.addParameter(currScope, (yyvsp[-2].s), currType);
     }
-#line 1335 "MochiParser/MochiParser.tab.cpp"
+#line 1349 "MochiParser/MochiParser.tab.cpp"
     break;
 
 
-#line 1339 "MochiParser/MochiParser.tab.cpp"
+#line 1353 "MochiParser/MochiParser.tab.cpp"
 
       default: break;
     }
@@ -1528,4 +1542,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 272 "MochiParser/MochiParser.y"
+#line 285 "MochiParser/MochiParser.y"
