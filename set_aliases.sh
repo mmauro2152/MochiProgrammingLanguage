@@ -1,3 +1,3 @@
-alias compile='g++ -fdiagnostics-color=always -g VarTable.cpp FuncDir.cpp MochiLexer/MochiLexer.yy.cpp MochiParser/MochiParser.tab.cpp main.cpp -o mochi.exe'
-alias parser='bison -H -o MochiParser/MochiParser.tab.cpp MochiParser/MochiParser.y'
-alias lexer='flex --header-file=MochiLexer/MochiLexer.yy.hh -o MochiLexer/MochiLexer.yy.cpp MochiLexer/MochiLexer.l'
+alias compile='g++ -fdiagnostics-color=always -g src/VarTable.cpp src/FuncDir.cpp src/MochiLexer/MochiLexer.yy.cpp src/MochiParser/MochiParser.tab.cpp src/main.cpp -o mochi.exe'
+alias parser='bison -H -o src/MochiParser/MochiParser.tab.cpp src/MochiParser/MochiParser.y'
+alias lexer='flex --header-file=src/MochiLexer/MochiLexer.yy.hh -o src/MochiLexer/MochiLexer.yy.cpp src/MochiLexer/MochiLexer.l'

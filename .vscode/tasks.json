@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/MochiLexer/MochiLexer.yy.cpp ${workspaceFolder}/MochiParser/MochiParser.tab.cpp ${workspaceFolder}/main.cpp",
+                "${workspaceFolder}/src/FuncDir.cpp {workspaceFolder}/src/VarTable.cpp {workspaceFolder}/src/MochiLexer/MochiLexer.yy.cpp ${workspaceFolder}/src/MochiParser/MochiParser.tab.cpp ${workspaceFolder}/src/main.cpp",
                 "-o",
                 "mochi.exe"
             ],
