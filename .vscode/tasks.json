@@ -2,17 +2,17 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc build active file",
-            "command": "/usr/bin/gcc",
+            "label": "C/C++: gcc build project",
+            "command": "g++",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "${workspaceFolder}/MochiLexer/MochiLexer.yy.cpp ${workspaceFolder}/MochiParser/MochiParser.tab.cpp ${workspaceFolder}/main.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "mochi.exe"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
