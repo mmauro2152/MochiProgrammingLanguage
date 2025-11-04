@@ -1,8 +1,6 @@
 program myProgram;
-var x: int;
+var x, y, z: int; a: string; b: float;
 main {
     x = 10;
-    @
-    $
 }
 end

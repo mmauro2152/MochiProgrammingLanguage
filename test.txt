@@ -6,9 +6,10 @@ void myFunc(y: int, z: float, s: string) [{
     print("these are the params: ", y, ", ", z);
 }];
 
-void myMathFunc(n: float) [{
+void myMathFunc(n: float) [
+var k, l, o : int; a, b: string; f: float;
+{
     n = n * 3 + 2 / 3 + (n * 24 / 3.5);
-    @@;
     n = -n;
     print(n);
 }];
