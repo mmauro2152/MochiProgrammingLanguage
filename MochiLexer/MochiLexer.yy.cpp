@@ -959,7 +959,7 @@ YY_RULE_SETUP
 case 35:
 YY_RULE_SETUP
 #line 50 "MochiLexer/MochiLexer.l"
-{ token_name = NAMEOF(id); return id; }
+{ token_name = NAMEOF(id); yylval.s = strdup(yytext); return id; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
@@ -993,7 +993,7 @@ YY_RULE_SETUP
                                 }
                                 result[j] = '\0'; // Null terminate
                                 
-                                yylval.s = result;
+                                yylval.s = strdup(result);
                                 return string_constant;
                             }
 	YY_BREAK

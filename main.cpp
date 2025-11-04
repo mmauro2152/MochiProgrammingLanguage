@@ -32,7 +32,7 @@ void test_parser(int argc, char** argv){
         yyin = fopen(argv[2], "r");
         if (!yyin)
         {
-            std::cerr << "Error: Cannot open file: " << argv[1] << std::endl;
+            std::cerr << "Error: Cannot open file: " << argv[2] << std::endl;
             return;
         }
         std::cout << "Parsing file: " << argv[2] << std::endl;

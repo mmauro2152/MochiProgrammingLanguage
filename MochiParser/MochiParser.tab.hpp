@@ -44,6 +44,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 1 "MochiParser/MochiParser.y"
+
+    #include <string>
+
+#line 53 "MochiParser/MochiParser.tab.hpp"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -101,13 +107,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "MochiParser/MochiParser.y"
+#line 26 "MochiParser/MochiParser.y"
 
     int i;
     float f;
     char* s;
 
-#line 111 "MochiParser/MochiParser.tab.hpp"
+#line 117 "MochiParser/MochiParser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

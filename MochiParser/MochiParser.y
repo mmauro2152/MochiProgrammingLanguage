@@ -1,12 +1,27 @@
+%code requires {
+    #include <string>
+}
+
 %{
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <queue>
+#include "../FuncDir.hpp"
 
-void yyerror(char* errorMsg) {
+void yyerror(const char* errorMsg) {
     std::cout << errorMsg << std::endl;
 };
 extern int yylex(void);
+
+
+FuncDir funcDir;
+std::string globalScope;
+std::string currScope;
+std::queue<char*> idQueue;
+VarType currType;
+int semanticErrors = 0;
+
 %}
 
 %union {
@@ -22,16 +37,22 @@ extern int yylex(void);
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
 %token plus minus asterisk slash equal_smaller_than l_angle_bracket equal_greater_than r_angle_bracket
 %token equal assign not_equal not_
-%token id
+%token <s> id
 %token <i> int_constant
 %token <f> float_constant
 %token <s> string_constant
 
 %%
 
-
 program_declaration:
-    program_token id semicolon opt_vars opt_funcs main_token body end_token
+    program_token id { 
+        globalScope = $2;
+        currScope = globalScope;
+        if (!funcDir.insertFunction(currScope, VarType::VOID)) {
+            semanticErrors++;
+        }
+    } 
+    semicolon opt_vars opt_funcs main_token body end_token {funcDir.printAll();}
 ;
 
 opt_funcs:
@@ -52,9 +73,17 @@ vars:
     var_token var_loop
 ;
 
-
 var_loop:
-    id_loop colon type semicolon var_loop_
+    id_loop colon type {
+        while (!idQueue.empty()) {
+            if (!funcDir.getFunction(currScope)->localVars.insert(idQueue.front(), currType)) {
+                semanticErrors++;
+            }
+                 
+            idQueue.pop();
+        }
+    } 
+    semicolon var_loop_
 ;
 
 var_loop_:
@@ -63,7 +92,8 @@ var_loop_:
 ;
 
 id_loop:
-    id id_loop_
+    id { idQueue.push($1); } 
+    id_loop_
 ;
 
 id_loop_:
@@ -72,13 +102,24 @@ id_loop_:
 ;
 
 type:
-    int_token
-    | float_token
-    | string_token
+    int_token { currType = VarType::INT; }
+    | float_token { currType = VarType::FLOAT; }
+    | string_token { currType = VarType::STRING; }
+;
+
+func_type:
+    void_token { currType = VarType::VOID; }
+    | type
 ;
 
 funcs:
-    void_token id l_parenthesis params r_parenthesis l_square_bracket opt_vars body r_square_bracket semicolon
+    func_type id { 
+        currScope = $2;
+        if (!funcDir.insertFunction(currScope, currType)){
+            semanticErrors++;
+        }
+    } 
+    l_parenthesis params r_parenthesis l_square_bracket opt_vars body r_square_bracket semicolon
 ;
 
 params:
@@ -87,7 +128,10 @@ params:
 ;
 
 param_loop:
-    id colon type param_loop_
+    id colon type { 
+        funcDir.addParameter(currScope, $1, currType);
+    } 
+    param_loop_
 ;
 
 param_loop_:

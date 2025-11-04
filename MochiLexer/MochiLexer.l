@@ -47,7 +47,7 @@ extern int yylex();
 "="                         { token_name = NAMEOF(assign); return assign; }
 "!="                        { token_name = NAMEOF(not_equal); return not_equal; }
 "!"                         { token_name = NAMEOF(not_); return not_; }
-[a-zA-Z_][A-Za-z0-9_]*      { token_name = NAMEOF(id); return id; }
+[a-zA-Z_][A-Za-z0-9_]*      { token_name = NAMEOF(id); yylval.s = strdup(yytext); return id; }
 [0-9]+\.[0-9]+              { token_name = NAMEOF(float_constant); yylval.f = atof(yytext); return float_constant; }
 [0-9]+                      { token_name = NAMEOF(int_constant); yylval.i = atoi(yytext); return int_constant; }
 \"(\\.|[^"\\])*\"           {
@@ -68,7 +68,7 @@ extern int yylex();
                                 }
                                 result[j] = '\0'; // Null terminate
                                 
-                                yylval.s = result;
+                                yylval.s = strdup(result);
                                 return string_constant;
                             }
 [ \t\n]+                    {} // ignore whitespace
