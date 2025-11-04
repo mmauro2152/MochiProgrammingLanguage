@@ -74,7 +74,7 @@ vars:
 ;
 
 var_loop:
-    id_loop colon type {
+    id_loop colon type semicolon {
         while (!idQueue.empty()) {
             if (!funcDir.getFunction(currScope)->localVars.insert(idQueue.front(), currType)) {
                 semanticErrors++;
@@ -82,8 +82,7 @@ var_loop:
                  
             idQueue.pop();
         }
-    } 
-    semicolon var_loop_
+    }  var_loop_
 ;
 
 var_loop_:
