@@ -27,6 +27,8 @@ bool check_parsing_case(std::string c)
 }
 
 void test_parser(int argc, char** argv){
+    SemanticCube::populate();
+
     if (argc > 2)
     {
         // Read from file
@@ -99,8 +101,6 @@ void test_lexer(int argc, char** argv) {
 }
 
 void test_semantic_cube(){
-    SemanticCube::populate();
-
     CubeEntry entry = CubeEntry(vartype::string_type, vartype::bool_type, operatortype::not_equal);
     vartype res = SemanticCube::resultingType(entry);
 
