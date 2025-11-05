@@ -4,19 +4,26 @@
 #include <unordered_map>
 #include <iostream>
 
-enum class VarType {
-    INT,
-    FLOAT,
-    STRING,
-    VOID
+enum class vartype {
+    int_type,
+    float_type,
+    string_type,
+    void_type,
+    bool_type,
+    unknown_type
 };
+
+static const char* vartype_string[] {
+    "int", "float", "string", "void", "bool", "unknown"
+};
+
 
 struct VarEntry
 {
-    VarType type;
+    vartype type;
 
-    VarEntry(): type(VarType::VOID) {}
-    VarEntry(VarType t):  type(t) {}
+    VarEntry(): type(vartype::void_type) {}
+    VarEntry(vartype t):  type(t) {}
 };
 
 
@@ -25,7 +32,7 @@ private:
     std::unordered_map<std::string, VarEntry> table;
 
 public:
-    bool insert(const std::string& name, VarType type);
+    bool insert(const std::string& name, vartype type);
 
     bool exists(const std::string& name) const;
 
@@ -35,5 +42,5 @@ public:
 
     void printAll();
     
-    static std::string typeToString(VarType type);
+    static std::string typeToString(vartype type);
 };

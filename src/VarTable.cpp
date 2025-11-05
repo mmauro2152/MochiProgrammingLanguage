@@ -1,6 +1,6 @@
 #include "VarTable.hpp"
 
-bool VarTable::insert(const std::string& name, VarType type) {
+bool VarTable::insert(const std::string& name, vartype type) {
     if (exists(name)) {
         std::cerr << "Error: Variable '" << name << "' already declared.\n";
         return false;
@@ -34,18 +34,18 @@ void VarTable::printAll() {
     }
 }
 
-std::string VarTable::typeToString(VarType type) {
+std::string VarTable::typeToString(vartype type) {
     switch(type){
-        case (VarType::FLOAT):
+        case (vartype::float_type):
             return "float";
 
-        case (VarType::INT):
+        case (vartype::int_type):
             return "int";
 
-        case (VarType::STRING):
+        case (vartype::string_type):
             return "string";
 
-        case (VarType::VOID):
+        case (vartype::void_type):
             return "void";
 
         default:

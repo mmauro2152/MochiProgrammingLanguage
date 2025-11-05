@@ -85,7 +85,7 @@ FuncDir funcDir;
 std::string globalScope;
 std::string currScope;
 std::queue<char*> idQueue;
-VarType currType;
+vartype currType;
 int semanticErrors = 0;
 
 
@@ -1266,7 +1266,7 @@ yyreduce:
                      { 
         globalScope = (yyvsp[0].s);
         currScope = globalScope;
-        if (!funcDir.insertFunction(currScope, VarType::VOID)) {
+        if (!funcDir.insertFunction(currScope, vartype::void_type)) {
             semanticErrors++;
         }
     }
@@ -1307,25 +1307,25 @@ yyreduce:
 
   case 18: /* type: int_token  */
 #line 110 "MochiParser/MochiParser.y"
-              { currType = VarType::INT; }
+              { currType = vartype::int_type; }
 #line 1312 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 19: /* type: float_token  */
 #line 111 "MochiParser/MochiParser.y"
-                  { currType = VarType::FLOAT; }
+                  { currType = vartype::float_type; }
 #line 1318 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 20: /* type: string_token  */
 #line 112 "MochiParser/MochiParser.y"
-                   { currType = VarType::STRING; }
+                   { currType = vartype::string_type; }
 #line 1324 "MochiParser/MochiParser.tab.cpp"
     break;
 
   case 21: /* func_type: void_token  */
 #line 116 "MochiParser/MochiParser.y"
-               { currType = VarType::VOID; }
+               { currType = vartype::void_type; }
 #line 1330 "MochiParser/MochiParser.tab.cpp"
     break;
 
