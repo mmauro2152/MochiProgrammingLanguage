@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <queue>
 #include "../FuncDir.hpp"
+#include "../QuadManager.hpp"
+#include "../SemanticCube.hpp"
 
 void yyerror(const char* errorMsg) {
     std::cout << errorMsg << std::endl;
@@ -21,6 +23,8 @@ std::string currScope;
 std::queue<char*> idQueue;
 vartype currType;
 int semanticErrors = 0;
+
+QuadManager quadManager;
 
 %}
 
@@ -48,11 +52,13 @@ program_declaration:
     program_token id { 
         globalScope = $2;
         currScope = globalScope;
+        funcDir.setGlobalScope(globalScope);
         if (!funcDir.insertFunction(currScope, vartype::void_type)) {
             semanticErrors++;
         }
     } 
-    semicolon opt_vars opt_funcs main_token body end_token {
+    semicolon opt_vars opt_funcs main_token { currScope = globalScope; } body end_token {
+        quadManager.debug();
         funcDir.printAll();
         if (semanticErrors > 0) {
             std::cerr << "Found " << semanticErrors << " semantic errors" << std::endl;
@@ -162,7 +168,16 @@ statement:
 ;
 
 assign_statement:
-    id assign expression semicolon
+    id {
+        VarEntry* var = funcDir.getVar(currScope, $1);
+        if (var == nullptr) {
+            semanticErrors++;
+        } else {
+            operand op = operand(var->type, currScope, $1);
+            quadManager.operands.push(op);
+        }
+    }
+    assign expression semicolon
 ;
 
 condition_statement:
@@ -234,7 +249,30 @@ conditional_operator:
 ;
 
 exp:
-    term term_
+    term {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::plus || quadManager.operators.top() == operatortype::minus)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    term_
 ;
 
 term_:
@@ -243,12 +281,35 @@ term_:
 ;
 
 term_operator:
-    plus
-    | minus
+    plus { quadManager.operators.push(operatortype::plus); }
+    | minus { quadManager.operators.push(operatortype::minus); }
 ;
 
 term:
-    factor factor_
+    factor {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::asterisk || quadManager.operators.top() == operatortype::slash)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    factor_
 ;
 
 factor_:
@@ -257,8 +318,8 @@ factor_:
 ;
 
 factor_operator:
-    asterisk
-    | slash
+    asterisk { quadManager.operators.push(operatortype::asterisk); }
+    | slash { quadManager.operators.push(operatortype::slash); }
 ;
 
 factor:
@@ -268,18 +329,32 @@ factor:
 
 opt_operator:
 
-    | plus
-    | minus
+    | plus //{ quadManager.operators.push(operatortype::plus); }
+    | minus //{ quadManager.operators.push(operatortype::minus); }
 ;
 
 factor_element:
-    id
+    id { 
+        VarEntry* var = funcDir.getVar(currScope, $1);
+        if (var == nullptr) {
+            semanticErrors++;
+        } else {
+            operand op = operand(var->type, currScope, $1);
+            quadManager.operands.push(op);
+        }
+    }
     | num_constant
 ;
 
 num_constant:
-    int_constant
-    | float_constant
+    int_constant {
+        operand op = operand(vartype::int_type, currScope, std::to_string($1));
+        quadManager.operands.push(op);
+    }
+    | float_constant {
+        operand op = operand(vartype::float_type, currScope, std::to_string($1));
+        quadManager.operands.push(op);
+    }
 ;
 
 %%

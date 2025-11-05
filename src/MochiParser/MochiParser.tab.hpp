@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED
-# define YY_YY_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED
+#ifndef YY_YY_SRC_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED
+# define YY_YY_SRC_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,11 +45,11 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "MochiParser/MochiParser.y"
+#line 1 "src/MochiParser/MochiParser.y"
 
     #include <string>
 
-#line 53 "MochiParser/MochiParser.tab.hpp"
+#line 53 "src/MochiParser/MochiParser.tab.hpp"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -107,13 +107,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "MochiParser/MochiParser.y"
+#line 31 "src/MochiParser/MochiParser.y"
 
     int i;
     float f;
     char* s;
 
-#line 117 "MochiParser/MochiParser.tab.hpp"
+#line 117 "src/MochiParser/MochiParser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -128,4 +128,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED  */
+#endif /* !YY_YY_SRC_MOCHIPARSER_MOCHIPARSER_TAB_HPP_INCLUDED  */
