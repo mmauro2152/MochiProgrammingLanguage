@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/mochi.exe",
-            "args": ["parser", "test.txt", "--debug"],
+            "args": ["semantic_cube", "test.txt", "--debug"],
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "setupCommands": [
