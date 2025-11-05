@@ -48,7 +48,7 @@ program_declaration:
     program_token id { 
         globalScope = $2;
         currScope = globalScope;
-        if (!funcDir.insertFunction(currScope, vartype::VOID)) {
+        if (!funcDir.insertFunction(currScope, vartype::void_type)) {
             semanticErrors++;
         }
     } 
