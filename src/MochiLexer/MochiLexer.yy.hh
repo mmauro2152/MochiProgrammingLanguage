@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 6 "MochiLexer/MochiLexer.yy.hh"
+#line 6 "src/MochiLexer/MochiLexer.yy.hh"
 
-#line 8 "MochiLexer/MochiLexer.yy.hh"
+#line 8 "src/MochiLexer/MochiLexer.yy.hh"
 
 #define  YY_INT_ALIGNED short int
 
@@ -469,9 +469,9 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 76 "MochiLexer/MochiLexer.l"
+#line 76 "src/MochiLexer/MochiLexer.l"
 
 
-#line 476 "MochiLexer/MochiLexer.yy.hh"
+#line 476 "src/MochiLexer/MochiLexer.yy.hh"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

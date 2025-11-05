@@ -1,6 +1,6 @@
-#line 2 "MochiLexer/MochiLexer.yy.cpp"
+#line 2 "src/MochiLexer/MochiLexer.yy.cpp"
 
-#line 4 "MochiLexer/MochiLexer.yy.cpp"
+#line 4 "src/MochiLexer/MochiLexer.yy.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -498,8 +498,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "MochiLexer/MochiLexer.l"
-#line 2 "MochiLexer/MochiLexer.l"
+#line 1 "src/MochiLexer/MochiLexer.l"
+#line 2 "src/MochiLexer/MochiLexer.l"
 #include "../MochiParser/MochiParser.tab.hpp"
 #include <cstdlib>
 #include <string>
@@ -509,8 +509,8 @@ char *yytext;
 std::string token_name;
 
 extern int yylex();
-#line 513 "MochiLexer/MochiLexer.yy.cpp"
-#line 514 "MochiLexer/MochiLexer.yy.cpp"
+#line 513 "src/MochiLexer/MochiLexer.yy.cpp"
+#line 514 "src/MochiLexer/MochiLexer.yy.cpp"
 
 #define INITIAL 0
 
@@ -727,9 +727,9 @@ YY_DECL
 		}
 
 	{
-#line 15 "MochiLexer/MochiLexer.l"
+#line 15 "src/MochiLexer/MochiLexer.l"
 
-#line 733 "MochiLexer/MochiLexer.yy.cpp"
+#line 733 "src/MochiLexer/MochiLexer.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -788,193 +788,193 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "MochiLexer/MochiLexer.l"
+#line 16 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(program_token); return program_token; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "MochiLexer/MochiLexer.l"
+#line 17 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(main_token); return main_token; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 18 "MochiLexer/MochiLexer.l"
+#line 18 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(end_token); return end_token; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 19 "MochiLexer/MochiLexer.l"
+#line 19 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(print_token); return print_token; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 20 "MochiLexer/MochiLexer.l"
+#line 20 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(while_token); return while_token; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 21 "MochiLexer/MochiLexer.l"
+#line 21 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(do_token); return do_token; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 22 "MochiLexer/MochiLexer.l"
+#line 22 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(if_token); return if_token; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 23 "MochiLexer/MochiLexer.l"
+#line 23 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(else_token); return else_token; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "MochiLexer/MochiLexer.l"
+#line 24 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(var_token); return var_token; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "MochiLexer/MochiLexer.l"
+#line 25 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(void_token); return void_token; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "MochiLexer/MochiLexer.l"
+#line 26 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(semicolon); return semicolon; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 27 "MochiLexer/MochiLexer.l"
+#line 27 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(comma); return comma; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 28 "MochiLexer/MochiLexer.l"
+#line 28 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(colon); return colon; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 29 "MochiLexer/MochiLexer.l"
+#line 29 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(string_token); return string_token; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 30 "MochiLexer/MochiLexer.l"
+#line 30 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(int_token); return int_token; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 31 "MochiLexer/MochiLexer.l"
+#line 31 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(float_token); return float_token; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 32 "MochiLexer/MochiLexer.l"
+#line 32 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(l_curly_brace); return l_curly_brace; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 33 "MochiLexer/MochiLexer.l"
+#line 33 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(r_curly_brace); return r_curly_brace; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 34 "MochiLexer/MochiLexer.l"
+#line 34 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(l_square_bracket); return l_square_bracket; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 35 "MochiLexer/MochiLexer.l"
+#line 35 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(r_square_bracket); return r_square_bracket; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 36 "MochiLexer/MochiLexer.l"
+#line 36 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(l_parenthesis); return l_parenthesis; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 37 "MochiLexer/MochiLexer.l"
+#line 37 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(r_parenthesis); return r_parenthesis; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 38 "MochiLexer/MochiLexer.l"
+#line 38 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(plus); return plus; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 39 "MochiLexer/MochiLexer.l"
+#line 39 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(minus); return minus; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 40 "MochiLexer/MochiLexer.l"
+#line 40 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(asterisk); return asterisk; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 41 "MochiLexer/MochiLexer.l"
+#line 41 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(slash); return slash; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 42 "MochiLexer/MochiLexer.l"
+#line 42 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(equal_smaller_than); return equal_smaller_than; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 43 "MochiLexer/MochiLexer.l"
+#line 43 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(l_angle_bracket); return l_angle_bracket; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 44 "MochiLexer/MochiLexer.l"
+#line 44 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(equal_greater_than); return equal_greater_than; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 45 "MochiLexer/MochiLexer.l"
+#line 45 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(r_angle_bracket); return r_angle_bracket; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 46 "MochiLexer/MochiLexer.l"
+#line 46 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(equal); return equal; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 47 "MochiLexer/MochiLexer.l"
+#line 47 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(assign); return assign; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 48 "MochiLexer/MochiLexer.l"
+#line 48 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(not_equal); return not_equal; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 49 "MochiLexer/MochiLexer.l"
+#line 49 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(not_); return not_; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 50 "MochiLexer/MochiLexer.l"
+#line 50 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(id); yylval.s = strdup(yytext); return id; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 51 "MochiLexer/MochiLexer.l"
+#line 51 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(float_constant); yylval.f = atof(yytext); return float_constant; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 52 "MochiLexer/MochiLexer.l"
+#line 52 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(int_constant); yylval.i = atoi(yytext); return int_constant; }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 53 "MochiLexer/MochiLexer.l"
+#line 53 "src/MochiLexer/MochiLexer.l"
 {
                                 token_name = NAMEOF(string_constant);
                                 // Remove the surrounding quotes and process escaped quotes
@@ -1000,20 +1000,20 @@ YY_RULE_SETUP
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 74 "MochiLexer/MochiLexer.l"
+#line 74 "src/MochiLexer/MochiLexer.l"
 {} // ignore whitespace
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 75 "MochiLexer/MochiLexer.l"
+#line 75 "src/MochiLexer/MochiLexer.l"
 { token_name = NAMEOF(invalid_character); return invalid_character; } // invalid characters
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 76 "MochiLexer/MochiLexer.l"
+#line 76 "src/MochiLexer/MochiLexer.l"
 ECHO;
 	YY_BREAK
-#line 1017 "MochiLexer/MochiLexer.yy.cpp"
+#line 1017 "src/MochiLexer/MochiLexer.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2018,6 +2018,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 76 "MochiLexer/MochiLexer.l"
+#line 76 "src/MochiLexer/MochiLexer.l"
 
 
