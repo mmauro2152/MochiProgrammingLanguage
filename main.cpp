@@ -1,6 +1,7 @@
 #include <iostream>
 #include "MochiParser/MochiParser.tab.hpp"
 #include "MochiLexer/MochiLexer.yy.hh"
+#include "SemanticCube.hpp"
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -95,6 +96,18 @@ void test_lexer(int argc, char** argv) {
     else {
         std::cerr << "Error: Missing input file" << std::endl;
     }
+}
+
+void test_semantic_cube(){
+    SemanticCube::populate();
+
+    CubeEntry entry = CubeEntry(vartype::string_type, vartype::bool_type, operatortype::not_equal);
+    vartype res = SemanticCube::resultingType(entry);
+
+    entry.rightOperand= vartype::string_type;
+    res = SemanticCube::resultingType(entry);
+
+    return;
 }
 
 int main(int argc, char **argv)
@@ -406,7 +419,7 @@ int main(int argc, char **argv)
     };
 
     if (argc == 1){
-        throw std::runtime_error("missing argument parser/lexer");
+        throw std::runtime_error("missing argument parser/lexer/semantic_cube");
     }
 
     std::string test_case = argv[1]; // parser/lexer
@@ -417,6 +430,10 @@ int main(int argc, char **argv)
 
     else if (test_case == "lexer"){
         test_lexer(argc, argv);
+    }
+
+    else if (test_case == "semantic_cube") {
+        test_semantic_cube();
     }
 
     else {
