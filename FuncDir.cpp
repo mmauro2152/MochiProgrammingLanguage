@@ -1,6 +1,6 @@
 #include "FuncDir.hpp"
 
-bool FuncDir::insertFunction(const std::string& name, VarType returnType) {
+bool FuncDir::insertFunction(const std::string& name, vartype returnType) {
     if (exists(name)) {
         std::cerr << "Error: Function '" << name << "' already declared.\n";
         return false;
@@ -14,7 +14,7 @@ bool FuncDir::exists(const std::string& name) {
     return table.find(name) != table.end();
 }
 
-bool FuncDir::addParameter(const std::string& name, const std::string& paramName, VarType paramType){
+bool FuncDir::addParameter(const std::string& name, const std::string& paramName, vartype paramType){
     if (!exists(name)) {
         std::cerr << "Error: Function '" << name << "' does not exist" << std::endl;
         return false;
@@ -43,7 +43,7 @@ void FuncDir::printAll() {
         if (!it->second.parameters.empty()) {
             std::cout << "Parameters:" << std::endl;
 
-            for (std::pair<std::string, VarType> p : it->second.parameters){
+            for (std::pair<std::string, vartype> p : it->second.parameters){
                 std::cout << p.first << ", " << VarTable::typeToString(p.second) << std::endl;
             }
         }

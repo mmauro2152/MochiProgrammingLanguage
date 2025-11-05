@@ -19,7 +19,7 @@ FuncDir funcDir;
 std::string globalScope;
 std::string currScope;
 std::queue<char*> idQueue;
-VarType currType;
+vartype currType;
 int semanticErrors = 0;
 
 %}
@@ -48,7 +48,7 @@ program_declaration:
     program_token id { 
         globalScope = $2;
         currScope = globalScope;
-        if (!funcDir.insertFunction(currScope, VarType::VOID)) {
+        if (!funcDir.insertFunction(currScope, vartype::VOID)) {
             semanticErrors++;
         }
     } 
@@ -107,13 +107,13 @@ id_loop_:
 ;
 
 type:
-    int_token { currType = VarType::INT; }
-    | float_token { currType = VarType::FLOAT; }
-    | string_token { currType = VarType::STRING; }
+    int_token { currType = vartype::int_type; }
+    | float_token { currType = vartype::float_type; }
+    | string_token { currType = vartype::string_type; }
 ;
 
 func_type:
-    void_token { currType = VarType::VOID; }
+    void_token { currType = vartype::void_type; }
     | type
 ;
 
