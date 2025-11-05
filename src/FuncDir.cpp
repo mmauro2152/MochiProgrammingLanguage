@@ -33,6 +33,10 @@ FuncEntry* FuncDir::getFunction(const std::string& name) {
     return nullptr;
 }
 
+void FuncDir::setGlobalScope(const std::string& scope){
+    globalScope = scope;
+}
+
 void FuncDir::printAll() {
     std::unordered_map<std::string, FuncEntry>::iterator it;
     for (it = table.begin(); it != table.end(); ++it){
@@ -56,3 +60,25 @@ void FuncDir::printAll() {
     }
 }
 
+VarEntry* FuncDir::getVar(const std::string& scope, const std::string& varName) {
+    FuncEntry* func = getFunction(scope);
+
+    if (func == nullptr){
+        std::cerr << "Error: scope '" << scope << "' does not exist" << std::endl;
+        return nullptr;
+    }
+    else if (!func->localVars.exists(varName)) {
+        // try global scope
+        func = getFunction(globalScope);
+
+        if (func == nullptr) {
+            std::cerr << "Scope '" << scope << "' does not exist" << std::endl;
+            return nullptr;
+        }
+        else {
+            return func->localVars.getVar(varName);
+        }
+    }
+
+    return func->localVars.getVar(varName);
+}

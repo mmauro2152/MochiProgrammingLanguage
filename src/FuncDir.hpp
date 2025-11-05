@@ -15,6 +15,7 @@ struct FuncEntry {
 class FuncDir{
 private:
     std::unordered_map<std::string, FuncEntry> table;
+    std::string globalScope;
 
 public:
     bool insertFunction(const std::string& name, vartype returnType);
@@ -26,4 +27,8 @@ public:
     FuncEntry* getFunction(const std::string& name);
 
     void printAll();
+
+    void setGlobalScope(const std::string& scope);
+
+    VarEntry* getVar(const std::string& scope, const std::string& varName);
 };
