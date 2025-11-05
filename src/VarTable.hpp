@@ -10,7 +10,7 @@ enum class vartype {
     string_type,
     void_type,
     bool_type,
-    unknown_type
+    unknown
 };
 
 static const char* vartype_string[] {

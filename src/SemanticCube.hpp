@@ -15,7 +15,9 @@ enum class operatortype {
     assign,
     not_equal,
     not_,
-    unknown
+    unknown,
+    call,
+    param
 };
 
 struct CubeEntry {
@@ -23,7 +25,7 @@ struct CubeEntry {
     vartype rightOperand;
     operatortype op;
 
-    CubeEntry(): leftOperand(vartype::unknown_type), rightOperand(vartype::unknown_type), op(operatortype::unknown) {}
+    CubeEntry(): leftOperand(vartype::unknown), rightOperand(vartype::unknown), op(operatortype::unknown) {}
     CubeEntry(vartype opA, vartype opB, operatortype o): leftOperand(opA), rightOperand(opB), op(o) {}
 
     bool operator==(const CubeEntry& other) const {
@@ -45,7 +47,7 @@ struct CubeEntryHash {
 
 static const char* operatortype_string[] {
     "+", "-", "*", "/", "<=", "<", ">=", ">",
-    "==", "=", "!=", "!", "unknown"
+    "==", "=", "!=", "!", "unknown", "call", "param"
 };
 
 class SemanticCube {

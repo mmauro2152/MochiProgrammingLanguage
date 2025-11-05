@@ -62,7 +62,7 @@ vartype SemanticCube::resultingType(CubeEntry entry) {
         operatortype_string[static_cast<int>(entry.op)] << "'" << 
         std::endl;
 
-        return vartype::unknown_type;
+        return vartype::unknown;
     }
 
     return table[entry];
