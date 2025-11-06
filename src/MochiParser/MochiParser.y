@@ -59,7 +59,7 @@ program_declaration:
     } 
     semicolon opt_vars opt_funcs main_token { currScope = globalScope; } body end_token {
         quadManager.debug();
-        funcDir.printAll();
+        //funcDir.printAll();
         if (semanticErrors > 0) {
             std::cerr << "Found " << semanticErrors << " semantic errors" << std::endl;
             exit(EXIT_FAILURE);
@@ -177,7 +177,58 @@ assign_statement:
             quadManager.operands.push(op);
         }
     }
-    assign expression semicolon
+    assign { quadManager.operators.push(operatortype::assign); }
+    assign_statement_ semicolon {
+        operand rOperand = quadManager.operands.top();
+        quadManager.operands.pop();
+        operand lOperand = quadManager.operands.top();
+        quadManager.operands.pop();
+        operatortype op = quadManager.operators.top();
+        quadManager.operators.pop();
+
+        CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+        vartype restype = SemanticCube::resultingType(entry);
+
+        if (restype == vartype::unknown) {
+            semanticErrors++;
+        }else {
+            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+            quadManager.push(q);
+        }
+    }
+;
+
+assign_statement_:
+    expression
+    | id {
+        VarEntry* var = funcDir.getVar(currScope, $1);
+        if (var == nullptr) {
+            semanticErrors++;
+        } else {
+            operand op = operand(var->type, currScope, $1);
+            quadManager.operands.push(op);
+        }
+    }
+    assign { quadManager.operators.push(operatortype::assign); }
+    assign_statement_ {
+        operand rOperand = quadManager.operands.top();
+        quadManager.operands.pop();
+        operand lOperand = quadManager.operands.top();
+        quadManager.operands.pop();
+        operatortype op = quadManager.operators.top();
+        quadManager.operators.pop();
+
+        CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+        vartype restype = SemanticCube::resultingType(entry);
+
+        if (restype == vartype::unknown) {
+            semanticErrors++;
+        }else {
+            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+            quadManager.push(q);
+            quadManager.operands.push(lOperand);
+        }
+    }
 ;
 
 condition_statement:
