@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/src/SemanticCube.cpp {workspaceFolder}/src/FuncDir.cpp {workspaceFolder}/src/VarTable.cpp {workspaceFolder}/src/MochiLexer/MochiLexer.yy.cpp ${workspaceFolder}/src/MochiParser/MochiParser.tab.cpp ${workspaceFolder}/src/main.cpp",
+                "${workspaceFolder}/src/*.cpp {workspaceFolder}/src/*/*.*.cpp",
                 "-o",
                 "mochi.exe"
             ],
