@@ -17,7 +17,8 @@ enum class operatortype {
     not_,
     unknown,
     call,
-    param
+    param,
+    fake_bottom
 };
 
 struct CubeEntry {
@@ -47,7 +48,7 @@ struct CubeEntryHash {
 
 static const char* operatortype_string[] {
     "+", "-", "*", "/", "<=", "<", ">=", ">",
-    "==", "=", "!=", "!", "unknown", "call", "param"
+    "==", "=", "!=", "!", "unknown", "call", "param", "fake_bottom"
 };
 
 class SemanticCube {

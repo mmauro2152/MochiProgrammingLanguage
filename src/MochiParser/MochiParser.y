@@ -323,14 +323,76 @@ factor_operator:
 ;
 
 factor:
-    l_parenthesis expression r_parenthesis
-    | opt_operator factor_element
+    l_parenthesis {
+        quadManager.operators.push(operatortype::fake_bottom);
+    } 
+    expression r_parenthesis {
+        if (quadManager.operators.top() != operatortype::fake_bottom) {
+            semanticErrors++;
+            std::cerr << "Error: Unexpected operator '" << operatortype_string[static_cast<int>(quadManager.operators.top())] << "'" << std::endl;  
+        } else {
+            // discard fake bottom
+            quadManager.operators.pop();
+        }
+    }
+
+    | opt_operator l_parenthesis {
+        quadManager.operators.push(operatortype::fake_bottom);
+    } 
+    expression r_parenthesis {
+        if (quadManager.operators.top() != operatortype::fake_bottom) {
+            semanticErrors++;
+            std::cerr << "Error: Unexpected operator '" << operatortype_string[static_cast<int>(quadManager.operators.top())] << "'" << std::endl;  
+        } else {
+            // discard fake bottom
+            quadManager.operators.pop();
+
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+    
+            CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+    
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, temp);
+    
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+
+    | factor_element
+    
+    | opt_operator factor_element {
+        operand rOperand = quadManager.operands.top();
+        quadManager.operands.pop();
+        operatortype op = quadManager.operators.top();
+        quadManager.operators.pop();
+
+        CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+        vartype restype = SemanticCube::resultingType(entry);
+
+        if (restype == vartype::unknown) {
+            semanticErrors++;
+        }else {
+            operand temp = quadManager.getTemp(restype);
+            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, temp);
+
+            quadManager.push(q);
+            quadManager.operands.push(temp);
+        }
+    }
 ;
 
 opt_operator:
-
-    | plus //{ quadManager.operators.push(operatortype::plus); }
-    | minus //{ quadManager.operators.push(operatortype::minus); }
+    plus { quadManager.operators.push(operatortype::plus); }
+    | minus { quadManager.operators.push(operatortype::minus); }
 ;
 
 factor_element:
