@@ -1,1 +1,3 @@
 *.exe
+/src/Mochi*/*.*.cpp
+/src/Mochi*/*.*.h*
