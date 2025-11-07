@@ -250,40 +250,48 @@ cycle_statement:
 ;
 
 print_statement:
-    print_token l_parenthesis print_loop r_parenthesis semicolon 
-;
-
-print_loop:
-    print_element print_loop_
-;
-
-print_loop_:
-
-    | comma print_loop
-;
-
-print_element:
-    expression
-    | string_constant
+    print_token l_parenthesis arg_loop r_parenthesis semicolon 
 ;
 
 func_call_statement:
-    id l_parenthesis opt_expression_loop r_parenthesis semicolon
+    id l_parenthesis opt_arg_loop r_parenthesis semicolon
 ;
 
-opt_expression_loop:
+opt_arg_loop:
 
-    | expression_loop
+    | arg_loop
 ;
 
-expression_loop:
-    expression expression_loop_
-    | string_constant expression_loop_
+arg_loop:
+    expression {
+        if (quadManager.operands.empty()) {
+            semanticErrors++;
+            std::cerr << "Error: Expected expression" << std::endl;
+        }
+        else {
+            operand exp_result = quadManager.operands.top();
+            quadManager.operands.pop();
+
+            CubeEntry entry = CubeEntry(vartype::none, exp_result.type, operatortype::arg);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }
+            else {
+                quad q = quad(operatortype::arg, operand(vartype::none, currScope, "none"), exp_result, operand(vartype::none, currScope, "none"));
+                quadManager.push(q);
+            }
+        }
+    }
+    arg_loop_
+
+    | string_constant arg_loop_
 ;
 
-expression_loop_:
+arg_loop_:
 
-    | comma expression_loop
+    | comma arg_loop
 ;
 
 expression:
@@ -530,7 +538,7 @@ factor:
             operatortype op = quadManager.operators.top();
             quadManager.operators.pop();
     
-            CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+            CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
             vartype restype = SemanticCube::resultingType(entry);
     
             if (restype == vartype::unknown) {
@@ -553,7 +561,7 @@ factor:
         operatortype op = quadManager.operators.top();
         quadManager.operators.pop();
 
-        CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+        CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
         vartype restype = SemanticCube::resultingType(entry);
 
         if (restype == vartype::unknown) {

@@ -201,43 +201,41 @@ enum yysymbol_kind_t
   YYSYMBOL_opt_else = 77,                  /* opt_else  */
   YYSYMBOL_cycle_statement = 78,           /* cycle_statement  */
   YYSYMBOL_print_statement = 79,           /* print_statement  */
-  YYSYMBOL_print_loop = 80,                /* print_loop  */
-  YYSYMBOL_print_loop_ = 81,               /* print_loop_  */
-  YYSYMBOL_print_element = 82,             /* print_element  */
-  YYSYMBOL_func_call_statement = 83,       /* func_call_statement  */
-  YYSYMBOL_opt_expression_loop = 84,       /* opt_expression_loop  */
-  YYSYMBOL_expression_loop = 85,           /* expression_loop  */
-  YYSYMBOL_expression_loop_ = 86,          /* expression_loop_  */
-  YYSYMBOL_expression = 87,                /* expression  */
-  YYSYMBOL_88_11 = 88,                     /* $@11  */
-  YYSYMBOL_or_exp_ = 89,                   /* or_exp_  */
-  YYSYMBOL_90_12 = 90,                     /* $@12  */
-  YYSYMBOL_or_exp = 91,                    /* or_exp  */
-  YYSYMBOL_92_13 = 92,                     /* $@13  */
-  YYSYMBOL_and_exp_ = 93,                  /* and_exp_  */
-  YYSYMBOL_94_14 = 94,                     /* $@14  */
-  YYSYMBOL_and_exp = 95,                   /* and_exp  */
-  YYSYMBOL_96_15 = 96,                     /* $@15  */
-  YYSYMBOL_eq_oper = 97,                   /* eq_oper  */
-  YYSYMBOL_eq_exp_ = 98,                   /* eq_exp_  */
-  YYSYMBOL_eq_exp = 99,                    /* eq_exp  */
-  YYSYMBOL_100_16 = 100,                   /* $@16  */
-  YYSYMBOL_rel_exp_ = 101,                 /* rel_exp_  */
-  YYSYMBOL_rel_oper = 102,                 /* rel_oper  */
-  YYSYMBOL_rel_exp = 103,                  /* rel_exp  */
-  YYSYMBOL_104_17 = 104,                   /* $@17  */
-  YYSYMBOL_term_ = 105,                    /* term_  */
-  YYSYMBOL_term_operator = 106,            /* term_operator  */
-  YYSYMBOL_term = 107,                     /* term  */
-  YYSYMBOL_108_18 = 108,                   /* $@18  */
-  YYSYMBOL_factor_ = 109,                  /* factor_  */
-  YYSYMBOL_factor_operator = 110,          /* factor_operator  */
-  YYSYMBOL_factor = 111,                   /* factor  */
-  YYSYMBOL_112_19 = 112,                   /* $@19  */
-  YYSYMBOL_113_20 = 113,                   /* $@20  */
-  YYSYMBOL_opt_operator = 114,             /* opt_operator  */
-  YYSYMBOL_factor_element = 115,           /* factor_element  */
-  YYSYMBOL_num_constant = 116              /* num_constant  */
+  YYSYMBOL_func_call_statement = 80,       /* func_call_statement  */
+  YYSYMBOL_opt_arg_loop = 81,              /* opt_arg_loop  */
+  YYSYMBOL_arg_loop = 82,                  /* arg_loop  */
+  YYSYMBOL_83_11 = 83,                     /* $@11  */
+  YYSYMBOL_arg_loop_ = 84,                 /* arg_loop_  */
+  YYSYMBOL_expression = 85,                /* expression  */
+  YYSYMBOL_86_12 = 86,                     /* $@12  */
+  YYSYMBOL_or_exp_ = 87,                   /* or_exp_  */
+  YYSYMBOL_88_13 = 88,                     /* $@13  */
+  YYSYMBOL_or_exp = 89,                    /* or_exp  */
+  YYSYMBOL_90_14 = 90,                     /* $@14  */
+  YYSYMBOL_and_exp_ = 91,                  /* and_exp_  */
+  YYSYMBOL_92_15 = 92,                     /* $@15  */
+  YYSYMBOL_and_exp = 93,                   /* and_exp  */
+  YYSYMBOL_94_16 = 94,                     /* $@16  */
+  YYSYMBOL_eq_oper = 95,                   /* eq_oper  */
+  YYSYMBOL_eq_exp_ = 96,                   /* eq_exp_  */
+  YYSYMBOL_eq_exp = 97,                    /* eq_exp  */
+  YYSYMBOL_98_17 = 98,                     /* $@17  */
+  YYSYMBOL_rel_exp_ = 99,                  /* rel_exp_  */
+  YYSYMBOL_rel_oper = 100,                 /* rel_oper  */
+  YYSYMBOL_rel_exp = 101,                  /* rel_exp  */
+  YYSYMBOL_102_18 = 102,                   /* $@18  */
+  YYSYMBOL_term_ = 103,                    /* term_  */
+  YYSYMBOL_term_operator = 104,            /* term_operator  */
+  YYSYMBOL_term = 105,                     /* term  */
+  YYSYMBOL_106_19 = 106,                   /* $@19  */
+  YYSYMBOL_factor_ = 107,                  /* factor_  */
+  YYSYMBOL_factor_operator = 108,          /* factor_operator  */
+  YYSYMBOL_factor = 109,                   /* factor  */
+  YYSYMBOL_110_20 = 110,                   /* $@20  */
+  YYSYMBOL_111_21 = 111,                   /* $@21  */
+  YYSYMBOL_opt_operator = 112,             /* opt_operator  */
+  YYSYMBOL_factor_element = 113,           /* factor_element  */
+  YYSYMBOL_num_constant = 114              /* num_constant  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -565,16 +563,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   133
+#define YYLAST   123
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  72
+#define YYNNTS  70
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  113
+#define YYNRULES  109
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  176
+#define YYNSTATES  171
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   299
@@ -632,13 +630,12 @@ static const yytype_int16 yyrline[] =
      117,   118,   119,   123,   124,   128,   128,   137,   139,   143,
      143,   149,   151,   155,   158,   160,   164,   165,   166,   167,
      168,   172,   181,   172,   205,   206,   215,   206,   240,   243,
-     245,   249,   253,   257,   260,   262,   266,   267,   271,   274,
-     276,   280,   281,   284,   286,   290,   290,   316,   318,   318,
-     322,   322,   348,   350,   350,   354,   354,   381,   382,   385,
-     387,   391,   391,   417,   419,   423,   424,   425,   426,   430,
-     430,   456,   458,   462,   463,   467,   467,   493,   495,   499,
-     500,   504,   504,   517,   517,   548,   550,   572,   573,   574,
-     578,   587,   591,   595
+     245,   249,   253,   271,   274,   276,   280,   280,   303,   306,
+     308,   312,   312,   338,   340,   340,   344,   344,   370,   372,
+     372,   376,   376,   403,   404,   407,   409,   413,   413,   439,
+     441,   445,   446,   447,   448,   452,   452,   478,   480,   484,
+     485,   489,   489,   515,   517,   521,   522,   526,   526,   539,
+     539,   570,   572,   594,   595,   596,   600,   609,   613,   617
 };
 #endif
 
@@ -669,13 +666,12 @@ static const char *const yytname[] =
   "funcs", "$@5", "params", "param_loop", "$@6", "param_loop_", "body",
   "statement_loop", "statement", "assign_statement", "$@7", "$@8",
   "assign_statement_", "$@9", "$@10", "condition_statement", "opt_else",
-  "cycle_statement", "print_statement", "print_loop", "print_loop_",
-  "print_element", "func_call_statement", "opt_expression_loop",
-  "expression_loop", "expression_loop_", "expression", "$@11", "or_exp_",
-  "$@12", "or_exp", "$@13", "and_exp_", "$@14", "and_exp", "$@15",
-  "eq_oper", "eq_exp_", "eq_exp", "$@16", "rel_exp_", "rel_oper",
-  "rel_exp", "$@17", "term_", "term_operator", "term", "$@18", "factor_",
-  "factor_operator", "factor", "$@19", "$@20", "opt_operator",
+  "cycle_statement", "print_statement", "func_call_statement",
+  "opt_arg_loop", "arg_loop", "$@11", "arg_loop_", "expression", "$@12",
+  "or_exp_", "$@13", "or_exp", "$@14", "and_exp_", "$@15", "and_exp",
+  "$@16", "eq_oper", "eq_exp_", "eq_exp", "$@17", "rel_exp_", "rel_oper",
+  "rel_exp", "$@18", "term_", "term_operator", "term", "$@19", "factor_",
+  "factor_operator", "factor", "$@20", "$@21", "opt_operator",
   "factor_element", "num_constant", YY_NULLPTR
 };
 
@@ -686,7 +682,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-104)
+#define YYPACT_NINF (-103)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -700,24 +696,24 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       8,     0,    19,  -104,  -104,    26,    30,     3,    52,  -104,
-    -104,  -104,    33,  -104,  -104,  -104,  -104,  -104,    41,  -104,
-       9,    52,    37,    56,  -104,  -104,  -104,  -104,     3,  -104,
-      40,    32,    31,  -104,  -104,    -2,    54,    18,     3,    43,
-      63,    64,    65,    57,    -2,  -104,  -104,  -104,  -104,  -104,
-    -104,    62,    66,  -104,  -104,  -104,   -18,    20,    20,   -11,
-      55,  -104,  -104,    56,    70,  -104,  -104,  -104,  -104,  -104,
-    -104,  -104,  -104,    68,    81,  -104,  -104,  -104,  -104,  -104,
-    -104,  -104,    -7,  -104,  -104,    71,    72,    84,    74,  -104,
-      84,  -104,  -104,    30,    20,    87,   -18,  -104,    67,    69,
-     -22,    53,    -6,    -1,  -104,  -104,    93,    32,   -11,  -104,
-      89,  -104,    39,    90,    32,    78,  -104,  -104,  -104,  -104,
-    -104,  -104,  -104,  -104,    20,  -104,  -104,  -104,  -104,  -104,
-    -104,    20,  -104,  -104,  -104,    20,  -104,  -104,  -104,    20,
-      20,    32,    95,  -104,  -104,    73,    96,  -104,    18,  -104,
-      88,  -104,    20,    20,  -104,  -104,  -104,  -104,    85,    99,
-      32,   100,    79,  -104,  -104,   102,  -104,  -104,  -104,  -104,
-    -104,  -104,  -104,  -104,    39,  -104
+       9,    -5,    45,  -103,  -103,    35,    40,    18,    -3,  -103,
+    -103,  -103,    51,  -103,  -103,  -103,  -103,  -103,    63,  -103,
+      29,    -3,    54,     1,  -103,  -103,  -103,  -103,    18,  -103,
+      57,    52,    47,  -103,  -103,    -2,    68,    34,    18,    53,
+      55,    56,    58,    60,    -2,  -103,  -103,  -103,  -103,  -103,
+    -103,    61,    50,  -103,  -103,  -103,   -16,     5,     5,   -16,
+      48,  -103,  -103,     1,    62,  -103,  -103,  -103,  -103,  -103,
+    -103,  -103,    71,    65,  -103,  -103,  -103,  -103,  -103,  -103,
+    -103,    19,  -103,  -103,    66,    67,    69,  -103,  -103,  -103,
+      40,     5,   -16,  -103,    73,    71,    49,    59,    -6,    32,
+      -4,    28,  -103,  -103,    79,    52,    80,    13,    81,    52,
+      74,  -103,  -103,  -103,  -103,  -103,  -103,  -103,  -103,  -103,
+       5,  -103,  -103,  -103,  -103,  -103,  -103,     5,  -103,  -103,
+    -103,     5,  -103,  -103,  -103,     5,     5,    52,    86,  -103,
+      70,    85,  -103,    34,  -103,    77,  -103,     5,     5,  -103,
+    -103,  -103,  -103,    76,    89,    52,    90,    72,  -103,  -103,
+      91,  -103,  -103,  -103,  -103,  -103,  -103,  -103,  -103,    13,
+    -103
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -730,32 +726,31 @@ static const yytype_int8 yydefact[] =
        0,     5,    17,     0,     3,    25,     7,     6,     0,    16,
        0,     0,     0,    18,    11,    34,     0,    27,    13,     0,
        0,     0,    41,     0,    34,    36,    37,    38,    39,    40,
-       4,     0,     0,    28,    14,    12,     0,     0,     0,    59,
-       0,    33,    35,     0,     0,   101,   107,   108,   109,   110,
-     112,   113,    57,     0,    54,    56,    65,    70,    75,    81,
-      89,    95,     0,   105,   111,     0,     0,    63,     0,    60,
-      63,    42,    29,     8,     0,     0,     0,    53,    67,    72,
-      79,    83,    91,    97,   103,   106,     0,     0,     0,    62,
-       0,    61,     0,    31,     0,     0,    52,    55,    68,    66,
-      73,    71,    77,    78,     0,    76,    87,    88,    85,    86,
-      82,     0,    93,    94,    90,     0,    99,   100,    96,     0,
-       0,     0,    49,    64,    58,   110,     0,    44,     0,    30,
-       0,   102,     0,     0,    80,    84,    92,    98,     0,     0,
-       0,     0,     0,    43,    32,     0,    69,    74,   104,    51,
-      50,    48,    46,    26,     0,    47
+       4,     0,     0,    28,    14,    12,     0,     0,     0,    54,
+       0,    33,    35,     0,     0,    97,   103,   104,   105,   106,
+     108,   109,    59,     0,    56,    61,    66,    71,    77,    85,
+      91,     0,   101,   107,     0,     0,     0,    55,    42,    29,
+       8,     0,     0,    58,     0,    59,    63,    68,    75,    79,
+      87,    93,    99,   102,     0,     0,     0,     0,    31,     0,
+       0,    60,    52,    57,    64,    62,    69,    67,    73,    74,
+       0,    72,    83,    84,    81,    82,    78,     0,    89,    90,
+      86,     0,    95,    96,    92,     0,     0,     0,    49,    53,
+     106,     0,    44,     0,    30,     0,    98,     0,     0,    76,
+      80,    88,    94,     0,     0,     0,     0,     0,    43,    32,
+       0,    65,    70,   100,    51,    50,    48,    46,    26,     0,
+      47
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-    -104,  -104,  -104,  -104,    97,  -104,    27,  -104,    83,  -104,
-    -104,    91,  -104,  -104,   -20,  -104,  -104,  -104,  -104,   -26,
-    -104,  -104,  -103,    80,  -104,  -104,  -104,  -104,   -51,  -104,
-    -104,  -104,  -104,  -104,  -104,    29,  -104,  -104,  -104,  -104,
-      21,    36,   -57,  -104,  -104,  -104,   -25,  -104,  -104,  -104,
-       6,  -104,  -104,  -104,    -4,  -104,  -104,  -104,    -3,  -104,
-    -104,  -104,    -8,  -104,  -104,  -104,  -104,  -104,  -104,  -104,
-      51,  -104
+    -103,  -103,  -103,  -103,    88,  -103,    17,  -103,    75,  -103,
+    -103,    82,  -103,  -103,   -21,  -103,  -103,  -103,  -103,   -32,
+    -103,  -103,  -102,    78,  -103,  -103,  -103,  -103,   -54,  -103,
+    -103,  -103,  -103,  -103,  -103,  -103,  -103,   -55,  -103,    21,
+     -57,  -103,  -103,  -103,   -34,  -103,  -103,  -103,    -1,  -103,
+    -103,  -103,   -10,  -103,  -103,  -103,   -13,  -103,  -103,  -103,
+     -15,  -103,  -103,  -103,  -103,  -103,  -103,  -103,    42,  -103
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -763,12 +758,11 @@ static const yytype_uint8 yydefgoto[] =
 {
        0,     2,     5,    31,    18,    27,     8,     9,    11,    38,
       55,    12,    22,    29,    19,    20,    21,    32,    52,    53,
-     113,   149,    36,    43,    44,    45,    60,   112,   146,   162,
-     174,    46,   161,    47,    48,    73,    97,    74,    49,    88,
-      89,   109,    75,    98,   119,   152,    76,    99,   121,   153,
-      77,   100,   124,   125,    78,   101,   130,   131,    79,   102,
-     134,   135,    80,   103,   138,   139,    81,    94,   140,    82,
-      83,    84
+     108,   144,    36,    43,    44,    45,    60,   107,   141,   157,
+     169,    46,   156,    47,    48,    49,    86,    73,    95,    93,
+      74,    96,   115,   147,    75,    97,   117,   148,    76,    98,
+     120,   121,    77,    99,   126,   127,    78,   100,   130,   131,
+      79,   101,   134,   135,    80,    91,   136,    81,    82,    83
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -776,38 +770,36 @@ static const yytype_uint8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      85,    86,    90,    30,   142,    39,    40,    65,    41,    66,
-      67,   150,     1,   122,    65,   123,    66,    67,   104,     4,
-      68,   132,   133,    69,    70,    71,    72,    68,   136,   137,
-      69,    70,    71,    87,    69,    70,    71,   115,   159,    42,
-       6,     3,     7,    92,    10,    65,    24,    66,    67,    23,
-      25,    90,    28,    35,    34,   147,    37,   170,    68,    51,
-      50,    69,    70,    71,    65,    13,    66,    67,    56,    14,
-      15,    16,    17,    14,    15,    16,    17,    68,    63,    61,
-     145,    70,    71,   158,   126,   127,   128,   129,    57,    58,
-      59,    91,    64,    93,    95,   166,    96,   106,   107,   108,
-     110,   116,   141,   144,   151,   148,   160,   118,   120,   -45,
-     163,   168,   165,   169,   171,   172,   173,   147,    26,    33,
-     114,    54,   164,   175,    62,   117,   111,   155,   167,   143,
-     154,   157,   156,   105
+      84,    85,    30,   138,    87,    39,    40,   145,    41,    65,
+      13,    66,    67,     1,    14,    15,    16,    17,    14,    15,
+      16,    17,    68,   128,   129,    69,    70,    71,    72,   118,
+      65,   119,    66,    67,   110,   154,     3,   111,    65,    42,
+      66,    67,    89,    68,   102,     4,    69,    70,    71,     6,
+     142,    68,     7,   165,   140,    70,    71,   132,   133,    10,
+      69,    70,    71,   122,   123,   124,   125,    23,    24,    28,
+      25,    34,    37,    35,    50,    51,    64,    63,    56,   153,
+      57,    58,    61,    59,    88,    90,    92,   112,   137,   114,
+     161,    94,   104,   105,   139,   106,   143,   155,   116,   158,
+     146,   160,   163,   164,   166,   168,   -45,   109,   167,    26,
+      33,   159,   142,    54,   162,   170,   113,   150,   151,   149,
+     152,     0,    62,   103
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int16 yycheck[] =
 {
-      57,    58,    59,    23,   107,     7,     8,    25,    10,    27,
-      28,   114,     4,    35,    25,    37,    27,    28,    25,     0,
-      38,    27,    28,    41,    42,    43,    44,    38,    29,    30,
-      41,    42,    43,    44,    41,    42,    43,    94,   141,    41,
-      14,    41,    12,    63,    41,    25,     5,    27,    28,    16,
-      41,   108,    15,    21,    14,   112,    25,   160,    38,    41,
-       6,    41,    42,    43,    25,    13,    27,    28,    25,    17,
-      18,    19,    20,    17,    18,    19,    20,    38,    16,    22,
-      41,    42,    43,   140,    31,    32,    33,    34,    25,    25,
-      25,    36,    26,    23,    26,   152,    15,    26,    26,    15,
-      26,    14,     9,    14,    26,    15,    11,    40,    39,    36,
-      14,    26,    24,    14,    14,    36,    14,   174,    21,    28,
-      93,    38,   148,   174,    44,    96,    90,   131,   153,   108,
-     124,   139,   135,    82
+      57,    58,    23,   105,    59,     7,     8,   109,    10,    25,
+      13,    27,    28,     4,    17,    18,    19,    20,    17,    18,
+      19,    20,    38,    27,    28,    41,    42,    43,    44,    35,
+      25,    37,    27,    28,    91,   137,    41,    92,    25,    41,
+      27,    28,    63,    38,    25,     0,    41,    42,    43,    14,
+     107,    38,    12,   155,    41,    42,    43,    29,    30,    41,
+      41,    42,    43,    31,    32,    33,    34,    16,     5,    15,
+      41,    14,    25,    21,     6,    41,    26,    16,    25,   136,
+      25,    25,    22,    25,    36,    23,    15,    14,     9,    40,
+     147,    26,    26,    26,    14,    26,    15,    11,    39,    14,
+      26,    24,    26,    14,    14,    14,    36,    90,    36,    21,
+      28,   143,   169,    38,   148,   169,    95,   127,   131,   120,
+     135,    -1,    44,    81
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -818,20 +810,20 @@ static const yytype_int8 yystos[] =
       41,    53,    56,    13,    17,    18,    19,    20,    49,    59,
       60,    61,    57,    16,     5,    41,    49,    50,    15,    58,
       59,    48,    62,    56,    14,    21,    67,    25,    54,     7,
-       8,    10,    41,    68,    69,    70,    76,    78,    79,    83,
+       8,    10,    41,    68,    69,    70,    76,    78,    79,    80,
        6,    41,    63,    64,    53,    55,    25,    25,    25,    25,
       71,    22,    68,    16,    26,    25,    27,    28,    38,    41,
-      42,    43,    44,    80,    82,    87,    91,    95,    99,   103,
-     107,   111,   114,   115,   116,    87,    87,    44,    84,    85,
-      87,    36,    59,    23,   112,    26,    15,    81,    88,    92,
-      96,   100,   104,   108,    25,   115,    26,    26,    15,    86,
-      26,    86,    72,    65,    51,    87,    14,    80,    40,    89,
-      39,    93,    35,    37,    97,    98,    31,    32,    33,    34,
-     101,   102,    27,    28,   105,   106,    29,    30,   109,   110,
-     113,     9,    67,    85,    14,    41,    73,    87,    15,    66,
-      67,    26,    90,    94,    95,    99,   103,   107,    87,    67,
-      11,    77,    74,    14,    64,    24,    87,    91,    26,    14,
-      67,    14,    36,    14,    75,    73
+      42,    43,    44,    82,    85,    89,    93,    97,   101,   105,
+     109,   112,   113,   114,    85,    85,    81,    82,    36,    59,
+      23,   110,    15,    84,    26,    83,    86,    90,    94,    98,
+     102,   106,    25,   113,    26,    26,    26,    72,    65,    51,
+      85,    82,    14,    84,    40,    87,    39,    91,    35,    37,
+      95,    96,    31,    32,    33,    34,    99,   100,    27,    28,
+     103,   104,    29,    30,   107,   108,   111,     9,    67,    14,
+      41,    73,    85,    15,    66,    67,    26,    88,    92,    93,
+      97,   101,   105,    85,    67,    11,    77,    74,    14,    64,
+      24,    85,    89,    26,    14,    67,    14,    36,    14,    75,
+      73
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -842,13 +834,12 @@ static const yytype_int8 yyr1[] =
       59,    59,    59,    60,    60,    62,    61,    63,    63,    65,
       64,    66,    66,    67,    68,    68,    69,    69,    69,    69,
       69,    71,    72,    70,    73,    74,    75,    73,    76,    77,
-      77,    78,    79,    80,    81,    81,    82,    82,    83,    84,
-      84,    85,    85,    86,    86,    88,    87,    89,    90,    89,
-      92,    91,    93,    94,    93,    96,    95,    97,    97,    98,
-      98,   100,    99,   101,   101,   102,   102,   102,   102,   104,
-     103,   105,   105,   106,   106,   108,   107,   109,   109,   110,
-     110,   112,   111,   113,   111,   111,   111,   114,   114,   114,
-     115,   115,   116,   116
+      77,    78,    79,    80,    81,    81,    83,    82,    82,    84,
+      84,    86,    85,    87,    88,    87,    90,    89,    91,    92,
+      91,    94,    93,    95,    95,    96,    96,    98,    97,    99,
+      99,   100,   100,   100,   100,   102,   101,   103,   103,   104,
+     104,   106,   105,   107,   107,   108,   108,   110,   109,   111,
+     109,   109,   109,   112,   112,   112,   113,   113,   114,   114
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -859,13 +850,12 @@ static const yytype_int8 yyr2[] =
        1,     1,     1,     1,     1,     0,    11,     0,     1,     0,
        5,     0,     2,     3,     0,     2,     1,     1,     1,     1,
        1,     0,     0,     6,     1,     0,     0,     5,     7,     0,
-       2,     7,     5,     2,     0,     2,     1,     1,     5,     0,
-       1,     2,     2,     0,     2,     0,     3,     0,     0,     3,
-       0,     3,     0,     0,     3,     0,     3,     1,     1,     0,
-       2,     0,     3,     0,     2,     1,     1,     1,     1,     0,
-       3,     0,     2,     1,     1,     0,     3,     0,     2,     1,
-       1,     0,     4,     0,     5,     1,     2,     1,     1,     1,
-       1,     1,     1,     1
+       2,     7,     5,     5,     0,     1,     0,     3,     2,     0,
+       2,     0,     3,     0,     0,     3,     0,     3,     0,     0,
+       3,     0,     3,     1,     1,     0,     2,     0,     3,     0,
+       2,     1,     1,     1,     1,     0,     3,     0,     2,     1,
+       1,     0,     3,     0,     2,     1,     1,     0,     4,     0,
+       5,     1,     2,     1,     1,     1,     1,     1,     1,     1
 };
 
 
@@ -1338,13 +1328,13 @@ yyreduce:
             semanticErrors++;
         }
     }
-#line 1342 "src/MochiParser/MochiParser.tab.cpp"
+#line 1332 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 3: /* $@2: %empty  */
 #line 60 "src/MochiParser/MochiParser.y"
                                             { currScope = globalScope; }
-#line 1348 "src/MochiParser/MochiParser.tab.cpp"
+#line 1338 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 4: /* program_declaration: program_token id $@1 semicolon opt_vars opt_funcs main_token $@2 body end_token  */
@@ -1357,7 +1347,7 @@ yyreduce:
             exit(EXIT_FAILURE);
         }
     }
-#line 1361 "src/MochiParser/MochiParser.tab.cpp"
+#line 1351 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 11: /* $@3: %empty  */
@@ -1371,43 +1361,43 @@ yyreduce:
             idQueue.pop();
         }
     }
-#line 1375 "src/MochiParser/MochiParser.tab.cpp"
+#line 1365 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 15: /* $@4: %empty  */
 #line 106 "src/MochiParser/MochiParser.y"
        { idQueue.push((yyvsp[0].s)); }
-#line 1381 "src/MochiParser/MochiParser.tab.cpp"
+#line 1371 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 19: /* type: int_token  */
 #line 116 "src/MochiParser/MochiParser.y"
               { currType = vartype::int_type; }
-#line 1387 "src/MochiParser/MochiParser.tab.cpp"
+#line 1377 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 20: /* type: float_token  */
 #line 117 "src/MochiParser/MochiParser.y"
                   { currType = vartype::float_type; }
-#line 1393 "src/MochiParser/MochiParser.tab.cpp"
+#line 1383 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 21: /* type: string_token  */
 #line 118 "src/MochiParser/MochiParser.y"
                    { currType = vartype::string_type; }
-#line 1399 "src/MochiParser/MochiParser.tab.cpp"
+#line 1389 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 22: /* type: bool_token  */
 #line 119 "src/MochiParser/MochiParser.y"
                  { currType = vartype::bool_type; }
-#line 1405 "src/MochiParser/MochiParser.tab.cpp"
+#line 1395 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 23: /* func_type: void_token  */
 #line 123 "src/MochiParser/MochiParser.y"
                { currType = vartype::void_type; }
-#line 1411 "src/MochiParser/MochiParser.tab.cpp"
+#line 1401 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 25: /* $@5: %empty  */
@@ -1418,7 +1408,7 @@ yyreduce:
             semanticErrors++;
         }
     }
-#line 1422 "src/MochiParser/MochiParser.tab.cpp"
+#line 1412 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 29: /* $@6: %empty  */
@@ -1426,7 +1416,7 @@ yyreduce:
                   { 
         funcDir.addParameter(currScope, (yyvsp[-2].s), currType);
     }
-#line 1430 "src/MochiParser/MochiParser.tab.cpp"
+#line 1420 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 41: /* $@7: %empty  */
@@ -1440,13 +1430,13 @@ yyreduce:
             quadManager.operands.push(op);
         }
     }
-#line 1444 "src/MochiParser/MochiParser.tab.cpp"
+#line 1434 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 42: /* $@8: %empty  */
 #line 181 "src/MochiParser/MochiParser.y"
            { quadManager.operators.push(operatortype::assign); }
-#line 1450 "src/MochiParser/MochiParser.tab.cpp"
+#line 1440 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 43: /* assign_statement: id $@7 assign $@8 assign_statement_ semicolon  */
@@ -1471,7 +1461,7 @@ yyreduce:
             }
         }
     }
-#line 1475 "src/MochiParser/MochiParser.tab.cpp"
+#line 1465 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 45: /* $@9: %empty  */
@@ -1485,13 +1475,13 @@ yyreduce:
             quadManager.operands.push(op);
         }
     }
-#line 1489 "src/MochiParser/MochiParser.tab.cpp"
+#line 1479 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 46: /* $@10: %empty  */
 #line 215 "src/MochiParser/MochiParser.y"
            { quadManager.operators.push(operatortype::assign); }
-#line 1495 "src/MochiParser/MochiParser.tab.cpp"
+#line 1485 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
   case 47: /* assign_statement_: id $@9 assign $@10 assign_statement_  */
@@ -1517,11 +1507,37 @@ yyreduce:
             }
         }
     }
-#line 1521 "src/MochiParser/MochiParser.tab.cpp"
+#line 1511 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 65: /* $@11: %empty  */
-#line 290 "src/MochiParser/MochiParser.y"
+  case 56: /* $@11: %empty  */
+#line 280 "src/MochiParser/MochiParser.y"
+               {
+        if (quadManager.operands.empty()) {
+            semanticErrors++;
+            std::cerr << "Error: Expected expression" << std::endl;
+        }
+        else {
+            operand exp_result = quadManager.operands.top();
+            quadManager.operands.pop();
+
+            CubeEntry entry = CubeEntry(vartype::none, exp_result.type, operatortype::arg);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }
+            else {
+                quad q = quad(operatortype::arg, operand(vartype::none, currScope, "none"), exp_result, operand(vartype::none, currScope, "none"));
+                quadManager.push(q);
+            }
+        }
+    }
+#line 1537 "src/MochiParser/MochiParser.tab.cpp"
+    break;
+
+  case 61: /* $@12: %empty  */
+#line 312 "src/MochiParser/MochiParser.y"
            {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::or_)) {
             operand rOperand = quadManager.operands.top();
@@ -1545,17 +1561,17 @@ yyreduce:
             }
         }
     }
-#line 1549 "src/MochiParser/MochiParser.tab.cpp"
+#line 1565 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 68: /* $@12: %empty  */
-#line 318 "src/MochiParser/MochiParser.y"
+  case 64: /* $@13: %empty  */
+#line 340 "src/MochiParser/MochiParser.y"
           { quadManager.operators.push(operatortype::or_); }
-#line 1555 "src/MochiParser/MochiParser.tab.cpp"
+#line 1571 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 70: /* $@13: %empty  */
-#line 322 "src/MochiParser/MochiParser.y"
+  case 66: /* $@14: %empty  */
+#line 344 "src/MochiParser/MochiParser.y"
             {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::and_)) {
             operand rOperand = quadManager.operands.top();
@@ -1579,17 +1595,17 @@ yyreduce:
             }
         }
     }
-#line 1583 "src/MochiParser/MochiParser.tab.cpp"
+#line 1599 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 73: /* $@14: %empty  */
-#line 350 "src/MochiParser/MochiParser.y"
+  case 69: /* $@15: %empty  */
+#line 372 "src/MochiParser/MochiParser.y"
            { quadManager.operators.push(operatortype::and_); }
-#line 1589 "src/MochiParser/MochiParser.tab.cpp"
+#line 1605 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 75: /* $@15: %empty  */
-#line 354 "src/MochiParser/MochiParser.y"
+  case 71: /* $@16: %empty  */
+#line 376 "src/MochiParser/MochiParser.y"
            {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal || quadManager.operators.top() == operatortype::not_equal)) {
             operand rOperand = quadManager.operands.top();
@@ -1613,23 +1629,23 @@ yyreduce:
             }
         }
     }
-#line 1617 "src/MochiParser/MochiParser.tab.cpp"
+#line 1633 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 77: /* eq_oper: equal  */
-#line 381 "src/MochiParser/MochiParser.y"
+  case 73: /* eq_oper: equal  */
+#line 403 "src/MochiParser/MochiParser.y"
           { quadManager.operators.push(operatortype::equal); }
-#line 1623 "src/MochiParser/MochiParser.tab.cpp"
+#line 1639 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 78: /* eq_oper: not_equal  */
-#line 382 "src/MochiParser/MochiParser.y"
+  case 74: /* eq_oper: not_equal  */
+#line 404 "src/MochiParser/MochiParser.y"
                 { quadManager.operators.push(operatortype::not_equal); }
-#line 1629 "src/MochiParser/MochiParser.tab.cpp"
+#line 1645 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 81: /* $@16: %empty  */
-#line 391 "src/MochiParser/MochiParser.y"
+  case 77: /* $@17: %empty  */
+#line 413 "src/MochiParser/MochiParser.y"
             {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal_greater_than || quadManager.operators.top() == operatortype::greater_than || quadManager.operators.top() == operatortype::equal_smaller_than || quadManager.operators.top() == operatortype::smaller_than)) {
             operand rOperand = quadManager.operands.top();
@@ -1653,35 +1669,35 @@ yyreduce:
             }
         }
     }
-#line 1657 "src/MochiParser/MochiParser.tab.cpp"
+#line 1673 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 85: /* rel_oper: equal_greater_than  */
-#line 423 "src/MochiParser/MochiParser.y"
+  case 81: /* rel_oper: equal_greater_than  */
+#line 445 "src/MochiParser/MochiParser.y"
                        { quadManager.operators.push(operatortype::equal_greater_than); }
-#line 1663 "src/MochiParser/MochiParser.tab.cpp"
+#line 1679 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 86: /* rel_oper: r_angle_bracket  */
-#line 424 "src/MochiParser/MochiParser.y"
+  case 82: /* rel_oper: r_angle_bracket  */
+#line 446 "src/MochiParser/MochiParser.y"
                       { quadManager.operators.push(operatortype::greater_than); }
-#line 1669 "src/MochiParser/MochiParser.tab.cpp"
+#line 1685 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 87: /* rel_oper: equal_smaller_than  */
-#line 425 "src/MochiParser/MochiParser.y"
+  case 83: /* rel_oper: equal_smaller_than  */
+#line 447 "src/MochiParser/MochiParser.y"
                          { quadManager.operators.push(operatortype::equal_smaller_than); }
-#line 1675 "src/MochiParser/MochiParser.tab.cpp"
+#line 1691 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 88: /* rel_oper: l_angle_bracket  */
-#line 426 "src/MochiParser/MochiParser.y"
+  case 84: /* rel_oper: l_angle_bracket  */
+#line 448 "src/MochiParser/MochiParser.y"
                       { quadManager.operators.push(operatortype::smaller_than); }
-#line 1681 "src/MochiParser/MochiParser.tab.cpp"
+#line 1697 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 89: /* $@17: %empty  */
-#line 430 "src/MochiParser/MochiParser.y"
+  case 85: /* $@18: %empty  */
+#line 452 "src/MochiParser/MochiParser.y"
          {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::plus || quadManager.operators.top() == operatortype::minus)) {
             operand rOperand = quadManager.operands.top();
@@ -1705,23 +1721,23 @@ yyreduce:
             }
         }
     }
-#line 1709 "src/MochiParser/MochiParser.tab.cpp"
+#line 1725 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 93: /* term_operator: plus  */
-#line 462 "src/MochiParser/MochiParser.y"
+  case 89: /* term_operator: plus  */
+#line 484 "src/MochiParser/MochiParser.y"
          { quadManager.operators.push(operatortype::plus); }
-#line 1715 "src/MochiParser/MochiParser.tab.cpp"
+#line 1731 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 94: /* term_operator: minus  */
-#line 463 "src/MochiParser/MochiParser.y"
+  case 90: /* term_operator: minus  */
+#line 485 "src/MochiParser/MochiParser.y"
             { quadManager.operators.push(operatortype::minus); }
-#line 1721 "src/MochiParser/MochiParser.tab.cpp"
+#line 1737 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 95: /* $@18: %empty  */
-#line 467 "src/MochiParser/MochiParser.y"
+  case 91: /* $@19: %empty  */
+#line 489 "src/MochiParser/MochiParser.y"
            {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::asterisk || quadManager.operators.top() == operatortype::slash)) {
             operand rOperand = quadManager.operands.top();
@@ -1745,31 +1761,31 @@ yyreduce:
             }
         }
     }
-#line 1749 "src/MochiParser/MochiParser.tab.cpp"
+#line 1765 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 99: /* factor_operator: asterisk  */
-#line 499 "src/MochiParser/MochiParser.y"
+  case 95: /* factor_operator: asterisk  */
+#line 521 "src/MochiParser/MochiParser.y"
              { quadManager.operators.push(operatortype::asterisk); }
-#line 1755 "src/MochiParser/MochiParser.tab.cpp"
+#line 1771 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 100: /* factor_operator: slash  */
-#line 500 "src/MochiParser/MochiParser.y"
+  case 96: /* factor_operator: slash  */
+#line 522 "src/MochiParser/MochiParser.y"
             { quadManager.operators.push(operatortype::slash); }
-#line 1761 "src/MochiParser/MochiParser.tab.cpp"
+#line 1777 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 101: /* $@19: %empty  */
-#line 504 "src/MochiParser/MochiParser.y"
+  case 97: /* $@20: %empty  */
+#line 526 "src/MochiParser/MochiParser.y"
                   {
         quadManager.operators.push(operatortype::fake_bottom);
     }
-#line 1769 "src/MochiParser/MochiParser.tab.cpp"
+#line 1785 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 102: /* factor: l_parenthesis $@19 expression r_parenthesis  */
-#line 507 "src/MochiParser/MochiParser.y"
+  case 98: /* factor: l_parenthesis $@20 expression r_parenthesis  */
+#line 529 "src/MochiParser/MochiParser.y"
                              {
         if (quadManager.operators.top() != operatortype::fake_bottom) {
             semanticErrors++;
@@ -1779,19 +1795,19 @@ yyreduce:
             quadManager.operators.pop();
         }
     }
-#line 1783 "src/MochiParser/MochiParser.tab.cpp"
+#line 1799 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 103: /* $@20: %empty  */
-#line 517 "src/MochiParser/MochiParser.y"
+  case 99: /* $@21: %empty  */
+#line 539 "src/MochiParser/MochiParser.y"
                                  {
         quadManager.operators.push(operatortype::fake_bottom);
     }
-#line 1791 "src/MochiParser/MochiParser.tab.cpp"
+#line 1807 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 104: /* factor: opt_operator l_parenthesis $@20 expression r_parenthesis  */
-#line 520 "src/MochiParser/MochiParser.y"
+  case 100: /* factor: opt_operator l_parenthesis $@21 expression r_parenthesis  */
+#line 542 "src/MochiParser/MochiParser.y"
                              {
         if (quadManager.operators.top() != operatortype::fake_bottom) {
             semanticErrors++;
@@ -1805,7 +1821,7 @@ yyreduce:
             operatortype op = quadManager.operators.top();
             quadManager.operators.pop();
     
-            CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+            CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
             vartype restype = SemanticCube::resultingType(entry);
     
             if (restype == vartype::unknown) {
@@ -1819,18 +1835,18 @@ yyreduce:
             }
         }
     }
-#line 1823 "src/MochiParser/MochiParser.tab.cpp"
+#line 1839 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 106: /* factor: opt_operator factor_element  */
-#line 550 "src/MochiParser/MochiParser.y"
+  case 102: /* factor: opt_operator factor_element  */
+#line 572 "src/MochiParser/MochiParser.y"
                                   {
         operand rOperand = quadManager.operands.top();
         quadManager.operands.pop();
         operatortype op = quadManager.operators.top();
         quadManager.operators.pop();
 
-        CubeEntry entry = CubeEntry(vartype::unknown, rOperand.type, op);
+        CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
         vartype restype = SemanticCube::resultingType(entry);
 
         if (restype == vartype::unknown) {
@@ -1843,29 +1859,29 @@ yyreduce:
             quadManager.operands.push(temp);
         }
     }
-#line 1847 "src/MochiParser/MochiParser.tab.cpp"
+#line 1863 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 107: /* opt_operator: plus  */
-#line 572 "src/MochiParser/MochiParser.y"
+  case 103: /* opt_operator: plus  */
+#line 594 "src/MochiParser/MochiParser.y"
          { quadManager.operators.push(operatortype::plus); }
-#line 1853 "src/MochiParser/MochiParser.tab.cpp"
+#line 1869 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 108: /* opt_operator: minus  */
-#line 573 "src/MochiParser/MochiParser.y"
+  case 104: /* opt_operator: minus  */
+#line 595 "src/MochiParser/MochiParser.y"
             { quadManager.operators.push(operatortype::minus); }
-#line 1859 "src/MochiParser/MochiParser.tab.cpp"
+#line 1875 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 109: /* opt_operator: not_  */
-#line 574 "src/MochiParser/MochiParser.y"
+  case 105: /* opt_operator: not_  */
+#line 596 "src/MochiParser/MochiParser.y"
            { quadManager.operators.push(operatortype::not_); }
-#line 1865 "src/MochiParser/MochiParser.tab.cpp"
+#line 1881 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 110: /* factor_element: id  */
-#line 578 "src/MochiParser/MochiParser.y"
+  case 106: /* factor_element: id  */
+#line 600 "src/MochiParser/MochiParser.y"
        { 
         VarEntry* var = funcDir.getVar(currScope, (yyvsp[0].s));
         if (var == nullptr) {
@@ -1875,29 +1891,29 @@ yyreduce:
             quadManager.operands.push(op);
         }
     }
-#line 1879 "src/MochiParser/MochiParser.tab.cpp"
+#line 1895 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 112: /* num_constant: int_constant  */
-#line 591 "src/MochiParser/MochiParser.y"
+  case 108: /* num_constant: int_constant  */
+#line 613 "src/MochiParser/MochiParser.y"
                  {
         operand op = operand(vartype::int_type, currScope, std::to_string((yyvsp[0].i)));
         quadManager.operands.push(op);
     }
-#line 1888 "src/MochiParser/MochiParser.tab.cpp"
+#line 1904 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
-  case 113: /* num_constant: float_constant  */
-#line 595 "src/MochiParser/MochiParser.y"
+  case 109: /* num_constant: float_constant  */
+#line 617 "src/MochiParser/MochiParser.y"
                      {
         operand op = operand(vartype::float_type, currScope, std::to_string((yyvsp[0].f)));
         quadManager.operands.push(op);
     }
-#line 1897 "src/MochiParser/MochiParser.tab.cpp"
+#line 1913 "src/MochiParser/MochiParser.tab.cpp"
     break;
 
 
-#line 1901 "src/MochiParser/MochiParser.tab.cpp"
+#line 1917 "src/MochiParser/MochiParser.tab.cpp"
 
       default: break;
     }
@@ -2090,4 +2106,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 601 "src/MochiParser/MochiParser.y"
+#line 623 "src/MochiParser/MochiParser.y"
