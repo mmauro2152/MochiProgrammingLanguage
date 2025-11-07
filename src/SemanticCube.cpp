@@ -124,6 +124,8 @@ void SemanticCube::populate() {
     table.insert({CubeEntry(vartype::bool_type, vartype::bool_type, operatortype::assign), vartype::bool_type});
     table.insert({CubeEntry(vartype::bool_type, vartype::bool_type, operatortype::not_equal), vartype::bool_type});
     table.insert({CubeEntry(vartype::unknown, vartype::bool_type, operatortype::not_), vartype::bool_type});
+    table.insert({CubeEntry(vartype::bool_type, vartype::bool_type, operatortype::and_), vartype::bool_type});
+    table.insert({CubeEntry(vartype::bool_type, vartype::bool_type, operatortype::or_), vartype::bool_type});
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::plus), vartype::string_type});
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::equal), vartype::bool_type});
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::assign), vartype::string_type});

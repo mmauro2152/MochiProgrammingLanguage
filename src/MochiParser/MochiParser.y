@@ -37,10 +37,10 @@ QuadManager quadManager;
 %token invalid_character
 %token program_token main_token end_token print_token while_token do_token if_token else_token var_token void_token
 %token semicolon comma colon 
-%token string_token int_token float_token
+%token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
 %token plus minus asterisk slash equal_smaller_than l_angle_bracket equal_greater_than r_angle_bracket
-%token equal assign not_equal not_
+%token equal assign not_equal not_ and_ or_
 %token <s> id
 %token <i> int_constant
 %token <f> float_constant
@@ -116,6 +116,7 @@ type:
     int_token { currType = vartype::int_type; }
     | float_token { currType = vartype::float_type; }
     | string_token { currType = vartype::string_type; }
+    | bool_token { currType = vartype::bool_type; }
 ;
 
 func_type:
@@ -179,21 +180,23 @@ assign_statement:
     }
     assign { quadManager.operators.push(operatortype::assign); }
     assign_statement_ semicolon {
-        operand rOperand = quadManager.operands.top();
-        quadManager.operands.pop();
-        operand lOperand = quadManager.operands.top();
-        quadManager.operands.pop();
-        operatortype op = quadManager.operators.top();
-        quadManager.operators.pop();
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && quadManager.operators.top() == operatortype::assign) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
 
-        CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
-        vartype restype = SemanticCube::resultingType(entry);
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
 
-        if (restype == vartype::unknown) {
-            semanticErrors++;
-        }else {
-            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
-            quadManager.push(q);
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+                quadManager.push(q);
+            }
         }
     }
 ;
@@ -211,22 +214,24 @@ assign_statement_:
     }
     assign { quadManager.operators.push(operatortype::assign); }
     assign_statement_ {
-        operand rOperand = quadManager.operands.top();
-        quadManager.operands.pop();
-        operand lOperand = quadManager.operands.top();
-        quadManager.operands.pop();
-        operatortype op = quadManager.operators.top();
-        quadManager.operators.pop();
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && quadManager.operators.top() == operatortype::assign) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
 
-        CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
-        vartype restype = SemanticCube::resultingType(entry);
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
 
-        if (restype == vartype::unknown) {
-            semanticErrors++;
-        }else {
-            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
-            quadManager.push(q);
-            quadManager.operands.push(lOperand);
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+                quadManager.push(q);
+                quadManager.operands.push(lOperand);
+            }
         }
     }
 ;
@@ -282,24 +287,146 @@ expression_loop_:
 ;
 
 expression:
-    exp exp_
+    or_exp {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::or_)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    or_exp_
 ;
 
-exp_:
+or_exp_:
 
-    | conditional_operator exp
+    | or_ { quadManager.operators.push(operatortype::or_); } expression
 ;
 
-conditional_operator:
-    equal_greater_than
-    | r_angle_bracket
-    | equal_smaller_than
-    | l_angle_bracket
-    | not_equal
-    | equal
+or_exp:
+    and_exp {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::and_)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    and_exp_
 ;
 
-exp:
+and_exp_:
+
+    | and_ { quadManager.operators.push(operatortype::and_); } or_exp
+;
+
+and_exp:
+    eq_exp {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal || quadManager.operators.top() == operatortype::not_equal)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    eq_exp_
+;
+
+eq_oper:
+    equal { quadManager.operators.push(operatortype::equal); }
+    | not_equal { quadManager.operators.push(operatortype::not_equal); }
+;
+
+eq_exp_: 
+
+    | eq_oper and_exp
+;
+
+eq_exp:
+    rel_exp {
+        if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal_greater_than || quadManager.operators.top() == operatortype::greater_than || quadManager.operators.top() == operatortype::equal_smaller_than || quadManager.operators.top() == operatortype::smaller_than)) {
+            operand rOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operand lOperand = quadManager.operands.top();
+            quadManager.operands.pop();
+            operatortype op = quadManager.operators.top();
+            quadManager.operators.pop();
+
+            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (restype == vartype::unknown) {
+                semanticErrors++;
+            }else {
+                operand temp = quadManager.getTemp(restype);
+                quad q = quad(op, lOperand, rOperand, temp);
+
+                quadManager.push(q);
+                quadManager.operands.push(temp);
+            }
+        }
+    }
+    rel_exp_
+;
+
+rel_exp_:
+
+    | rel_oper eq_exp
+;
+
+rel_oper:
+    equal_greater_than { quadManager.operators.push(operatortype::equal_greater_than); }
+    | r_angle_bracket { quadManager.operators.push(operatortype::greater_than); }
+    | equal_smaller_than { quadManager.operators.push(operatortype::equal_smaller_than); }
+    | l_angle_bracket { quadManager.operators.push(operatortype::smaller_than); }
+;
+
+rel_exp:
     term {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::plus || quadManager.operators.top() == operatortype::minus)) {
             operand rOperand = quadManager.operands.top();
@@ -328,7 +455,7 @@ exp:
 
 term_:
     
-    | term_operator exp
+    | term_operator rel_exp
 ;
 
 term_operator:

@@ -77,28 +77,31 @@ extern int yydebug;
     string_token = 272,            /* string_token  */
     int_token = 273,               /* int_token  */
     float_token = 274,             /* float_token  */
-    l_curly_brace = 275,           /* l_curly_brace  */
-    r_curly_brace = 276,           /* r_curly_brace  */
-    l_square_bracket = 277,        /* l_square_bracket  */
-    r_square_bracket = 278,        /* r_square_bracket  */
-    l_parenthesis = 279,           /* l_parenthesis  */
-    r_parenthesis = 280,           /* r_parenthesis  */
-    plus = 281,                    /* plus  */
-    minus = 282,                   /* minus  */
-    asterisk = 283,                /* asterisk  */
-    slash = 284,                   /* slash  */
-    equal_smaller_than = 285,      /* equal_smaller_than  */
-    l_angle_bracket = 286,         /* l_angle_bracket  */
-    equal_greater_than = 287,      /* equal_greater_than  */
-    r_angle_bracket = 288,         /* r_angle_bracket  */
-    equal = 289,                   /* equal  */
-    assign = 290,                  /* assign  */
-    not_equal = 291,               /* not_equal  */
-    not_ = 292,                    /* not_  */
-    id = 293,                      /* id  */
-    int_constant = 294,            /* int_constant  */
-    float_constant = 295,          /* float_constant  */
-    string_constant = 296          /* string_constant  */
+    bool_token = 275,              /* bool_token  */
+    l_curly_brace = 276,           /* l_curly_brace  */
+    r_curly_brace = 277,           /* r_curly_brace  */
+    l_square_bracket = 278,        /* l_square_bracket  */
+    r_square_bracket = 279,        /* r_square_bracket  */
+    l_parenthesis = 280,           /* l_parenthesis  */
+    r_parenthesis = 281,           /* r_parenthesis  */
+    plus = 282,                    /* plus  */
+    minus = 283,                   /* minus  */
+    asterisk = 284,                /* asterisk  */
+    slash = 285,                   /* slash  */
+    equal_smaller_than = 286,      /* equal_smaller_than  */
+    l_angle_bracket = 287,         /* l_angle_bracket  */
+    equal_greater_than = 288,      /* equal_greater_than  */
+    r_angle_bracket = 289,         /* r_angle_bracket  */
+    equal = 290,                   /* equal  */
+    assign = 291,                  /* assign  */
+    not_equal = 292,               /* not_equal  */
+    not_ = 293,                    /* not_  */
+    and_ = 294,                    /* and_  */
+    or_ = 295,                     /* or_  */
+    id = 296,                      /* id  */
+    int_constant = 297,            /* int_constant  */
+    float_constant = 298,          /* float_constant  */
+    string_constant = 299          /* string_constant  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -113,7 +116,7 @@ union YYSTYPE
     float f;
     char* s;
 
-#line 117 "src/MochiParser/MochiParser.tab.hpp"
+#line 120 "src/MochiParser/MochiParser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
