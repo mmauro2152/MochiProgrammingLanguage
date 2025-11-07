@@ -1,6 +1,6 @@
 program myProgram;
-var x, y, z: int; a: string; b: float;
+var x: bool; y: bool;
 main {
-    x = 10;
+    x = y = 1 + 3 > 2 == 1 + 3 > 2 * 23 / 34 != 1 < -2 && 3 >= 4 || 3 <= 4;
 }
 end
