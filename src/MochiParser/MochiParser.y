@@ -571,6 +571,7 @@ factor:
 opt_operator:
     plus { quadManager.operators.push(operatortype::plus); }
     | minus { quadManager.operators.push(operatortype::minus); }
+    | not_ { quadManager.operators.push(operatortype::not_); }
 ;
 
 factor_element:
