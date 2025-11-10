@@ -24,6 +24,10 @@ std::queue<char*> idQueue;
 vartype currType;
 int semanticErrors = 0;
 
+std::stack<int> argCounters;
+std::stack<std::vector<operand>> args;
+std::stack<FuncEntry*> funcStack;
+
 QuadManager quadManager;
 
 %}
@@ -250,11 +254,68 @@ cycle_statement:
 ;
 
 print_statement:
-    print_token l_parenthesis arg_loop r_parenthesis semicolon 
+    print_token { args.push(std::vector<operand>()); }
+    l_parenthesis arg_loop r_parenthesis {
+        std::vector<operand> funcArgs = args.top();
+        args.pop();
+
+        operand o = operand(vartype::func, "", "print");
+        operand temp = quadManager.getTemp(vartype::void_type);
+        quad q = quad(operatortype::call, operand(vartype::int_type, currScope, std::to_string(funcArgs.size())), o, temp);
+
+        quadManager.push(q);
+    }
+    semicolon 
+;
+
+func_call: 
+    id { 
+        FuncEntry* func = funcDir.getFunction($1);
+        
+        if (func == nullptr) {
+            semanticErrors++;
+        }
+        else {
+            funcStack.push(func);
+            args.push(std::vector<operand>());
+        } 
+    } 
+    l_parenthesis opt_arg_loop r_parenthesis {
+        std::vector<operand> funcArgs = args.top();
+        args.pop();
+
+        FuncEntry* func = funcStack.top();
+        funcStack.pop();
+
+        int err = semanticErrors;
+        if (func->parameters.size() != funcArgs.size()) {
+            semanticErrors++;
+
+            std::cerr << "Error: Argument count mismatch for function '" << $1 << "'" << std::endl;
+        } 
+        else {
+
+            for (int i = 0; i < func->parameters.size(); i++){
+                if (func->parameters[i].second != funcArgs[i].type) {
+                    semanticErrors++;
+                    std::cerr << "Error: Argument type mismatch, expected '" << vartype_string[static_cast<int>(func->parameters[i].second)] << "'" << std::endl;
+                }
+            }
+        }
+
+        if (semanticErrors == err) {
+            operand o = operand(vartype::func, "", $1);
+            operand temp = quadManager.getTemp(func->returnType);
+            quad q = quad(operatortype::call, operand(vartype::int_type, currScope, std::to_string(func->parameters.size())), o, temp);
+
+            quadManager.push(q);
+            quadManager.operands.push(temp);
+        }
+    }
 ;
 
 func_call_statement:
-    id l_parenthesis opt_arg_loop r_parenthesis semicolon
+    func_call semicolon
 ;
 
 opt_arg_loop:
@@ -269,19 +330,12 @@ arg_loop:
             std::cerr << "Error: Expected expression" << std::endl;
         }
         else {
-            operand exp_result = quadManager.operands.top();
+            operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            CubeEntry entry = CubeEntry(vartype::none, exp_result.type, operatortype::arg);
-            vartype restype = SemanticCube::resultingType(entry);
-
-            if (restype == vartype::unknown) {
-                semanticErrors++;
-            }
-            else {
-                quad q = quad(operatortype::arg, operand(vartype::none, currScope, "none"), exp_result, operand(vartype::none, currScope, "none"));
-                quadManager.push(q);
-            }
+            quad q = quad(operatortype::arg, operand(vartype::none, currScope, "none"), exp_result, operand(vartype::none, currScope, "none"));
+            quadManager.push(q);
+            args.top().push_back(exp_result);
         }
     }
     arg_loop_
@@ -593,6 +647,7 @@ factor_element:
         }
     }
     | num_constant
+    | func_call
 ;
 
 num_constant:

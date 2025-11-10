@@ -1,31 +1,18 @@
 program myProgram;
-var x: int;
+var x: int; y: float;
 
-void myFunc(y: int, z: float, s: string) [{
-    print("this is my func");
-    print("these are the params: ", y, ", ", z);
-}];
-
-void myMathFunc(n: float) [
-var k, l, o : int; a, b: string;
+float myMathFunc(n: float) [
+var k, l, o: int; a, b: string;
 {
     n = n * 3 + 2 / 3 + (n * 24 / 3.5);
     n = k = l = - (k + l);
-    print(n);
 }];
 
 main {
     x = 10;
-    print(x);
-    if (x > 4) {
-        print("x is bigger than 4");
-    };
 
-    while (x > 0) do {
-        x = x - 1;
-    };
-
-    myFunc(x, 3.0, "hola");
     myMathFunc(5.3);
+    y = 3.1;
+    print(x + y, x, y, x / y, myMathFunc(5.3));
 }
 end

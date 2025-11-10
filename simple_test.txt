@@ -1,7 +1,15 @@
 program myProgram;
 var x: bool; y: bool; z: int;
+
+void myMathFunc(n: float) [
+var k, l, o: int;
+{
+    n = n * 3 + 2 / 3 + (n * 24 / 3.5);
+    n = k = l = - (k + l);
+}];
+
 main {
-    print(x);
     y = !(x == x);
+    myMathFunc(3.1);
 }
 end
