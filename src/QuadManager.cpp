@@ -5,5 +5,6 @@ operand QuadManager::getTemp(vartype type) {
 }
 
 void QuadManager::push(quad q) {
-    quads.push(q);
+    quads.push_back(q);
+    instructionPointer++;
 }

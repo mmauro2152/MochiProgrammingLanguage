@@ -25,24 +25,25 @@ struct quad {
 
 class QuadManager {
     private:
-        std::queue<quad> quads;
-        std::string tempScope = "__temps";
         int tempCount = 0;
-
+    
     public:
+        std::string tempScope = "__temps";
+        std::string constScope = "__constants";
+        int instructionPointer = 0;
+        std::vector<quad> quads;
         std::stack<operatortype> operators;
         std::stack<operand> operands;
+        std::stack<int> jumps;
 
         operand getTemp(vartype type);
 
         void push(quad q);
 
         void debug() {
-            while (!quads.empty()) {
-                quad q = quads.front();
-                std::cout << operatortype_string[static_cast<int>(q.operator_)] << " " << q.leftOperand.name << " " << q.rightOperand.name << " " << q.result.name << std::endl;
-                quads.pop();
-             }
+            for (int i = 0; i < quads.size(); i++) {
+                std::cout << i << " " << operatortype_string[static_cast<int>(quads[i].operator_)] << " " << quads[i].leftOperand.name << " " << quads[i].rightOperand.name << " " << quads[i].result.name << std::endl;
+            }
 
             return;
         }

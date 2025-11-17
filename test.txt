@@ -5,6 +5,7 @@ float myMathFunc(n: float) [
 var k, l, o: int; a, b: string;
 {
     n = n * 3 + 2 / 3 + (n * 24 / 3.5);
+    n = k*l >= l*n/(o*k);
     n = k = l = - (k + l);
 }];
 

@@ -241,16 +241,82 @@ assign_statement_:
 ;
 
 condition_statement:
-    if_token l_parenthesis expression r_parenthesis body opt_else semicolon
+    if_token l_parenthesis expression {
+        operand condition = quadManager.operands.top();
+        quadManager.operands.pop();
+        if (condition.type != vartype::bool_type){
+            semanticErrors++;
+            std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
+        } else {
+            operand none_operand =  operand(vartype::none, currScope, "none");
+            quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
+
+            quadManager.push(q);
+            quadManager.jumps.push(quadManager.instructionPointer - 1);
+        }
+    }
+    r_parenthesis body opt_else semicolon {
+        int end = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        quadManager.quads[end].rightOperand = jumpOperand;
+    }
 ;
 
 opt_else:
 
-    | else_token body
+    | else_token {
+        operand none_operand = operand(vartype::none, currScope, "none");
+        quad q = quad(operatortype::goto_, none_operand, none_operand, none_operand);
+
+        quadManager.push(q);
+
+        int false_ = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        quadManager.jumps.push(quadManager.instructionPointer - 1);
+
+        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        quadManager.quads[false_].rightOperand = jumpOperand;
+    } 
+    body
 ;
 
 cycle_statement:
-    while_token l_parenthesis expression r_parenthesis do_token body semicolon
+    while_token {
+        quadManager.jumps.push(quadManager.instructionPointer);
+    }
+    l_parenthesis expression r_parenthesis {
+        operand condition = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        if (condition.type != vartype::bool_type){
+            semanticErrors++;
+            std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
+        } else {
+            operand none_operand = operand(vartype::none, currScope, "none");
+            quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
+            quadManager.push(q);
+            quadManager.jumps.push(quadManager.instructionPointer - 1);
+        }
+    }
+    do_token body semicolon {
+        int end = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        int return_ = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        operand returnOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(return_));
+        operand noneOperand = operand(vartype::none, currScope, "none");
+        quad q = quad(operatortype::goto_, noneOperand, returnOperand, noneOperand);
+        quadManager.push(q);
+
+
+        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        quadManager.quads[end].rightOperand = jumpOperand;
+    }
 ;
 
 print_statement:
