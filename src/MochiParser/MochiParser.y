@@ -92,7 +92,14 @@ vars:
 var_loop:
     id_loop colon type semicolon {
         while (!idQueue.empty()) {
-            if (!funcDir.getFunction(currScope)->localVars.insert(idQueue.front(), currType)) {
+            int addr = 0;
+            if (currScope == globalScope) {
+                addr = funcDir.getFunction(currScope)->memManager.getGlobalAddress(currType);
+            } else {
+                addr = funcDir.getFunction(currScope)->memManager.getLocalAddress(currType);
+            }
+
+            if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front())) {
                 semanticErrors++;
             }
                  
@@ -178,7 +185,7 @@ assign_statement:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1);
+            operand op = operand(var->type, currScope, $1, var->addr);
             quadManager.operands.push(op);
         }
     }
@@ -198,7 +205,7 @@ assign_statement:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+                quad q = quad(op, operand(vartype::none, currScope, "", -1), rOperand, lOperand);
                 quadManager.push(q);
             }
         }
@@ -212,7 +219,7 @@ assign_statement_:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1);
+            operand op = operand(var->type, currScope, $1, var->addr);
             quadManager.operands.push(op);
         }
     }
@@ -232,7 +239,7 @@ assign_statement_:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, lOperand);
+                quad q = quad(op, operand(vartype::none, "", "", -1), rOperand, lOperand);
                 quadManager.push(q);
                 quadManager.operands.push(lOperand);
             }
@@ -248,7 +255,7 @@ condition_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand =  operand(vartype::none, currScope, "none");
+            operand none_operand = operand(vartype::none, "", "", -1);
             quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
 
             quadManager.push(q);
@@ -259,7 +266,7 @@ condition_statement:
         int end = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
         quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
@@ -267,7 +274,7 @@ condition_statement:
 opt_else:
 
     | else_token {
-        operand none_operand = operand(vartype::none, currScope, "none");
+        operand none_operand = operand(vartype::none, "", "", -1);
         quad q = quad(operatortype::goto_, none_operand, none_operand, none_operand);
 
         quadManager.push(q);
@@ -277,7 +284,7 @@ opt_else:
 
         quadManager.jumps.push(quadManager.instructionPointer - 1);
 
-        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
         quadManager.quads[false_].rightOperand = jumpOperand;
     } 
     body
@@ -295,7 +302,7 @@ cycle_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand = operand(vartype::none, currScope, "none");
+            operand none_operand = operand(vartype::none, "", "", -1);
             quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
             quadManager.push(q);
             quadManager.jumps.push(quadManager.instructionPointer - 1);
@@ -308,13 +315,13 @@ cycle_statement:
         int return_ = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand returnOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(return_));
-        operand noneOperand = operand(vartype::none, currScope, "none");
+        operand returnOperand = operand(vartype::int_type, "", "", return_);
+        operand noneOperand = operand(vartype::none, "", "", -1);
         quad q = quad(operatortype::goto_, noneOperand, returnOperand, noneOperand);
         quadManager.push(q);
 
 
-        operand jumpOperand = operand(vartype::int_type, quadManager.constScope, std::to_string(quadManager.instructionPointer));
+        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
         quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
@@ -325,9 +332,9 @@ print_statement:
         std::vector<operand> funcArgs = args.top();
         args.pop();
 
-        operand o = operand(vartype::func, "", "print");
-        operand temp = quadManager.getTemp(vartype::void_type);
-        quad q = quad(operatortype::call, operand(vartype::int_type, currScope, std::to_string(funcArgs.size())), o, temp);
+        operand o = operand(vartype::func, "", "print", -1);
+        operand temp = funcDir.getFunction(currScope)->memManager.getTemp(vartype::void_type);
+        quad q = quad(operatortype::call, operand(vartype::int_type, "", "", funcArgs.size()), o, temp);
 
         quadManager.push(q);
     }
@@ -370,9 +377,9 @@ func_call:
         }
 
         if (semanticErrors == err) {
-            operand o = operand(vartype::func, "", $1);
-            operand temp = quadManager.getTemp(func->returnType);
-            quad q = quad(operatortype::call, operand(vartype::int_type, currScope, std::to_string(func->parameters.size())), o, temp);
+            operand o = operand(vartype::func, "", $1, -1);
+            operand temp = funcDir.getFunction(currScope)->memManager.getTemp(func->returnType);
+            quad q = quad(operatortype::call, operand(vartype::int_type, currScope, "", func->parameters.size()), o, temp);
 
             quadManager.push(q);
             quadManager.operands.push(temp);
@@ -399,7 +406,7 @@ arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            quad q = quad(operatortype::arg, operand(vartype::none, currScope, "none"), exp_result, operand(vartype::none, currScope, "none"));
+            quad q = quad(operatortype::arg, operand(vartype::none, "", "", -1), exp_result, operand(vartype::none, "", "", -1));
             quadManager.push(q);
             args.top().push_back(exp_result);
         }
@@ -417,7 +424,7 @@ arg_loop_:
 expression:
     or_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::or_)) {
-            if (!quadManager.generateBinaryQuad()){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -433,7 +440,7 @@ or_exp_:
 or_exp:
     and_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::and_)) {
-            if (!quadManager.generateBinaryQuad()){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -449,7 +456,7 @@ and_exp_:
 and_exp:
     eq_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal || quadManager.operators.top() == operatortype::not_equal)) {
-            if (!quadManager.generateBinaryQuad()){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -470,7 +477,7 @@ eq_exp_:
 eq_exp:
     rel_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal_greater_than || quadManager.operators.top() == operatortype::greater_than || quadManager.operators.top() == operatortype::equal_smaller_than || quadManager.operators.top() == operatortype::smaller_than)) {
-            if (!quadManager.generateBinaryQuad()){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -493,7 +500,7 @@ rel_oper:
 rel_exp:
     term {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::plus || quadManager.operators.top() == operatortype::minus)) {
-            if (!quadManager.generateBinaryQuad()){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -527,7 +534,7 @@ term:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                operand temp = quadManager.getTemp(restype);
+                operand temp = funcDir.getFunction(currScope)->memManager.getTemp(restype);
                 quad q = quad(op, lOperand, rOperand, temp);
 
                 quadManager.push(q);
@@ -573,7 +580,7 @@ factor:
             // discard fake bottom
             quadManager.operators.pop();
 
-            if (!quadManager.generateUnaryQuad()){
+            if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
             }
         }
@@ -582,7 +589,7 @@ factor:
     | factor_element
     
     | opt_operator factor_element {
-        if (!quadManager.generateUnaryQuad()){
+        if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->memManager)){
             semanticErrors++;
         }
     }
@@ -600,7 +607,7 @@ factor_element:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1);
+            operand op = operand(var->type, currScope, $1, var->addr);
             quadManager.operands.push(op);
         }
     }
@@ -610,11 +617,11 @@ factor_element:
 
 num_constant:
     int_constant {
-        operand op = operand(vartype::int_type, currScope, std::to_string($1));
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::int_type);
         quadManager.operands.push(op);
     }
     | float_constant {
-        operand op = operand(vartype::float_type, currScope, std::to_string($1));
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::float_type);
         quadManager.operands.push(op);
     }
 ;

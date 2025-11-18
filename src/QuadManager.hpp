@@ -3,15 +3,8 @@
 #include <stack>
 #include <queue>
 #include "SemanticCube.hpp"
-
-struct operand {
-    vartype type;
-    std::string scope;
-    std::string name;
-
-    operand(): type(vartype::unknown), scope(nullptr), name(nullptr) {}
-    operand(vartype t, std::string s, std::string n): type(t), scope(s), name(n) {}
-};
+#include "operand.hpp"
+#include "VirtualMemoryManager.hpp"
 
 struct quad {
     operatortype operator_;
@@ -28,8 +21,6 @@ class QuadManager {
         int tempCount = 0;
     
     public:
-        std::string tempScope = "__temps";
-        std::string constScope = "__constants";
         int instructionPointer = 0;
         std::vector<quad> quads;
         std::stack<operatortype> operators;
@@ -42,12 +33,12 @@ class QuadManager {
 
         void debug() {
             for (int i = 0; i < quads.size(); i++) {
-                std::cout << i << " " << operatortype_string[static_cast<int>(quads[i].operator_)] << " " << quads[i].leftOperand.name << " " << quads[i].rightOperand.name << " " << quads[i].result.name << std::endl;
+                std::cout << i << " " << operatortype_string[static_cast<int>(quads[i].operator_)] << " " << quads[i].leftOperand.addr << " " << quads[i].rightOperand.addr << " " << quads[i].result.addr << std::endl;
             }
 
             return;
         }
 
-        bool generateBinaryQuad();
-        bool generateUnaryQuad();
+        bool generateBinaryQuad(VirtualMemoryManager memManager);
+        bool generateUnaryQuad(VirtualMemoryManager memManager);
 };

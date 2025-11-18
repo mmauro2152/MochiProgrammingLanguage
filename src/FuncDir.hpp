@@ -2,11 +2,15 @@
 
 #include <vector>
 #include "VarTable.hpp"
+#include "VirtualMemoryManager.hpp"
 
 struct FuncEntry {
     vartype returnType;
     std::vector<std::pair<std::string, vartype>> parameters;
     VarTable localVars;
+    VirtualMemoryManager memManager;
+    std::string scope;
+
 
     FuncEntry(): returnType(vartype::void_type) {}
     FuncEntry(vartype r) : returnType(r) {}

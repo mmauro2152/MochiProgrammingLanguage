@@ -7,6 +7,7 @@ bool FuncDir::insertFunction(const std::string& name, vartype returnType) {
     }
 
     table[name] = FuncEntry(returnType);
+    table[name].memManager.setscope(name);
     return true;
 }
 
@@ -20,8 +21,9 @@ bool FuncDir::addParameter(const std::string& name, const std::string& paramName
         return false;
     }
 
+
     table[name].parameters.push_back({paramName, paramType});
-    table[name].localVars.insert(paramName, paramType);
+    table[name].localVars.insert(table[name].memManager.getLocalAddress(paramType), paramType, paramName);
     return true;
 }
 

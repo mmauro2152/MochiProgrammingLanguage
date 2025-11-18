@@ -1,22 +1,40 @@
 #include "VarTable.hpp"
 
-bool VarTable::insert(const std::string& name, vartype type) {
+bool VarTable::insert(const int& addr, vartype type, std::string name) {
     if (exists(name)) {
-        std::cerr << "Error: Variable '" << name << "' already declared.\n";
+        std::cerr << "Error: Variable '" << addr << "' already declared.\n";
+        return false;
+    }
+    else if (exists(addr)) {
+        std::cerr << "Error: Address '" << addr << "' already in use.\n";
         return false;
     }
 
-    table[name] = VarEntry(type);
+    nameToAddr[name] = addr;
+    table[addr] = VarEntry(type, addr, name);
     return true;
 }
 
-bool VarTable::exists(const std::string& name) const {
-    return table.find(name) != table.end();
+bool VarTable::exists(const int& addr) {
+    return table.find(addr) != table.end();
+}
+
+bool VarTable::exists(const std::string& name) {
+    return nameToAddr.find(name) != nameToAddr.end();
+}
+
+VarEntry* VarTable::getVar(const int& addr) {
+    if (exists(addr)) {
+        return &table[addr];
+    }
+    
+    std::cerr << "Error: Variable '" << addr << "' does not exist.\n";
+    return nullptr;
 }
 
 VarEntry* VarTable::getVar(const std::string& name) {
     if (exists(name)) {
-        return &table[name];
+        return &table[nameToAddr[name]];
     }
     
     std::cerr << "Error: Variable '" << name << "' does not exist.\n";
@@ -28,9 +46,9 @@ bool VarTable::empty() {
 }
 
 void VarTable::printAll() {
-    std::unordered_map<std::string, VarEntry>::iterator it;
+    std::unordered_map<int, VarEntry>::iterator it;
     for (it = table.begin(); it != table.end(); ++it) {
-        std::cout << it->first << ", " << typeToString(it->second.type) << std::endl;
+        std::cout << it->second.name << ", " << typeToString(it->second.type) << std::endl;
     }
 }
 

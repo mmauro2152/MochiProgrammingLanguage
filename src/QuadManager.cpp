@@ -1,15 +1,11 @@
 #include "QuadManager.hpp"
 
-operand QuadManager::getTemp(vartype type) {
-    return operand(type, tempScope, "t" + std::to_string(++tempCount));
-}
-
 void QuadManager::push(quad q) {
     quads.push_back(q);
     instructionPointer++;
 }
 
-bool QuadManager::generateBinaryQuad(){
+bool QuadManager::generateBinaryQuad(VirtualMemoryManager memManager){
     if (operands.size() < 2 || operators.empty()) {
         return false;
     }
@@ -28,7 +24,7 @@ bool QuadManager::generateBinaryQuad(){
         return false;
     }
 
-    operand temp = getTemp(restype);
+    operand temp = memManager.getTemp(restype);
     quad q = quad(op, lOperand, rOperand, temp);
 
     push(q);
@@ -37,7 +33,7 @@ bool QuadManager::generateBinaryQuad(){
     return true;
 }
 
-bool QuadManager::generateUnaryQuad(){
+bool QuadManager::generateUnaryQuad(VirtualMemoryManager memManager){
     if (operands.empty() || operators.empty()) {
         return false;
     }
@@ -54,8 +50,8 @@ bool QuadManager::generateUnaryQuad(){
         return false;
     }
 
-    operand temp = getTemp(restype);
-    quad q = quad(op, operand(vartype::none, "none", "none"), rOperand, temp);
+    operand temp = memManager.getTemp(restype);
+    quad q = quad(op, operand(vartype::none, "none", "none", -1), rOperand, temp);
 
     push(q);
     operands.push(temp);
