@@ -573,22 +573,8 @@ factor:
             // discard fake bottom
             quadManager.operators.pop();
 
-            operand rOperand = quadManager.operands.top();
-            quadManager.operands.pop();
-            operatortype op = quadManager.operators.top();
-            quadManager.operators.pop();
-    
-            CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
-            vartype restype = SemanticCube::resultingType(entry);
-    
-            if (restype == vartype::unknown) {
+            if (!quadManager.generateUnaryQuad()){
                 semanticErrors++;
-            }else {
-                operand temp = quadManager.getTemp(restype);
-                quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, temp);
-    
-                quadManager.push(q);
-                quadManager.operands.push(temp);
             }
         }
     }
@@ -596,22 +582,8 @@ factor:
     | factor_element
     
     | opt_operator factor_element {
-        operand rOperand = quadManager.operands.top();
-        quadManager.operands.pop();
-        operatortype op = quadManager.operators.top();
-        quadManager.operators.pop();
-
-        CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
-        vartype restype = SemanticCube::resultingType(entry);
-
-        if (restype == vartype::unknown) {
+        if (!quadManager.generateUnaryQuad()){
             semanticErrors++;
-        }else {
-            operand temp = quadManager.getTemp(restype);
-            quad q = quad(op, operand(vartype::none, currScope, "none"), rOperand, temp);
-
-            quadManager.push(q);
-            quadManager.operands.push(temp);
         }
     }
 ;

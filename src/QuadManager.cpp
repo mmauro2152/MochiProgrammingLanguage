@@ -36,3 +36,29 @@ bool QuadManager::generateBinaryQuad(){
 
     return true;
 }
+
+bool QuadManager::generateUnaryQuad(){
+    if (operands.empty() || operators.empty()) {
+        return false;
+    }
+
+    operand rOperand = operands.top();
+    operands.pop();
+    operatortype op = operators.top();
+    operators.pop();
+
+    CubeEntry entry = CubeEntry(vartype::none, rOperand.type, op);
+    vartype restype = SemanticCube::resultingType(entry);
+
+    if (restype == vartype::unknown) {
+        return false;
+    }
+
+    operand temp = getTemp(restype);
+    quad q = quad(op, operand(vartype::none, "none", "none"), rOperand, temp);
+
+    push(q);
+    operands.push(temp);
+    
+    return true;
+}
