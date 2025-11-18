@@ -47,4 +47,6 @@ class QuadManager {
 
             return;
         }
+
+        bool generateBinaryQuad();
 };
