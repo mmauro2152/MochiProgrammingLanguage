@@ -369,18 +369,31 @@ cycle_statement:
 ;
 
 print_statement:
-    print_token { args.push(std::vector<operand>()); }
-    l_parenthesis arg_loop r_parenthesis {
-        std::vector<operand> funcArgs = args.top();
-        args.pop();
+    print_token l_parenthesis print_arg_loop r_parenthesis semicolon 
+;
 
-        operand o = operand(vartype::func, "", -1, operandcat::pointer);
-        operand temp = funcDir.getFunction(currScope)->memManager.getTemp(vartype::void_type);
-        quad q = quad(operatortype::call, operand(vartype::int_type, "", funcArgs.size(), operandcat::pointer), o, temp);
+print_arg_loop:
+    expression {
+        if (quadManager.operands.empty()) {
+            semanticErrors++;
+            std::cerr << "Error: Expected expression" << std::endl;
+        }
+        else {
+            operand exp_result = quadManager.operands.top(); 
+            quadManager.operands.pop();
 
-        quadManager.push(q);
+            quad q = quad(operatortype::print, operand(), exp_result, operand());
+            quadManager.push(q);
+        }
     }
-    semicolon 
+    print_arg_loop_
+
+    | string_constant print_arg_loop_
+;
+
+print_arg_loop_:
+
+    | comma print_arg_loop
 ;
 
 func_call: 

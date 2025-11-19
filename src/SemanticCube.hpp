@@ -23,7 +23,8 @@ enum class operatortype {
     fake_bottom,
     gotof,
     gotot,
-    goto_
+    goto_,
+    print
 };
 
 struct CubeEntry {
@@ -54,7 +55,7 @@ struct CubeEntryHash {
 static const char* operatortype_string[] {
     "+", "-", "*", "/", "<=", "<", ">=", ">",
     "==", "=", "!=", "!", "&&", "||", "unknown", "call", "arg", "fake_bottom",
-    "gotof", "gotot", "goto"
+    "gotof", "gotot", "goto", "print"
 };
 
 class SemanticCube {
