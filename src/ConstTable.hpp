@@ -31,7 +31,7 @@ class ConstTable {
 
         bool setConst(int addr, ConstEntry entry) {
             if (exists(addr)) {
-                std::cerr << "Addres '" << addr << "' already in use" << std::endl;
+                std::cerr << "Address '" << addr << "' already in use" << std::endl;
                 return false;
             }
 
