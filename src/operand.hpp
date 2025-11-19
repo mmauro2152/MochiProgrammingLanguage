@@ -2,12 +2,20 @@
 
 #include "VarTable.hpp"
 
+enum class operandcat {
+    var,
+    temp,
+    const_,
+    pointer,
+    none
+};
+
 struct operand {
     vartype type;
     int addr;
     std::string scope;
-    std::string name;
+    operandcat cat;
 
-    operand(): type(vartype::unknown), scope(nullptr), name(nullptr), addr(-1) {}
-    operand(vartype t, std::string s, std::string n, int a): type(t), scope(s), name(n), addr(a) {}
+    operand(): type(vartype::unknown), scope(""), addr(-1) , cat(operandcat::none) {}
+    operand(vartype t, std::string s, int a, operandcat c): type(t), scope(s), addr(a), cat(c) {}
 };

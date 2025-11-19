@@ -30,6 +30,47 @@ std::stack<FuncEntry*> funcStack;
 
 QuadManager quadManager;
 
+void printOperand(operand o) {
+    switch (o.cat) {
+        case (operandcat::var):
+            std::cout << funcDir.getFunction(o.scope)->localVars.getVar(o.addr)->name;
+            break;
+
+        case (operandcat::const_):
+            std::cout << funcDir.getFunction(o.scope)->localConsts.getConst(o.addr)->value;
+            break;
+        
+        case (operandcat::temp):
+            funcDir.getFunction(o.scope)->memManager.printTemp(o);
+            break;
+
+        case (operandcat::pointer):
+            std::cout << o.addr;
+            break;
+
+        case (operandcat::none):
+        default:
+            break;
+    }
+ }
+
+
+void printQuads(){
+    for (int i = 0; i < quadManager.quads.size(); i++){
+        quad q = quadManager.quads[i];
+
+        std::cout << i << ": " << operatortype_string[static_cast<int>(q.operator_)] << ", ";         
+        printOperand(q.leftOperand); 
+        std::cout << ", "; 
+        printOperand(q.rightOperand); 
+        std::cout << ", "; 
+        printOperand(q.result); 
+        std::cout << std::endl;
+
+        // std::cout << i << ": " << operatortype_string[static_cast<int>(q.operator_)] << ", " << q.leftOperand.addr << ", " << q.rightOperand.addr  << ", " << q.result.addr << std::endl;
+    }
+}
+
 %}
 
 %union {
@@ -62,8 +103,9 @@ program_declaration:
         }
     } 
     semicolon opt_vars opt_funcs main_token { currScope = globalScope; } body end_token {
-        quadManager.debug();
-        //funcDir.printAll();
+        
+        printQuads();
+
         if (semanticErrors > 0) {
             std::cerr << "Found " << semanticErrors << " semantic errors" << std::endl;
             exit(EXIT_FAILURE);
@@ -185,7 +227,7 @@ assign_statement:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1, var->addr);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var);
             quadManager.operands.push(op);
         }
     }
@@ -205,7 +247,7 @@ assign_statement:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(vartype::none, currScope, "", -1), rOperand, lOperand);
+                quad q = quad(op, operand(), rOperand, lOperand);
                 quadManager.push(q);
             }
         }
@@ -219,7 +261,7 @@ assign_statement_:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1, var->addr);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var);
             quadManager.operands.push(op);
         }
     }
@@ -239,7 +281,7 @@ assign_statement_:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(vartype::none, "", "", -1), rOperand, lOperand);
+                quad q = quad(op, operand(), rOperand, lOperand);
                 quadManager.push(q);
                 quadManager.operands.push(lOperand);
             }
@@ -255,7 +297,7 @@ condition_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand = operand(vartype::none, "", "", -1);
+            operand none_operand = operand();
             quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
 
             quadManager.push(q);
@@ -266,7 +308,7 @@ condition_statement:
         int end = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
+        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
         quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
@@ -274,7 +316,7 @@ condition_statement:
 opt_else:
 
     | else_token {
-        operand none_operand = operand(vartype::none, "", "", -1);
+        operand none_operand = operand();
         quad q = quad(operatortype::goto_, none_operand, none_operand, none_operand);
 
         quadManager.push(q);
@@ -284,7 +326,7 @@ opt_else:
 
         quadManager.jumps.push(quadManager.instructionPointer - 1);
 
-        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
+        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
         quadManager.quads[false_].rightOperand = jumpOperand;
     } 
     body
@@ -302,7 +344,7 @@ cycle_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand = operand(vartype::none, "", "", -1);
+            operand none_operand = operand();
             quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
             quadManager.push(q);
             quadManager.jumps.push(quadManager.instructionPointer - 1);
@@ -315,13 +357,13 @@ cycle_statement:
         int return_ = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand returnOperand = operand(vartype::int_type, "", "", return_);
-        operand noneOperand = operand(vartype::none, "", "", -1);
+        operand returnOperand = operand(vartype::int_type, "", return_, operandcat::pointer);
+        operand noneOperand = operand();
         quad q = quad(operatortype::goto_, noneOperand, returnOperand, noneOperand);
         quadManager.push(q);
 
 
-        operand jumpOperand = operand(vartype::int_type, "", "", quadManager.instructionPointer);
+        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
         quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
@@ -332,9 +374,9 @@ print_statement:
         std::vector<operand> funcArgs = args.top();
         args.pop();
 
-        operand o = operand(vartype::func, "", "print", -1);
+        operand o = operand(vartype::func, "", -1, operandcat::pointer);
         operand temp = funcDir.getFunction(currScope)->memManager.getTemp(vartype::void_type);
-        quad q = quad(operatortype::call, operand(vartype::int_type, "", "", funcArgs.size()), o, temp);
+        quad q = quad(operatortype::call, operand(vartype::int_type, "", funcArgs.size(), operandcat::pointer), o, temp);
 
         quadManager.push(q);
     }
@@ -377,9 +419,9 @@ func_call:
         }
 
         if (semanticErrors == err) {
-            operand o = operand(vartype::func, "", $1, -1);
+            operand o = operand(vartype::func, "", -1, operandcat::pointer);
             operand temp = funcDir.getFunction(currScope)->memManager.getTemp(func->returnType);
-            quad q = quad(operatortype::call, operand(vartype::int_type, currScope, "", func->parameters.size()), o, temp);
+            quad q = quad(operatortype::call, operand(vartype::int_type, "", func->parameters.size(), operandcat::pointer), o, temp);
 
             quadManager.push(q);
             quadManager.operands.push(temp);
@@ -406,7 +448,7 @@ arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            quad q = quad(operatortype::arg, operand(vartype::none, "", "", -1), exp_result, operand(vartype::none, "", "", -1));
+            quad q = quad(operatortype::arg, operand(), exp_result, operand());
             quadManager.push(q);
             args.top().push_back(exp_result);
         }
@@ -607,7 +649,7 @@ factor_element:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, $1, var->addr);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var);
             quadManager.operands.push(op);
         }
     }
@@ -617,12 +659,18 @@ factor_element:
 
 num_constant:
     int_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::int_type);
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(vartype::int_type);
         quadManager.operands.push(op);
+
+        ConstEntry entry = ConstEntry(op.type, std::to_string($1));
+        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
     | float_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::float_type);
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(vartype::float_type);
         quadManager.operands.push(op);
+
+        ConstEntry entry = ConstEntry(op.type, std::to_string($1));
+        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
 ;
 

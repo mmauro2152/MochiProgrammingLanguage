@@ -20,7 +20,6 @@ private:
 
 public:
     VirtualMemoryManager();
-    ~VirtualMemoryManager();
 
     int getGlobalAddress(vartype t);
     int getLocalAddress(vartype t);
@@ -28,9 +27,11 @@ public:
     int getConstAddress(vartype t);
 
     operand getTemp(vartype t);
-    operand getConst(std::string value, vartype t);
+    operand getConst(vartype t);
 
     void setscope(std::string s) {
         scope = s;
     }
+
+    void printTemp(operand temp);
 };

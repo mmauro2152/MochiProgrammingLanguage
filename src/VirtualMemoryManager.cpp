@@ -11,15 +11,6 @@ VirtualMemoryManager::VirtualMemoryManager() {
     }   
 }
 
-VirtualMemoryManager::~VirtualMemoryManager() {
-    // for (int i = 0; i < 4; i++)
-    //     delete[] counters[i];
-
-    // delete[] counters;
-
-    // std::cout << "ran del" << std::endl;
-}
-
 int VirtualMemoryManager::getGlobalAddress(vartype t) {
     int typePad = (5000 / dataTypes) * static_cast<int>(t);
 
@@ -62,9 +53,14 @@ int VirtualMemoryManager::getConstAddress(vartype t) {
 }
 
 operand VirtualMemoryManager::getTemp(vartype t) {
-    return operand(t, scope, "", getTempAddress(t));
+    return operand(t, scope, getTempAddress(t), operandcat::temp);
 }
 
-operand VirtualMemoryManager::getConst(std::string value, vartype t) {
-    return operand(t, scope, value, getConstAddress(t));
+operand VirtualMemoryManager::getConst(vartype t) {
+    return operand(t, scope, getConstAddress(t), operandcat::const_);
+}
+
+void VirtualMemoryManager::printTemp(operand temp) {
+    int typePad = (5000 / dataTypes) * static_cast<int>(temp.type);
+    std::cout << "t" << vartype_string[static_cast<int>(temp.type)][0] << temp.addr - typePad - tempPad;
 }

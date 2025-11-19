@@ -51,7 +51,7 @@ bool QuadManager::generateUnaryQuad(VirtualMemoryManager memManager){
     }
 
     operand temp = memManager.getTemp(restype);
-    quad q = quad(op, operand(vartype::none, "none", "none", -1), rOperand, temp);
+    quad q = quad(op, operand(), rOperand, temp);
 
     push(q);
     operands.push(temp);
