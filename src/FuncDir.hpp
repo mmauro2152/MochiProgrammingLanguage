@@ -11,12 +11,12 @@ struct FuncEntry {
     VirtualMemoryManager* memManager;
 
     int start;
-    std::string scope;
+    std::string name;
     vartype returnType;
     std::vector<std::pair<std::string, vartype>> parameters;
 
     FuncEntry(): returnType(vartype::void_type), memManager(nullptr) {}
-    FuncEntry(vartype r) : returnType(r), memManager(new VirtualMemoryManager()) {}
+    FuncEntry(std::string n, vartype r) : name(n), returnType(r), memManager(new VirtualMemoryManager()) {}
 };
 
 class FuncDir{

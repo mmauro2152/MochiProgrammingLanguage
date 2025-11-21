@@ -57,7 +57,7 @@ struct CubeEntryHash {
 static const char* operatortype_string[] {
     "+", "-", "*", "/", "<=", "<", ">=", ">",
     "==", "=", "!=", "!", "&&", "||", "unknown", "call", "arg", "fake_bottom",
-    "gotof", "gotot", "goto", "print", "reserve"
+    "gotof", "gotot", "goto", "print", "reserve", "endfunc"
 };
 
 class SemanticCube {

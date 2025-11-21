@@ -6,7 +6,7 @@ bool FuncDir::insertFunction(const std::string& name, vartype returnType) {
         return false;
     }
 
-    table[name] = FuncEntry(returnType);
+    table[name] = FuncEntry(name, returnType);
     table[name].memManager->setscope(name);
     return true;
 }

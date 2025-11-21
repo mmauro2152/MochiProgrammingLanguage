@@ -72,8 +72,29 @@ program_declaration:
         if (!funcDir.insertFunction(currScope, vartype::void_type)) {
             semanticErrors++;
         }
+
+        quad* q = new goto_(-1);
+        quadManager.push(q);
+        quadManager.jumps.push(quadManager.instructionPointer - 1);
     } 
-    semicolon opt_vars opt_funcs main_token { currScope = globalScope; } body end_token {
+    semicolon opt_vars opt_funcs main_token { 
+        currScope = globalScope; 
+
+        if (quadManager.jumps.empty()) {
+            semanticErrors++;
+            std::cerr << "Expected pointer to goto main quad" << std::endl;
+        } else {
+            int jump = quadManager.jumps.top();
+
+            if (goto_* g = dynamic_cast<goto_*>(quadManager.quads[jump])) {
+                g->jump = quadManager.instructionPointer;
+            } else {
+                semanticErrors++;
+                std::cerr << "Incorrect jump to quad " << jump << " expected instruction" << std::endl;
+            }
+        }
+    }
+    body end_token {
         
         printQuads();
 
@@ -158,7 +179,9 @@ funcs:
     l_parenthesis params r_parenthesis l_square_bracket opt_vars {
         funcDir.getFunction(currScope)->start = quadManager.instructionPointer;
     }
-    body r_square_bracket semicolon
+    body r_square_bracket semicolon {
+        quadManager.push(new endfunc());
+    }
 ;
 
 params:
@@ -407,7 +430,7 @@ func_call:
                 std::cout << "Argument count mismatch" << std::endl;
                 
             }else {
-                quad* q = new call(func->scope, func->start);
+                quad* q = new call(func->name, func->start);
                 quadManager.push(q);
             }
         }
@@ -437,7 +460,7 @@ arg_loop:
 
             if (params.size() == 0 || argCounters.top() + 1 >= params.size()){
                 semanticErrors++;
-                std::cerr << "Argument count mismatch for function '" << funcStack.top()->scope << "'" << std::endl;
+                std::cerr << "Argument count mismatch for function '" << funcStack.top()->name << "'" << std::endl;
             }
             else if (params[argCounters.top() + 1].second != exp_result.type) {
                 semanticErrors++;

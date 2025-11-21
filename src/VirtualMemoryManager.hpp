@@ -17,7 +17,7 @@ private:
     int** counters;
 
     std::string scope;
-    
+
 public:
     VirtualMemoryManager();
 
