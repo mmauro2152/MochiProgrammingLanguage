@@ -15,7 +15,7 @@ enum class vartype {
     func
 };
 
-static const char* vartype_string[] {
+static const std::string vartype_string[] {
     "int", "float", "string", "bool", "void", "unknown", "none", "func"
 };
 

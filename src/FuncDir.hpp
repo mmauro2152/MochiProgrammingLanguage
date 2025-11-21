@@ -10,6 +10,7 @@ struct FuncEntry {
     ConstTable localConsts;
     VirtualMemoryManager memManager;
 
+    int start;
     std::string scope;
     vartype returnType;
     std::vector<std::pair<std::string, vartype>> parameters;

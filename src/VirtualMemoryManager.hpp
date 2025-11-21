@@ -27,11 +27,11 @@ public:
     int getConstAddress(vartype t);
 
     operand getTemp(vartype t);
-    operand getConst(vartype t);
+    operand getConst(std::string strValue, vartype t);
 
     void setscope(std::string s) {
         scope = s;
     }
 
-    void printTemp(operand temp);
+    std::string getTempStr(int addr, vartype t);
 };

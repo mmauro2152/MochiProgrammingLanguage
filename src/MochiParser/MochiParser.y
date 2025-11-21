@@ -30,44 +30,14 @@ std::stack<FuncEntry*> funcStack;
 
 QuadManager quadManager;
 
-void printOperand(operand o) {
-    switch (o.cat) {
-        case (operandcat::var):
-            std::cout << funcDir.getFunction(o.scope)->localVars.getVar(o.addr)->name;
-            break;
-
-        case (operandcat::const_):
-            std::cout << funcDir.getFunction(o.scope)->localConsts.getConst(o.addr)->value;
-            break;
-        
-        case (operandcat::temp):
-            funcDir.getFunction(o.scope)->memManager.printTemp(o);
-            break;
-
-        case (operandcat::pointer):
-            std::cout << o.addr;
-            break;
-
-        case (operandcat::none):
-        default:
-            break;
-    }
- }
-
 
 void printQuads(){
     for (int i = 0; i < quadManager.quads.size(); i++){
-        quad q = quadManager.quads[i];
+        quad* q = quadManager.quads[i];
 
-        std::cout << i << ": " << operatortype_string[static_cast<int>(q.operator_)] << ", ";         
-        printOperand(q.leftOperand); 
-        std::cout << ", "; 
-        printOperand(q.rightOperand); 
-        std::cout << ", "; 
-        printOperand(q.result); 
+        std::cout << i << ": ";         
+        q->printQuad();
         std::cout << std::endl;
-
-        // std::cout << i << ": " << operatortype_string[static_cast<int>(q.operator_)] << ", " << q.leftOperand.addr << ", " << q.rightOperand.addr  << ", " << q.result.addr << std::endl;
     }
 }
 
@@ -184,7 +154,10 @@ funcs:
             semanticErrors++;
         }
     } 
-    l_parenthesis params r_parenthesis l_square_bracket opt_vars body r_square_bracket semicolon
+    l_parenthesis params r_parenthesis l_square_bracket opt_vars {
+        funcDir.getFunction(currScope)->start = quadManager.instructionPointer;
+    }
+    body r_square_bracket semicolon
 ;
 
 params:
@@ -227,7 +200,7 @@ assign_statement:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
             quadManager.operands.push(op);
         }
     }
@@ -247,7 +220,7 @@ assign_statement:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(), rOperand, lOperand);
+                quad* q = new unaryOperation(op, rOperand, lOperand);
                 quadManager.push(q);
             }
         }
@@ -261,7 +234,7 @@ assign_statement_:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
             quadManager.operands.push(op);
         }
     }
@@ -281,7 +254,7 @@ assign_statement_:
             if (restype == vartype::unknown) {
                 semanticErrors++;
             }else {
-                quad q = quad(op, operand(), rOperand, lOperand);
+                quad* q = new unaryOperation(op, rOperand, lOperand);
                 quadManager.push(q);
                 quadManager.operands.push(lOperand);
             }
@@ -297,8 +270,7 @@ condition_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand = operand();
-            quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
+            quad* q = new condGoto(operatortype::gotof, condition, -1);
 
             quadManager.push(q);
             quadManager.jumps.push(quadManager.instructionPointer - 1);
@@ -308,16 +280,21 @@ condition_statement:
         int end = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
-        quadManager.quads[end].rightOperand = jumpOperand;
+        if (goto_* g = dynamic_cast<goto_*>(quadManager.quads[end])) {
+            g->jump = quadManager.instructionPointer;
+        } else {
+            semanticErrors++;
+            std::cerr << "Incorrect jump to quad " << end << " expected instruction" << std::endl;
+        }
+
+        //quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
 
 opt_else:
 
     | else_token {
-        operand none_operand = operand();
-        quad q = quad(operatortype::goto_, none_operand, none_operand, none_operand);
+        quad* q = new goto_(operatortype::goto_, -1);
 
         quadManager.push(q);
 
@@ -326,8 +303,14 @@ opt_else:
 
         quadManager.jumps.push(quadManager.instructionPointer - 1);
 
-        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
-        quadManager.quads[false_].rightOperand = jumpOperand;
+        if (goto_* g = dynamic_cast<goto_*>(quadManager.quads[false_])) {
+            g->jump = quadManager.instructionPointer;
+        } else {
+            semanticErrors++;
+            std::cerr << "Incorrect jump to quad " << false_ << " expected instruction" << std::endl;
+        }
+
+        //quadManager.quads[false_].rightOperand = jumpOperand;
     } 
     body
 ;
@@ -344,8 +327,7 @@ cycle_statement:
             semanticErrors++;
             std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
         } else {
-            operand none_operand = operand();
-            quad q = quad(operatortype::gotof, condition, none_operand, none_operand);
+            quad* q = new condGoto(operatortype::gotof, condition, -1);
             quadManager.push(q);
             quadManager.jumps.push(quadManager.instructionPointer - 1);
         }
@@ -357,14 +339,15 @@ cycle_statement:
         int return_ = quadManager.jumps.top();
         quadManager.jumps.pop();
 
-        operand returnOperand = operand(vartype::int_type, "", return_, operandcat::pointer);
-        operand noneOperand = operand();
-        quad q = quad(operatortype::goto_, noneOperand, returnOperand, noneOperand);
+        quad* q = new goto_(return_);
         quadManager.push(q);
 
-
-        operand jumpOperand = operand(vartype::int_type, "", quadManager.instructionPointer, operandcat::pointer);
-        quadManager.quads[end].rightOperand = jumpOperand;
+        if (goto_* g = dynamic_cast<goto_*>(quadManager.quads[end])) {
+            g->jump = quadManager.instructionPointer;
+        } else {
+            semanticErrors++;
+            std::cerr << "Incorrect jump to quad " << end << " expected instruction" << std::endl;
+        }
     }
 ;
 
@@ -382,7 +365,7 @@ print_arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            quad q = quad(operatortype::print, operand(), exp_result, operand());
+            quad* q = new print(exp_result);
             quadManager.push(q);
         }
     }
@@ -432,9 +415,9 @@ func_call:
         }
 
         if (semanticErrors == err) {
-            operand o = operand(vartype::func, "", -1, operandcat::pointer);
+            operand o = operand(vartype::func, "", -1, operandcat::pointer, "");
             operand temp = funcDir.getFunction(currScope)->memManager.getTemp(func->returnType);
-            quad q = quad(operatortype::call, operand(vartype::int_type, "", func->parameters.size(), operandcat::pointer), o, temp);
+            quad* q = new operation(operatortype::call, operand(vartype::int_type, "", func->parameters.size(), operandcat::pointer, ""), o, temp);
 
             quadManager.push(q);
             quadManager.operands.push(temp);
@@ -461,7 +444,7 @@ arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            quad q = quad(operatortype::arg, operand(), exp_result, operand());
+            quad* q = new operation(operatortype::arg, operand(), exp_result, operand());
             quadManager.push(q);
             args.top().push_back(exp_result);
         }
@@ -576,24 +559,8 @@ term_operator:
 term:
     factor {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::asterisk || quadManager.operators.top() == operatortype::slash)) {
-            operand rOperand = quadManager.operands.top();
-            quadManager.operands.pop();
-            operand lOperand = quadManager.operands.top();
-            quadManager.operands.pop();
-            operatortype op = quadManager.operators.top();
-            quadManager.operators.pop();
-
-            CubeEntry entry = CubeEntry(lOperand.type, rOperand.type, op);
-            vartype restype = SemanticCube::resultingType(entry);
-
-            if (restype == vartype::unknown) {
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
                 semanticErrors++;
-            }else {
-                operand temp = funcDir.getFunction(currScope)->memManager.getTemp(restype);
-                quad q = quad(op, lOperand, rOperand, temp);
-
-                quadManager.push(q);
-                quadManager.operands.push(temp);
             }
         }
     }
@@ -662,7 +629,7 @@ factor_element:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var);
+            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
             quadManager.operands.push(op);
         }
     }
@@ -672,14 +639,14 @@ factor_element:
 
 num_constant:
     int_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(vartype::int_type);
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::int_type);
         quadManager.operands.push(op);
 
         ConstEntry entry = ConstEntry(op.type, std::to_string($1));
         funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
     | float_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(vartype::float_type);
+        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::float_type);
         quadManager.operands.push(op);
 
         ConstEntry entry = ConstEntry(op.type, std::to_string($1));

@@ -16,6 +16,8 @@ struct operand {
     std::string scope;
     operandcat cat;
 
-    operand(): type(vartype::unknown), scope(""), addr(-1) , cat(operandcat::none) {}
-    operand(vartype t, std::string s, int a, operandcat c): type(t), scope(s), addr(a), cat(c) {}
+    std::string str;
+
+    operand(): type(vartype::unknown), scope(""), addr(-1) , cat(operandcat::none), str("") {}
+    operand(vartype t, std::string s, int a, operandcat c, std::string s_): type(t), scope(s), addr(a), cat(c), str(s_) {}
 };

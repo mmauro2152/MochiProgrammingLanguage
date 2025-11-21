@@ -53,14 +53,15 @@ int VirtualMemoryManager::getConstAddress(vartype t) {
 }
 
 operand VirtualMemoryManager::getTemp(vartype t) {
-    return operand(t, scope, getTempAddress(t), operandcat::temp);
+    int addr = getTempAddress(t);
+    return operand(t, scope, addr, operandcat::temp, getTempStr(addr, t));
 }
 
-operand VirtualMemoryManager::getConst(vartype t) {
-    return operand(t, scope, getConstAddress(t), operandcat::const_);
+operand VirtualMemoryManager::getConst(std::string strValue, vartype t) {
+    return operand(t, scope, getConstAddress(t), operandcat::const_, strValue);
 }
 
-void VirtualMemoryManager::printTemp(operand temp) {
-    int typePad = (5000 / dataTypes) * static_cast<int>(temp.type);
-    std::cout << "t" << vartype_string[static_cast<int>(temp.type)][0] << temp.addr - typePad - tempPad;
+std::string VirtualMemoryManager::getTempStr(int addr, vartype t) {
+    int typePad = (5000 / dataTypes) * static_cast<int>(t);
+    return "t" + std::string(1, vartype_string[static_cast<int>(t)][0]) + std::to_string(addr - typePad - tempPad);
 }

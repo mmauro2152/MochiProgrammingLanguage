@@ -1,6 +1,6 @@
 #include "QuadManager.hpp"
 
-void QuadManager::push(quad q) {
+void QuadManager::push(quad* q) {
     quads.push_back(q);
     instructionPointer++;
 }
@@ -25,7 +25,7 @@ bool QuadManager::generateBinaryQuad(VirtualMemoryManager memManager){
     }
 
     operand temp = memManager.getTemp(restype);
-    quad q = quad(op, lOperand, rOperand, temp);
+    quad* q = new binaryOperation(op, lOperand, rOperand, temp);
 
     push(q);
     operands.push(temp);
@@ -51,7 +51,7 @@ bool QuadManager::generateUnaryQuad(VirtualMemoryManager memManager){
     }
 
     operand temp = memManager.getTemp(restype);
-    quad q = quad(op, operand(), rOperand, temp);
+    quad* q = new unaryOperation(op, rOperand, temp);
 
     push(q);
     operands.push(temp);
