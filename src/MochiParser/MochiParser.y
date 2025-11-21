@@ -51,7 +51,7 @@ void printQuads(){
 }
 
 %token invalid_character
-%token program_token main_token end_token print_token while_token do_token if_token else_token var_token void_token
+%token program_token main_token end_token print_token while_token do_token if_token else_token var_token void_token return_token
 %token semicolon comma colon 
 %token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
@@ -174,6 +174,11 @@ funcs:
         currScope = $2;
         if (!funcDir.insertFunction(currScope, currType)){
             semanticErrors++;
+        } else {
+            FuncEntry* globalContext = funcDir.getFunction(globalScope);
+
+            int addr = globalContext->memManager->getAddress(memorytype::global, currType);
+            globalContext->localVars.insert(addr, currType, currScope);
         }
     } 
     l_parenthesis params r_parenthesis l_square_bracket opt_vars {
@@ -216,6 +221,38 @@ statement:
     | cycle_statement 
     | print_statement
     | func_call_statement
+    | return_statement 
+;
+
+return_statement:
+    return_token opt_expression semicolon {
+        FuncEntry* globalContext = funcDir.getFunction(globalScope);
+
+        operand exp_result = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        VarEntry* funcVar = globalContext->localVars.getVar(currScope);
+        operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, operandcat::var, funcVar->name);
+
+        if (funcVarOper.type != exp_result.type) {
+            semanticErrors++;
+            std::cerr << "Expected expression of type '" << 
+            vartype_string[funcVarOper.type] << "' instead of '" << 
+            vartype_string[exp_result.type] << "'" << std::endl;
+        } else {
+            quad* q = new unaryOperation(operatortype::assign, exp_result, funcVarOper);
+            quadManager.push(q);
+            quadManager.push(new endfunc());
+        }
+    }
+;
+
+opt_expression:
+    {
+        operand op = funcDir.getFunction(currScope)->memManager->getTemp(vartype::void_type);
+        quadManager.operands.push(op);
+    }
+    | expression
 ;
 
 assign_statement:
@@ -424,14 +461,26 @@ func_call:
         } else {
             FuncEntry* func = funcStack.top();
             funcStack.pop();
+            int argCount = argCounters.top();
+            argCounters.pop();
     
-            if (func->parameters.size() != argCounters.top()) {
+            if (func->parameters.size() != argCount) {
                 semanticErrors++;
                 std::cout << "Argument count mismatch" << std::endl;
                 
             }else {
                 quad* q = new call(func->name, func->start);
                 quadManager.push(q);
+
+                FuncEntry* globalContext = funcDir.getFunction(globalScope);
+                VarEntry* funcVar = globalContext->localVars.getVar(func->name);
+                operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, operandcat::var, funcVar->name);
+
+                operand t = func->memManager->getTemp(func->returnType);
+
+                quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
+                quadManager.push(aq);
+                quadManager.operands.push(t);
             }
         }
     }
@@ -458,21 +507,21 @@ arg_loop:
 
             std::vector<std::pair<std::string, vartype>> params = funcStack.top()->parameters;
 
-            if (params.size() == 0 || argCounters.top() + 1 >= params.size()){
+            if (params.size() == 0 || argCounters.top() > params.size() - 1) {
                 semanticErrors++;
                 std::cerr << "Argument count mismatch for function '" << funcStack.top()->name << "'" << std::endl;
             }
-            else if (params[argCounters.top() + 1].second != exp_result.type) {
+            else if (params[argCounters.top()].second != exp_result.type) {
                 semanticErrors++;
 
                 std::cerr << "Argument type mismatch, expected '" << 
-                vartype_string[params[argCounters.top() + 1].second] <<
+                vartype_string[params[argCounters.top()].second] <<
                 "' and received '" <<
                 vartype_string[exp_result.type] << 
                 "'" << std::endl;
             }
 
-            quad* q = new arg(exp_result, argCounters.top() + 1);
+            quad* q = new arg(exp_result, argCounters.top());
             quadManager.push(q);
 
             argCounters.top() = argCounters.top() + 1;

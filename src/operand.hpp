@@ -12,8 +12,8 @@ enum class operandcat {
 
 struct operand {
     vartype type;
-    int addr;
     std::string scope;
+    int addr;
     operandcat cat;
 
     std::string str;

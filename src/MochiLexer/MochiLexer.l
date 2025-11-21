@@ -15,6 +15,7 @@ extern int yylex();
 %%
 "program"                   { token_name = NAMEOF(program_token); return program_token; }
 "main"                      { token_name = NAMEOF(main_token); return main_token; }
+"return"                    { token_name = NAMEOF(return_token); return return_token; }
 "end"                       { token_name = NAMEOF(end_token); return end_token; }
 "print"                     { token_name = NAMEOF(print_token); return print_token; }
 "while"                     { token_name = NAMEOF(while_token); return while_token; }
@@ -29,7 +30,7 @@ extern int yylex();
 "string"                    { token_name = NAMEOF(string_token); return string_token; }
 "int"                       { token_name = NAMEOF(int_token); return int_token; }
 "float"                     { token_name = NAMEOF(float_token); return float_token; }
-"bool"                     { token_name = NAMEOF(bool_token); return bool_token; }
+"bool"                      { token_name = NAMEOF(bool_token); return bool_token; }
 "{"                         { token_name = NAMEOF(l_curly_brace); return l_curly_brace; }
 "}"                         { token_name = NAMEOF(r_curly_brace); return r_curly_brace; }
 "["                         { token_name = NAMEOF(l_square_bracket); return l_square_bracket; }
@@ -48,8 +49,8 @@ extern int yylex();
 "="                         { token_name = NAMEOF(assign); return assign; }
 "!="                        { token_name = NAMEOF(not_equal); return not_equal; }
 "!"                         { token_name = NAMEOF(not_); return not_; }
-"&&"                         { token_name = NAMEOF(and_); return and_; }
-"||"                         { token_name = NAMEOF(or_); return or_; }
+"&&"                        { token_name = NAMEOF(and_); return and_; }
+"||"                        { token_name = NAMEOF(or_); return or_; }
 [a-zA-Z_][A-Za-z0-9_]*      { token_name = NAMEOF(id); yylval.s = strdup(yytext); return id; }
 [0-9]+\.[0-9]+              { token_name = NAMEOF(float_constant); yylval.f = atof(yytext); return float_constant; }
 [0-9]+                      { token_name = NAMEOF(int_constant); yylval.i = atoi(yytext); return int_constant; }

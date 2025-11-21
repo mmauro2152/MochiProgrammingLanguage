@@ -41,15 +41,10 @@ struct counter {
 class VirtualMemoryManager
 {
 private:
-    int globalPad = 0;
-    int localPad = 5000;
-    int tempPad = 10000;
-    int constPad = 14000;
-
     proxyarr<int> pads;
     int memSize = 15000;
 
-    int dataTypes = 4;
+    int dataTypes = 5;
     int** counters;
     counter count;
 
