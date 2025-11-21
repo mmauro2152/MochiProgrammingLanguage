@@ -31,6 +31,8 @@ extern int yylex();
 "int"                       { token_name = NAMEOF(int_token); return int_token; }
 "float"                     { token_name = NAMEOF(float_token); return float_token; }
 "bool"                      { token_name = NAMEOF(bool_token); return bool_token; }
+"true"                      { token_name = NAMEOF(true_constant); return true_constant; }
+"false"                     { token_name = NAMEOF(false_constant); return false_constant; }
 "{"                         { token_name = NAMEOF(l_curly_brace); return l_curly_brace; }
 "}"                         { token_name = NAMEOF(r_curly_brace); return r_curly_brace; }
 "["                         { token_name = NAMEOF(l_square_bracket); return l_square_bracket; }

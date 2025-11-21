@@ -20,7 +20,7 @@ void myFunc1(y: int, x: int) [
 main {
     A = B + C * (D-E/F) * H;
     B = E - F;
-    while (A*B >= D*E/(G*H)) do {
+    while ((A*B >= D*E/(G*H)) == true) do {
         H = J * K + B;
         if (B < H){
             B = H + J;
@@ -32,10 +32,12 @@ main {
             while (A-D < C+B) do {
                 A = A + B;
                 print(B-D);
+                print("hola");
             };
         };
     };
 
     myFunc1(myFunc(1), 3);
+    A = -A;
 }
 end

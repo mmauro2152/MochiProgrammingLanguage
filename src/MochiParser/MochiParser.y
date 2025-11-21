@@ -48,6 +48,7 @@ void printQuads(){
     int i;
     float f;
     char* s;
+    bool b;
 }
 
 %token invalid_character
@@ -61,6 +62,7 @@ void printQuads(){
 %token <i> int_constant
 %token <f> float_constant
 %token <s> string_constant
+%token <b> true_constant false_constant
 
 %%
 
@@ -431,8 +433,6 @@ print_arg_loop:
         }
     }
     print_arg_loop_
-
-    | string_constant print_arg_loop_
 ;
 
 print_arg_loop_:
@@ -528,8 +528,6 @@ arg_loop:
         }
     }
     arg_loop_
-
-    | string_constant arg_loop_
 ;
 
 arg_loop_:
@@ -669,7 +667,7 @@ factor:
         }
     }
 
-    | opt_operator l_parenthesis {
+    | unary_oper l_parenthesis {
         quadManager.operators.push(operatortype::fake_bottom);
     } 
     expression r_parenthesis {
@@ -688,14 +686,14 @@ factor:
 
     | factor_element
     
-    | opt_operator factor_element {
+    | unary_oper factor_element {
         if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->memManager)){
             semanticErrors++;
         }
     }
 ;
 
-opt_operator:
+unary_oper:
     plus { quadManager.operators.push(operatortype::plus); }
     | minus { quadManager.operators.push(operatortype::minus); }
     | not_ { quadManager.operators.push(operatortype::not_); }
@@ -711,8 +709,20 @@ factor_element:
             quadManager.operands.push(op);
         }
     }
-    | num_constant
+    | constants
     | func_call
+;
+
+constants: 
+    string_constant {
+        operand op = funcDir.getFunction(currScope)->memManager->getConst($1, vartype::string_type);
+        quadManager.operands.push(op);
+
+        ConstEntry entry = ConstEntry(op.type, $1);
+        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
+    }
+    | num_constant
+    | bool_constant
 ;
 
 num_constant:
@@ -728,6 +738,24 @@ num_constant:
         quadManager.operands.push(op);
 
         ConstEntry entry = ConstEntry(op.type, std::to_string($1));
+        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
+    }
+;
+
+bool_constant:
+    true_constant {
+        operand op = funcDir.getFunction(currScope)->memManager->getConst("true", vartype::bool_type);
+        quadManager.operands.push(op);
+
+        ConstEntry entry = ConstEntry(op.type, "true");
+        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
+    }
+
+    | false_constant {
+        operand op = funcDir.getFunction(currScope)->memManager->getConst("false", vartype::bool_type);
+        quadManager.operands.push(op);
+
+        ConstEntry entry = ConstEntry(op.type, "false");
         funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
 ;
