@@ -1,5 +1,13 @@
 program demo;
 var A, B, C, D, E, F, G, H, J, K: float;
+
+void myFunc() [
+    var j: int; k, l: float;
+    {
+        print(j, k, l);
+    }
+];
+
 main {
     A = B + C * (D-E/F) * H;
     B = E - F;
@@ -18,5 +26,7 @@ main {
             };
         };
     };
+
+    myFunc();
 }
 end

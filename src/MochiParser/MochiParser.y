@@ -25,8 +25,9 @@ vartype currType;
 int semanticErrors = 0;
 
 std::stack<int> argCounters;
-std::stack<std::vector<operand>> args;
 std::stack<FuncEntry*> funcStack;
+std::stack<std::vector<operand>> args;
+
 
 QuadManager quadManager;
 
@@ -106,9 +107,9 @@ var_loop:
         while (!idQueue.empty()) {
             int addr = 0;
             if (currScope == globalScope) {
-                addr = funcDir.getFunction(currScope)->memManager.getGlobalAddress(currType);
+                addr = funcDir.getFunction(currScope)->memManager->getGlobalAddress(currType);
             } else {
-                addr = funcDir.getFunction(currScope)->memManager.getLocalAddress(currType);
+                addr = funcDir.getFunction(currScope)->memManager->getLocalAddress(currType);
             }
 
             if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front())) {
@@ -388,39 +389,27 @@ func_call:
         }
         else {
             funcStack.push(func);
-            args.push(std::vector<operand>());
-        } 
+            argCounters.push(0);
+
+            quad* q = new reserve(func->memManager);
+            quadManager.push(q);
+        }
     } 
     l_parenthesis opt_arg_loop r_parenthesis {
-        std::vector<operand> funcArgs = args.top();
-        args.pop();
-
-        FuncEntry* func = funcStack.top();
-        funcStack.pop();
-
-        int err = semanticErrors;
-        if (func->parameters.size() != funcArgs.size()) {
+        if (funcStack.empty()) {
             semanticErrors++;
-
-            std::cerr << "Error: Argument count mismatch for function '" << $1 << "'" << std::endl;
-        } 
-        else {
-
-            for (int i = 0; i < func->parameters.size(); i++){
-                if (func->parameters[i].second != funcArgs[i].type) {
-                    semanticErrors++;
-                    std::cerr << "Error: Argument type mismatch, expected '" << vartype_string[static_cast<int>(func->parameters[i].second)] << "'" << std::endl;
-                }
+        } else {
+            FuncEntry* func = funcStack.top();
+            funcStack.pop();
+    
+            if (func->parameters.size() != argCounters.top()) {
+                semanticErrors++;
+                std::cout << "Argument count mismatch" << std::endl;
+                
+            }else {
+                quad* q = new call(func->scope, func->start);
+                quadManager.push(q);
             }
-        }
-
-        if (semanticErrors == err) {
-            operand o = operand(vartype::func, "", -1, operandcat::pointer, "");
-            operand temp = funcDir.getFunction(currScope)->memManager.getTemp(func->returnType);
-            quad* q = new operation(operatortype::call, operand(vartype::int_type, "", func->parameters.size(), operandcat::pointer, ""), o, temp);
-
-            quadManager.push(q);
-            quadManager.operands.push(temp);
         }
     }
 ;
@@ -444,9 +433,26 @@ arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            quad* q = new operation(operatortype::arg, operand(), exp_result, operand());
+            std::vector<std::pair<std::string, vartype>> params = funcStack.top()->parameters;
+
+            if (params.size() == 0 || argCounters.top() + 1 >= params.size()){
+                semanticErrors++;
+                std::cerr << "Argument count mismatch for function '" << funcStack.top()->scope << "'" << std::endl;
+            }
+            else if (params[argCounters.top() + 1].second != exp_result.type) {
+                semanticErrors++;
+
+                std::cerr << "Argument type mismatch, expected '" << 
+                vartype_string[static_cast<int>(params[argCounters.top() + 1].second)] <<
+                "' and received '" <<
+                vartype_string[static_cast<int>(exp_result.type)] << 
+                "'" << std::endl;
+            }
+
+            quad* q = new arg(exp_result, argCounters.top() + 1);
             quadManager.push(q);
-            args.top().push_back(exp_result);
+
+            argCounters.top() = argCounters.top() + 1;
         }
     }
     arg_loop_
@@ -639,14 +645,14 @@ factor_element:
 
 num_constant:
     int_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::int_type);
+        operand op = funcDir.getFunction(currScope)->memManager->getConst(std::to_string($1), vartype::int_type);
         quadManager.operands.push(op);
 
         ConstEntry entry = ConstEntry(op.type, std::to_string($1));
         funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
     | float_constant {
-        operand op = funcDir.getFunction(currScope)->memManager.getConst(std::to_string($1), vartype::float_type);
+        operand op = funcDir.getFunction(currScope)->memManager->getConst(std::to_string($1), vartype::float_type);
         quadManager.operands.push(op);
 
         ConstEntry entry = ConstEntry(op.type, std::to_string($1));

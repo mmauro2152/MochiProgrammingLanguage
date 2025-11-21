@@ -17,7 +17,7 @@ private:
     int** counters;
 
     std::string scope;
-
+    
 public:
     VirtualMemoryManager();
 
@@ -32,6 +32,8 @@ public:
     void setscope(std::string s) {
         scope = s;
     }
+
+    std::string getscope() { return scope; }
 
     std::string getTempStr(int addr, vartype t);
 };

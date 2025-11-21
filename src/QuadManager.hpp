@@ -118,28 +118,47 @@ struct call : quad {
     std::string funcName;
     int jump;
 
+    void printQuad() override {
+        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << 
+        funcName << ", " <<
+        jump;
+    }
+
     call(): quad(operatortype::unknown), funcName(""), jump(-1) {}
     call(std::string n, int j): quad(operatortype::call), funcName(n), jump(j) {}
 };
 
 struct reserve : quad {
-    vartype type;
-    operandcat cat;
-    int* count;
+    VirtualMemoryManager* memory;
 
-    reserve(): quad(operatortype::unknown), type(vartype::unknown), cat(operandcat::none), count(nullptr) {}
-    reserve(vartype t, operandcat c, int* cnt): quad(operatortype::reserve), type(t), cat(c), count(cnt) {}
+    void printQuad() override {
+        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << memory->getscope();
+    }
+
+    reserve(): quad(operatortype::unknown), memory(nullptr) {}
+    reserve(VirtualMemoryManager* m): quad(operatortype::reserve), memory(m) {}
 };
 
 struct arg : quad {
     operand argument;
     int pos;
 
+    void printQuad() override {
+        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << 
+        argument.str << ", " <<
+        pos;
+    }
+
     arg(): quad(operatortype::unknown), argument(operand()), pos(-1) {}
     arg(operand a, int p): quad(operatortype::arg), argument(a), pos(p) {}
 };
 
 struct endfunc : quad {
+    
+    void printQuad() override {
+        std::cout << operatortype_string[static_cast<int>(operator_)];
+    }
+
     endfunc(): quad(operatortype::endfunc) {}
 };
 
@@ -166,6 +185,6 @@ class QuadManager {
         //     return;
         // }
 
-        bool generateBinaryQuad(VirtualMemoryManager memManager);
-        bool generateUnaryQuad(VirtualMemoryManager memManager);
+        bool generateBinaryQuad(VirtualMemoryManager* memManager);
+        bool generateUnaryQuad(VirtualMemoryManager* memManager);
 };
