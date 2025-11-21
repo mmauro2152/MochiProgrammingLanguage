@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include "proxyarr.hpp"
 
 enum class vartype {
     int_type,
@@ -15,9 +16,11 @@ enum class vartype {
     func
 };
 
-static const std::string vartype_string[] {
+static std::string var_s[] {
     "int", "float", "string", "bool", "void", "unknown", "none", "func"
 };
+
+static proxyarr<std::string> vartype_string = proxyarr<std::string>(var_s);
 
 
 struct VarEntry

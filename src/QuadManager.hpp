@@ -22,7 +22,7 @@ struct binaryOperation : quad {
     operand result;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " <<
+        std::cout << operatortype_string[operator_] << ", " <<
         leftOperand.str << ", " <<
         rightOperand.str << ", " <<
         result.str;
@@ -37,7 +37,7 @@ struct unaryOperation : quad {
     operand result;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " <<
+        std::cout << operatortype_string[operator_] << ", " <<
         operand_.str << ", " <<
         result.str;
     }
@@ -50,7 +50,7 @@ struct goto_ : quad {
     int jump;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << jump;
+        std::cout << operatortype_string[operator_] << ", " << jump;
     }
 
     goto_(): quad(operatortype::goto_), jump(-1) {}
@@ -62,7 +62,7 @@ struct condGoto : goto_ {
     operand condition;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " 
+        std::cout << operatortype_string[operator_] << ", " 
         << condition.str << ", "
         << jump;
     }
@@ -75,7 +75,7 @@ struct print : quad {
     operand operand_;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << operand_.str;
+        std::cout << operatortype_string[operator_] << ", " << operand_.str;
     }
 
     print(): quad(operatortype::unknown), operand_(operand()) {}
@@ -88,7 +88,7 @@ struct operation : quad {
     operand result;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " <<
+        std::cout << operatortype_string[operator_] << ", " <<
         leftOperand.str << ", " <<
         rightOperand.str << ", " <<
         result.str;
@@ -104,7 +104,7 @@ struct instruction : quad {
     int data3;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " <<
+        std::cout << operatortype_string[operator_] << ", " <<
         data1 << ", " <<
         data2 << ", " <<
         data3 << ", ";
@@ -119,7 +119,7 @@ struct call : quad {
     int jump;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << 
+        std::cout << operatortype_string[operator_] << ", " << 
         funcName << ", " <<
         jump;
     }
@@ -132,7 +132,7 @@ struct reserve : quad {
     VirtualMemoryManager* memory;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << memory->getscope();
+        std::cout << operatortype_string[operator_] << ", " << memory->getscope();
     }
 
     reserve(): quad(operatortype::unknown), memory(nullptr) {}
@@ -144,7 +144,7 @@ struct arg : quad {
     int pos;
 
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)] << ", " << 
+        std::cout << operatortype_string[operator_] << ", " << 
         argument.str << ", " <<
         pos;
     }
@@ -156,7 +156,7 @@ struct arg : quad {
 struct endfunc : quad {
     
     void printQuad() override {
-        std::cout << operatortype_string[static_cast<int>(operator_)];
+        std::cout << operatortype_string[operator_];
     }
 
     endfunc(): quad(operatortype::endfunc) {}
@@ -176,15 +176,6 @@ class QuadManager {
         operand getTemp(vartype type);
 
         void push(quad* q);
-
-        // void debug() {
-        //     for (int i = 0; i < quads.size(); i++) {
-        //         std::cout << i << " " << operatortype_string[static_cast<int>(quads[i].operator_)] << " " << quads[i].leftOperand.addr << " " << quads[i].rightOperand.addr << " " << quads[i].result.addr << std::endl;
-        //     }
-
-        //     return;
-        // }
-
         bool generateBinaryQuad(VirtualMemoryManager* memManager);
         bool generateUnaryQuad(VirtualMemoryManager* memManager);
 };

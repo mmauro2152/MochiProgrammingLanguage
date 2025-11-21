@@ -1,6 +1,7 @@
 #pragma once 
 #include "VarTable.hpp"
 #include "MochiParser/MochiParser.tab.hpp"
+#include "proxyarr.hpp"
 
 enum class operatortype {
     plus,
@@ -54,11 +55,13 @@ struct CubeEntryHash {
     }
 };
 
-static const char* operatortype_string[] {
+static std::string* oper_s = new std::string[24] {
     "+", "-", "*", "/", "<=", "<", ">=", ">",
     "==", "=", "!=", "!", "&&", "||", "unknown", "call", "arg", "fake_bottom",
     "gotof", "gotot", "goto", "print", "reserve", "endfunc"
 };
+
+static proxyarr<std::string> operatortype_string = proxyarr(oper_s);
 
 class SemanticCube {
 private:

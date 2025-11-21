@@ -57,9 +57,9 @@ vartype SemanticCube::resultingType(CubeEntry entry) {
     if (!possibleOperation(entry)) {
         std::cerr << 
         "No valid operation for types '" << 
-        vartype_string[static_cast<int>(entry.leftOperand)] << "' and '" <<
-        vartype_string[static_cast<int>(entry.rightOperand)] << "' with operator '" <<
-        operatortype_string[static_cast<int>(entry.op)] << "'" << 
+        vartype_string[entry.leftOperand] << "' and '" <<
+        vartype_string[entry.rightOperand] << "' with operator '" <<
+        operatortype_string[entry.op] << "'" << 
         std::endl;
 
         return vartype::unknown;

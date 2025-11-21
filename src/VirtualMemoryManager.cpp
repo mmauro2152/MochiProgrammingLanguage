@@ -44,5 +44,5 @@ operand VirtualMemoryManager::getConst(std::string strValue, vartype t) {
 
 std::string VirtualMemoryManager::getTempStr(int addr, vartype t) {
     int typePad = (getMemoryRange(memorytype::temp) / dataTypes) * static_cast<int>(t);
-    return "t" + std::string(1, vartype_string[static_cast<int>(t)][0]) + std::to_string(addr - typePad - pads[memorytype::temp]);
+    return "t" + std::string(1, vartype_string[t][0]) + std::to_string(addr - typePad - pads[memorytype::temp]);
 }

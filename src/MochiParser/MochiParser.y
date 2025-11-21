@@ -292,7 +292,7 @@ condition_statement:
         quadManager.operands.pop();
         if (condition.type != vartype::bool_type){
             semanticErrors++;
-            std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
+            std::cerr << "Expected bool expression instead of " << vartype_string[condition.type] << std::endl; 
         } else {
             quad* q = new condGoto(operatortype::gotof, condition, -1);
 
@@ -349,7 +349,7 @@ cycle_statement:
 
         if (condition.type != vartype::bool_type){
             semanticErrors++;
-            std::cerr << "Expected bool expression instead of " << vartype_string[static_cast<int>(condition.type)] << std::endl; 
+            std::cerr << "Expected bool expression instead of " << vartype_string[condition.type] << std::endl; 
         } else {
             quad* q = new condGoto(operatortype::gotof, condition, -1);
             quadManager.push(q);
@@ -466,9 +466,9 @@ arg_loop:
                 semanticErrors++;
 
                 std::cerr << "Argument type mismatch, expected '" << 
-                vartype_string[static_cast<int>(params[argCounters.top() + 1].second)] <<
+                vartype_string[params[argCounters.top() + 1].second] <<
                 "' and received '" <<
-                vartype_string[static_cast<int>(exp_result.type)] << 
+                vartype_string[exp_result.type] << 
                 "'" << std::endl;
             }
 
@@ -613,7 +613,7 @@ factor:
     expression r_parenthesis {
         if (quadManager.operators.top() != operatortype::fake_bottom) {
             semanticErrors++;
-            std::cerr << "Error: Unexpected operator '" << operatortype_string[static_cast<int>(quadManager.operators.top())] << "'" << std::endl;  
+            std::cerr << "Error: Unexpected operator '" << operatortype_string[quadManager.operators.top()] << "'" << std::endl;  
         } else {
             // discard fake bottom
             quadManager.operators.pop();
@@ -626,7 +626,7 @@ factor:
     expression r_parenthesis {
         if (quadManager.operators.top() != operatortype::fake_bottom) {
             semanticErrors++;
-            std::cerr << "Error: Unexpected operator '" << operatortype_string[static_cast<int>(quadManager.operators.top())] << "'" << std::endl;  
+            std::cerr << "Error: Unexpected operator '" << operatortype_string[quadManager.operators.top()] << "'" << std::endl;  
         } else {
             // discard fake bottom
             quadManager.operators.pop();
