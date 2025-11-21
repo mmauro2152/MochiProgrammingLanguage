@@ -114,6 +114,35 @@ struct instruction : quad {
     instruction(operatortype o, int d1, int d2, int d3) : quad(o), data1(d1), data2(d2), data3(d3) {}
 };
 
+struct call : quad {
+    std::string funcName;
+    int jump;
+
+    call(): quad(operatortype::unknown), funcName(""), jump(-1) {}
+    call(std::string n, int j): quad(operatortype::call), funcName(n), jump(j) {}
+};
+
+struct reserve : quad {
+    vartype type;
+    operandcat cat;
+    int* count;
+
+    reserve(): quad(operatortype::unknown), type(vartype::unknown), cat(operandcat::none), count(nullptr) {}
+    reserve(vartype t, operandcat c, int* cnt): quad(operatortype::reserve), type(t), cat(c), count(cnt) {}
+};
+
+struct arg : quad {
+    operand argument;
+    int pos;
+
+    arg(): quad(operatortype::unknown), argument(operand()), pos(-1) {}
+    arg(operand a, int p): quad(operatortype::arg), argument(a), pos(p) {}
+};
+
+struct endfunc : quad {
+    endfunc(): quad(operatortype::endfunc) {}
+};
+
 class QuadManager {
     private:
         int tempCount = 0;
