@@ -128,9 +128,9 @@ var_loop:
         while (!idQueue.empty()) {
             int addr = 0;
             if (currScope == globalScope) {
-                addr = funcDir.getFunction(currScope)->memManager->getGlobalAddress(currType);
+                addr = funcDir.getFunction(currScope)->memManager->getAddress(memorytype::global, currType);
             } else {
-                addr = funcDir.getFunction(currScope)->memManager->getLocalAddress(currType);
+                addr = funcDir.getFunction(currScope)->memManager->getAddress(memorytype::local, currType);
             }
 
             if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front())) {

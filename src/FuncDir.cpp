@@ -23,7 +23,7 @@ bool FuncDir::addParameter(const std::string& name, const std::string& paramName
 
 
     table[name].parameters.push_back({paramName, paramType});
-    table[name].localVars.insert(table[name].memManager->getLocalAddress(paramType), paramType, paramName);
+    table[name].localVars.insert(table[name].memManager->getAddress(memorytype::local, paramType), paramType, paramName);
     return true;
 }
 
