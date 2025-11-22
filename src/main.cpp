@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include "MochiParser/parserglobals.hpp"
 
 extern FILE *yyin;
 extern int yyparse();
@@ -45,6 +46,11 @@ void test_parser(int argc, char** argv){
         if (result == 0)
         {
             std::cout << "Parse successful!" << std::endl;
+
+            std::cout << "Executing..." << std::endl;
+
+            // Machine vm = Machine(quadManager.quads);
+            // vm.execute();
         }
         else
         {

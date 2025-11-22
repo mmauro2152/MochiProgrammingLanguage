@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "proxyarr.hpp"
+#include "memorytype.hpp"
 
 enum class vartype {
     int_type,
@@ -28,9 +29,10 @@ struct VarEntry
     vartype type;
     int addr;
     std::string name;
+    memorytype mem;
 
     VarEntry(): type(vartype::void_type), addr(-1), name("") {}
-    VarEntry(vartype t, int a, std::string n):  type(t), addr(a), name(n) {}
+    VarEntry(vartype t, int a, std::string n, memorytype m):  type(t), addr(a), name(n), mem(m) {}
 };
 
 
@@ -40,7 +42,7 @@ private:
     std::unordered_map<std::string, int> nameToAddr;
 
 public:
-    bool insert(const int& addr, vartype type, std::string name);
+    bool insert(const int& addr, vartype type, std::string name, memorytype mem);
 
     bool exists(const int& addr);
 

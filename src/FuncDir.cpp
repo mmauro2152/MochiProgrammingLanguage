@@ -20,10 +20,11 @@ bool FuncDir::addParameter(const std::string& name, const std::string& paramName
         std::cerr << "Error: Function '" << name << "' does not exist" << std::endl;
         return false;
     }
-
+    
+    memorytype mem = (name == globalScope) ? memorytype::global : memorytype::local;
 
     table[name].parameters.push_back({paramName, paramType});
-    table[name].localVars.insert(table[name].memManager->getAddress(memorytype::local, paramType), paramType, paramName);
+    table[name].localVars.insert(table[name].memManager->getAddress(mem, paramType), paramType, paramName, mem);
     return true;
 }
 

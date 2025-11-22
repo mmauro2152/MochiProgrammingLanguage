@@ -1,6 +1,6 @@
 #include "VarTable.hpp"
 
-bool VarTable::insert(const int& addr, vartype type, std::string name) {
+bool VarTable::insert(const int& addr, vartype type, std::string name, memorytype mem) {
     if (exists(name)) {
         std::cerr << "Error: Variable '" << addr << "' already declared.\n";
         return false;
@@ -11,7 +11,7 @@ bool VarTable::insert(const int& addr, vartype type, std::string name) {
     }
 
     nameToAddr[name] = addr;
-    table[addr] = VarEntry(type, addr, name);
+    table[addr] = VarEntry(type, addr, name, mem);
     return true;
 }
 

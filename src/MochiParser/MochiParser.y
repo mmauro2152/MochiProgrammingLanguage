@@ -3,13 +3,14 @@
 }
 
 %{
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <queue>
-#include "../FuncDir.hpp"
-#include "../QuadManager.hpp"
-#include "../SemanticCube.hpp"
+// #include <iostream>
+// #include <string>
+// #include <cstdlib>
+// #include <queue>
+// #include "../FuncDir.hpp"
+// #include "../QuadManager.hpp"
+// #include "../SemanticCube.hpp"
+#include "parserglobals.hpp"
 
 void yyerror(const char* errorMsg) {
     std::cout << errorMsg << std::endl;
@@ -75,7 +76,10 @@ program_declaration:
             semanticErrors++;
         }
 
-        quad* q = new goto_(-1);
+        quad* q = new reserve(funcDir.getFunction(globalScope)->memManager);
+        quadManager.push(q);
+
+        q = new goto_(-1);
         quadManager.push(q);
         quadManager.jumps.push(quadManager.instructionPointer - 1);
     } 
@@ -129,13 +133,14 @@ var_loop:
     id_loop colon type semicolon {
         while (!idQueue.empty()) {
             int addr = 0;
+            memorytype mem = (currScope == globalScope) ? memorytype::global : memorytype::local;
             if (currScope == globalScope) {
-                addr = funcDir.getFunction(currScope)->memManager->getAddress(memorytype::global, currType);
+                addr = funcDir.getFunction(currScope)->memManager->getAddress(mem, currType);
             } else {
-                addr = funcDir.getFunction(currScope)->memManager->getAddress(memorytype::local, currType);
+                addr = funcDir.getFunction(currScope)->memManager->getAddress(mem, currType);
             }
 
-            if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front())) {
+            if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front(), mem)) {
                 semanticErrors++;
             }
                  
@@ -180,7 +185,7 @@ funcs:
             FuncEntry* globalContext = funcDir.getFunction(globalScope);
 
             int addr = globalContext->memManager->getAddress(memorytype::global, currType);
-            globalContext->localVars.insert(addr, currType, currScope);
+            globalContext->localVars.insert(addr, currType, currScope, memorytype::global);
         }
     } 
     l_parenthesis params r_parenthesis l_square_bracket opt_vars {
@@ -234,7 +239,7 @@ return_statement:
         quadManager.operands.pop();
 
         VarEntry* funcVar = globalContext->localVars.getVar(currScope);
-        operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, operandcat::var, funcVar->name);
+        operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
 
         if (funcVarOper.type != exp_result.type) {
             semanticErrors++;
@@ -252,6 +257,7 @@ return_statement:
 opt_expression:
     {
         operand op = funcDir.getFunction(currScope)->memManager->getTemp(vartype::void_type);
+        std::cout << currScope << std::endl;
         quadManager.operands.push(op);
     }
     | expression
@@ -263,7 +269,7 @@ assign_statement:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
+            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
             quadManager.operands.push(op);
         }
     }
@@ -297,7 +303,7 @@ assign_statement_:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
+            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
             quadManager.operands.push(op);
         }
     }
@@ -474,9 +480,9 @@ func_call:
 
                 FuncEntry* globalContext = funcDir.getFunction(globalScope);
                 VarEntry* funcVar = globalContext->localVars.getVar(func->name);
-                operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, operandcat::var, funcVar->name);
+                operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
 
-                operand t = func->memManager->getTemp(func->returnType);
+                operand t = globalContext->memManager->getTemp(func->returnType);
 
                 quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
                 quadManager.push(aq);
@@ -705,7 +711,7 @@ factor_element:
         if (var == nullptr) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, operandcat::var, var->name);
+            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
             quadManager.operands.push(op);
         }
     }

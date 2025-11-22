@@ -4,13 +4,10 @@
 #include "operand.hpp"
 #include "proxyarr.hpp"
 #include <vector>
+#include "memorytype.hpp"
 
-enum class memorytype {
-    global,
-    local,
-    temp,
-    const_
-};
+
+
 
 static std::string* s = new std::string[4]{"global", "local", "temp", "const"};
 static proxyarr<std::string> memtype_string = proxyarr<std::string>(s);
