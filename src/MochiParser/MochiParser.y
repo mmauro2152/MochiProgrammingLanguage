@@ -76,6 +76,7 @@ program_declaration:
             semanticErrors++;
         }
 
+        funcDir.getFunction(globalScope)->memManager->setAsGlobal();
         quad* q = new reserve(funcDir.getFunction(globalScope)->memManager);
         quadManager.push(q);
 
@@ -257,7 +258,6 @@ return_statement:
 opt_expression:
     {
         operand op = funcDir.getFunction(currScope)->memManager->getTemp(vartype::void_type);
-        std::cout << currScope << std::endl;
         quadManager.operands.push(op);
     }
     | expression

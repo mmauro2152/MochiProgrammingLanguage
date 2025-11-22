@@ -6,6 +6,7 @@
 #include <string>
 #include <stdexcept>
 #include "MochiParser/parserglobals.hpp"
+#include "MochiVM/Machine.hpp"
 
 extern FILE *yyin;
 extern int yyparse();

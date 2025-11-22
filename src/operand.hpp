@@ -2,14 +2,6 @@
 
 #include "VarTable.hpp"
 
-enum class operandcat {
-    var,
-    temp,
-    const_,
-    pointer,
-    none
-};
-
 struct operand {
     vartype type;
     std::string scope;

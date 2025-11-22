@@ -6,8 +6,8 @@
 #include <vector>
 #include "memorytype.hpp"
 
-
-
+class Memory;
+struct reserve;
 
 static std::string* s = new std::string[4]{"global", "local", "temp", "const"};
 static proxyarr<std::string> memtype_string = proxyarr<std::string>(s);
@@ -42,12 +42,16 @@ private:
     int memSize = 15000;
 
     int dataTypes = 5;
-    int** counters;
     counter count;
 
     std::string scope;
     
     int getMemoryRange(memorytype memtype);
+
+    bool global = false;
+
+    friend class Memory;
+    friend struct reserve;
 
 public:
     VirtualMemoryManager();
@@ -64,4 +68,6 @@ public:
     std::string getscope() { return scope; }
 
     std::string getTempStr(int addr, vartype t);
+
+    void setAsGlobal() { global = true; }
 };
