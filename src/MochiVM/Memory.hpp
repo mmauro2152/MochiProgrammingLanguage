@@ -1,29 +1,23 @@
 #pragma once
 
 #include "../VirtualMemoryManager.hpp"
-#include <variant>
+#include "datatypes.hpp"
+
 
 class Memory {
-    public:
-        using arraytypes = std::variant<
-            proxyarr<int>,
-            proxyarr<float>,
-            proxyarr<std::string>,
-            proxyarr<bool>
-        >;
-
     private:
-        proxyarr<proxyarr<arraytypes>> mem;
+        proxyarr<proxyarr<proxyarr<datatypes>>> mem;
+        VirtualMemoryManager* virtualMem;
 
     public:
         Memory();
         Memory(VirtualMemoryManager* virtualMem);
 
-        proxyarr<arraytypes>& operator[](int i) {
+        proxyarr<proxyarr<datatypes>>& operator[](int i) {
             return mem[i];
         }
 
-        proxyarr<arraytypes>& operator[](memorytype m) {
+        proxyarr<proxyarr<datatypes>>& operator[](memorytype m) {
             return mem[static_cast<int>(m)];
         }
  };

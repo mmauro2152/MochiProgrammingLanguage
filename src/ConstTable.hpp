@@ -1,41 +1,25 @@
 #pragma once
 #include "VarTable.hpp"
 #include <unordered_map>
+#include "MochiVM/datatypes.hpp"
 
-struct ConstEntry
-{
-    vartype type;
-    std::string value;
-
-    ConstEntry(): type(vartype::unknown), value("") {}
-    ConstEntry(vartype t, std::string v): type(t), value(v) {}
-};
+class VirtualMemoryManager;
+class Memory;
 
 class ConstTable {
+    friend class VirtualMemoryManager;
+    friend class Memory;
+
     private:
-        std::unordered_map<int, ConstEntry> table;
+        std::unordered_map<int, operand> table;
+        std::unordered_map<datatypes, int> check;
 
     public:
-        bool exists(int addr) {
+        bool addrExists(int addr) {
             return table.find(addr) != table.end();
         }
 
-        ConstEntry* getConst(int addr) {
-            if (exists(addr)) 
-                return &table[addr];
-
-            std::cerr << "Address '" << addr << "' holds no value" << std::endl;
-            
-            return nullptr;
-        }
-
-        bool setConst(int addr, ConstEntry entry) {
-            if (exists(addr)) {
-                std::cerr << "Address '" << addr << "' already in use" << std::endl;
-                return false;
-            }
-
-            table[addr] = entry;
-            return true;
+        bool valueExists(datatypes value) {
+            return check.find(value) != check.end();
         }
 };

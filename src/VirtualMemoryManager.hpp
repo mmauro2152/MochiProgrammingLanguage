@@ -5,6 +5,7 @@
 #include "proxyarr.hpp"
 #include <vector>
 #include "memorytype.hpp"
+#include "ConstTable.hpp"
 
 class Memory;
 struct reserve;
@@ -38,17 +39,19 @@ struct counter {
 class VirtualMemoryManager
 {
 private:
-    proxyarr<int> pads;
-    int memSize = 15000;
+    static proxyarr<int> pads;
+    const static int memSize = 15000;
 
-    int dataTypes = 5;
+    const static int dataTypes = 5;
     counter count;
 
     std::string scope;
     
-    int getMemoryRange(memorytype memtype);
+    static int getMemoryRange(memorytype memtype);
 
     bool global = false;
+
+    ConstTable constTable;
 
     friend class Memory;
     friend struct reserve;
@@ -59,7 +62,7 @@ public:
     int getAddress(memorytype memytype, vartype datatype);
 
     operand getTemp(vartype t);
-    operand getConst(std::string strValue, vartype t);
+    operand getConst(std::string strValue, datatypes value, vartype t);
 
     void setscope(std::string s) {
         scope = s;
@@ -70,4 +73,6 @@ public:
     std::string getTempStr(int addr, vartype t);
 
     void setAsGlobal() { global = true; }
+
+    static int getIndex(operand o);
 };
