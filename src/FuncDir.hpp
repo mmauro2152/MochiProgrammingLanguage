@@ -13,7 +13,7 @@ struct FuncEntry {
     int start;
     std::string name;
     vartype returnType;
-    std::vector<std::pair<std::string, vartype>> parameters;
+    std::vector<operand> parameters;
 
     FuncEntry(): returnType(vartype::void_type), memManager(nullptr) {}
     FuncEntry(std::string n, vartype r) : name(n), returnType(r), memManager(new VirtualMemoryManager()) {}

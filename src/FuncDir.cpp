@@ -22,9 +22,10 @@ bool FuncDir::addParameter(const std::string& name, const std::string& paramName
     }
     
     memorytype mem = (name == globalScope) ? memorytype::global : memorytype::local;
+    operand param = operand(paramType, name, table[name].memManager->getAddress(mem, paramType), mem, paramName);
 
-    table[name].parameters.push_back({paramName, paramType});
-    table[name].localVars.insert(table[name].memManager->getAddress(mem, paramType), paramType, paramName, mem);
+    table[name].parameters.push_back(param);
+    table[name].localVars.insert(param.addr, param.type, param.str, param.mem);
     return true;
 }
 
@@ -50,8 +51,8 @@ void FuncDir::printAll() {
         if (!it->second.parameters.empty()) {
             std::cout << "Parameters:" << std::endl;
 
-            for (std::pair<std::string, vartype> p : it->second.parameters){
-                std::cout << p.first << ", " << VarTable::typeToString(p.second) << std::endl;
+            for (auto p : it->second.parameters){
+                std::cout << p.str << ", " << vartype_string[p.type] << std::endl;
             }
         }
 

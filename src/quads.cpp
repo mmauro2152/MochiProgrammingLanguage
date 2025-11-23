@@ -137,7 +137,11 @@ void call::printQuad() {
 }
 
 void call::execute(Machine* vm) {
-    
+    vm->memoryStack.push(vm->reservedMemory.top());
+    vm->reservedMemory.pop();
+
+    vm->returnPointers.push(vm->instructionPointer + 1);
+    vm->instructionPointer = jump;
 }
 
 call::call(): quad(operatortype::unknown), funcName(""), jump(-1) {}
@@ -153,8 +157,11 @@ void reserve::execute(Machine* vm) {
     if (memory->global) {
         vm->globalMemory = new Memory(memory);
         vm->memoryStack.push(vm->globalMemory);
-        vm->instructionPointer++;
+    }else {
+        vm->reservedMemory.push(new Memory(memory));
     }
+
+    vm->instructionPointer++;
 }
 
 reserve::reserve(): quad(operatortype::unknown), memory(nullptr) {}
@@ -169,11 +176,18 @@ void arg::printQuad() {
 }
 
 void arg::execute(Machine* vm) {
-    
+    int argindex = VirtualMemoryManager::getIndex(argument);
+    int paramindex = VirtualMemoryManager::getIndex(param);
+    Memory* argmem = (argument.mem == memorytype::global || argument.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    Memory* parammem = vm->reservedMemory.top();
+    datatypes argval = argmem->operator[](argument.mem)[argument.type][argindex];
+
+    parammem->operator[](param.mem)[param.type][paramindex] = argval;
+    vm->instructionPointer++;
 }
 
-arg::arg(): quad(operatortype::unknown), argument(operand()), pos(-1) {}
-arg::arg(operand a, int p): quad(operatortype::arg), argument(a), pos(p) {}
+arg::arg(): quad(operatortype::unknown), argument(operand()), pos(-1), param(operand()) {}
+arg::arg(operand a, int p, operand pa): quad(operatortype::arg), argument(a), pos(p), param(pa) {}
 
 
 // endfunc
@@ -182,7 +196,9 @@ void endfunc::printQuad() {
 }
 
 void endfunc::execute(Machine* vm) {
-    
+    vm->instructionPointer = vm->returnPointers.top();
+    vm->returnPointers.pop();
+    vm->memoryStack.pop();
 }
 
 endfunc::endfunc(): quad(operatortype::endfunc) {}

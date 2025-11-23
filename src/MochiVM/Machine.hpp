@@ -18,9 +18,10 @@ class Machine {
     private:
         Memory* globalMemory;
         int instructionPointer = 0;
+        std::stack<int> returnPointers;
         std::vector<quad*> quads;
         std::stack<Memory*> memoryStack;
-
+        std::stack<Memory*> reservedMemory;
         
     public:
         Machine(std::vector<quad*> quads);

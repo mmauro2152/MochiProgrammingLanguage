@@ -97,13 +97,14 @@ struct reserve : quad {
 
 struct arg : quad {
     operand argument;
+    operand param;
     int pos;
 
     void printQuad() override;
     void execute(Machine* vm) override;
 
     arg();
-    arg(operand a, int p);
+    arg(operand a, int p, operand pa);
 };
 
 struct endfunc : quad {

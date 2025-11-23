@@ -28,6 +28,7 @@ int semanticErrors = 0;
 std::stack<int> argCounters;
 std::stack<FuncEntry*> funcStack;
 std::stack<std::vector<operand>> args;
+bool hasReturnExpression = false;
 
 
 QuadManager quadManager;
@@ -234,33 +235,44 @@ statement:
 
 return_statement:
     return_token opt_expression semicolon {
-        FuncEntry* globalContext = funcDir.getFunction(globalScope);
+        FuncEntry* func = funcDir.getFunction(currScope);
 
-        operand exp_result = quadManager.operands.top();
-        quadManager.operands.pop();
-
-        VarEntry* funcVar = globalContext->localVars.getVar(currScope);
-        operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
-
-        if (funcVarOper.type != exp_result.type) {
+        if (func->returnType == vartype::void_type) {
+            if (hasReturnExpression) {
+                semanticErrors++;
+                std::cerr << "No return expression allowed for void function '" << func->name << "' " << std::endl;
+            }
+        } 
+        else if (!hasReturnExpression) {
             semanticErrors++;
-            std::cerr << "Expected expression of type '" << 
-            vartype_string[funcVarOper.type] << "' instead of '" << 
-            vartype_string[exp_result.type] << "'" << std::endl;
-        } else {
-            quad* q = new unaryOperation(operatortype::assign, exp_result, funcVarOper);
-            quadManager.push(q);
-            quadManager.push(new endfunc());
+            std::cerr << "Expected return expression of type '" << vartype_string[func->returnType] << "'" << std::endl;
+        } 
+        else {
+            FuncEntry* globalContext = funcDir.getFunction(globalScope);
+
+            operand exp_result = quadManager.operands.top();
+            quadManager.operands.pop();
+
+            VarEntry* funcVar = globalContext->localVars.getVar(currScope);
+            operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
+
+            if (funcVarOper.type != exp_result.type) {
+                semanticErrors++;
+                std::cerr << "Expected expression of type '" << 
+                vartype_string[funcVarOper.type] << "' instead of '" << 
+                vartype_string[exp_result.type] << "'" << std::endl;
+            } else {
+                quad* q = new unaryOperation(operatortype::assign, exp_result, funcVarOper);
+                quadManager.push(q);
+                quadManager.push(new endfunc());
+            }
         }
     }
 ;
 
 opt_expression:
-    {
-        operand op = funcDir.getFunction(currScope)->memManager->getTemp(vartype::void_type);
-        quadManager.operands.push(op);
-    }
-    | expression
+    { hasReturnExpression = false; }
+    | expression { hasReturnExpression = true; }
 ;
 
 assign_statement:
@@ -457,6 +469,8 @@ func_call:
             funcStack.push(func);
             argCounters.push(0);
 
+            quadManager.operators.push(operatortype::fake_bottom);
+
             quad* q = new reserve(func->memManager);
             quadManager.push(q);
         }
@@ -474,19 +488,29 @@ func_call:
                 semanticErrors++;
                 std::cout << "Argument count mismatch" << std::endl;
                 
-            }else {
+            }
+            else if (quadManager.operators.top() != operatortype::fake_bottom) {
+                semanticErrors++;
+                std::cerr << "Unexpected operator '" << operatortype_string[quadManager.operators.top()] << "'" << std::endl;
+            }
+            else {
+                // discard fake bottom
+                quadManager.operators.pop();
+
                 quad* q = new call(func->name, func->start);
                 quadManager.push(q);
 
-                FuncEntry* globalContext = funcDir.getFunction(globalScope);
-                VarEntry* funcVar = globalContext->localVars.getVar(func->name);
-                operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
-
-                operand t = globalContext->memManager->getTemp(func->returnType);
-
-                quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
-                quadManager.push(aq);
-                quadManager.operands.push(t);
+                if (func->returnType != vartype::void_type) {
+                    FuncEntry* globalContext = funcDir.getFunction(globalScope);
+                    VarEntry* funcVar = globalContext->localVars.getVar(func->name);
+                    operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
+    
+                    operand t = globalContext->memManager->getTemp(func->returnType);
+    
+                    quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
+                    quadManager.push(aq);
+                    quadManager.operands.push(t);
+                }
             }
         }
     }
@@ -511,23 +535,23 @@ arg_loop:
             operand exp_result = quadManager.operands.top(); 
             quadManager.operands.pop();
 
-            std::vector<std::pair<std::string, vartype>> params = funcStack.top()->parameters;
+            std::vector<operand> params = funcStack.top()->parameters;
 
             if (params.size() == 0 || argCounters.top() > params.size() - 1) {
                 semanticErrors++;
                 std::cerr << "Argument count mismatch for function '" << funcStack.top()->name << "'" << std::endl;
             }
-            else if (params[argCounters.top()].second != exp_result.type) {
+            else if (params[argCounters.top()].type != exp_result.type) {
                 semanticErrors++;
 
                 std::cerr << "Argument type mismatch, expected '" << 
-                vartype_string[params[argCounters.top()].second] <<
+                vartype_string[params[argCounters.top()].type] <<
                 "' and received '" <<
                 vartype_string[exp_result.type] << 
                 "'" << std::endl;
             }
 
-            quad* q = new arg(exp_result, argCounters.top());
+            quad* q = new arg(exp_result, argCounters.top(), params[argCounters.top()]);
             quadManager.push(q);
 
             argCounters.top() = argCounters.top() + 1;
