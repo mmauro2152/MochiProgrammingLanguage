@@ -721,11 +721,8 @@ factor_element:
 
 constants: 
     string_constant {
-        operand op = funcDir.getFunction(currScope)->memManager->getConst($1, vartype::string_type);
+        operand op = funcDir.getFunction(globalScope)->memManager->getConst($1, $1, vartype::string_type);
         quadManager.operands.push(op);
-
-        ConstEntry entry = ConstEntry(op.type, $1);
-        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
     | num_constant
     | bool_constant
@@ -733,36 +730,24 @@ constants:
 
 num_constant:
     int_constant {
-        operand op = funcDir.getFunction(currScope)->memManager->getConst(std::to_string($1), vartype::int_type);
+        operand op = funcDir.getFunction(globalScope)->memManager->getConst(std::to_string($1), $1, vartype::int_type);
         quadManager.operands.push(op);
-
-        ConstEntry entry = ConstEntry(op.type, std::to_string($1));
-        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
     | float_constant {
-        operand op = funcDir.getFunction(currScope)->memManager->getConst(std::to_string($1), vartype::float_type);
+        operand op = funcDir.getFunction(globalScope)->memManager->getConst(std::to_string($1), $1, vartype::float_type);
         quadManager.operands.push(op);
-
-        ConstEntry entry = ConstEntry(op.type, std::to_string($1));
-        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
 ;
 
 bool_constant:
     true_constant {
-        operand op = funcDir.getFunction(currScope)->memManager->getConst("true", vartype::bool_type);
+        operand op = funcDir.getFunction(globalScope)->memManager->getConst("true", true, vartype::bool_type);
         quadManager.operands.push(op);
-
-        ConstEntry entry = ConstEntry(op.type, "true");
-        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
 
     | false_constant {
-        operand op = funcDir.getFunction(currScope)->memManager->getConst("false", vartype::bool_type);
+        operand op = funcDir.getFunction(globalScope)->memManager->getConst("false", false, vartype::bool_type);
         quadManager.operands.push(op);
-
-        ConstEntry entry = ConstEntry(op.type, "false");
-        funcDir.getFunction(currScope)->localConsts.setConst(op.addr, entry);
     }
 ;
 
