@@ -13,6 +13,10 @@ struct proxyarr {
         return arr[static_cast<int>(col)];
     }
 
+    bool isnull() {
+        return arr == nullptr;
+    }
+
     proxyarr(): arr(nullptr) {}
     proxyarr(T* r): arr(r) {}
     proxyarr(int len): arr(new T[len]) {}

@@ -1,7 +1,32 @@
 program myProgram;
-var x: bool; y: bool; z: int;
+var x: bool; y: bool; z: int; f: float;
 
 main {
     z = -1;
+    f = 3.14;
+
+    print(z + f * 89 / 45 + (2 + f));
+
+    x = true;
+    y = false;
+
+    if (x) {
+        print("x es true");
+    } else {
+        print("x es false");
+    };
+    
+    if (y) {
+        print("y es true");
+    } else {
+        print("y es false");
+    };
+
+    z = 0;
+    while (z <= 10) do {
+        print(z);
+        z = z + 1;
+    };
+
 }
 end

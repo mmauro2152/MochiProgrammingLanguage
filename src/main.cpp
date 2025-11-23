@@ -50,8 +50,8 @@ void test_parser(int argc, char** argv){
 
             std::cout << "Executing..." << std::endl;
 
-            // Machine vm = Machine(quadManager.quads);
-            // vm.execute();
+            Machine vm = Machine(quadManager.quads);
+            vm.execute();
         }
         else
         {

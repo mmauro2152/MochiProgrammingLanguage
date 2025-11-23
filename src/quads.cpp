@@ -2,6 +2,7 @@
 #include "MochiVM/Machine.hpp"
 #include "VirtualMemoryManager.hpp"
 #include "SemanticCube.hpp"
+#include "MochiVM/functors.hpp"
 
 
 // empty parent class
@@ -19,7 +20,17 @@ void binaryOperation::printQuad() {
 }
 
 void binaryOperation::execute(Machine* vm) {
+    int leftindex = VirtualMemoryManager::getIndex(leftOperand);
+    int rightindex = VirtualMemoryManager::getIndex(rightOperand);
+    int resindex = VirtualMemoryManager::getIndex(result);
+    Memory* leftmem = (leftOperand.mem == memorytype::global || leftOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    Memory* rightmem = (rightOperand.mem == memorytype::global || rightOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    datatypes leftval = leftmem->operator[](leftOperand.mem)[leftOperand.type][leftindex];
+    datatypes rightval = rightmem->operator[](rightOperand.mem)[rightOperand.type][rightindex];
 
+    resmem->operator[](result.mem)[result.type][resindex] = std::visit(binaryFunctor(operator_), leftval, rightval);
+    vm->instructionPointer++;
 }
 
 binaryOperation::binaryOperation(): quad(), leftOperand(operand()), rightOperand(operand()), result(operand()) {}
@@ -34,7 +45,14 @@ void unaryOperation::printQuad() {
 }
 
 void unaryOperation::execute(Machine* vm) {
-    
+    int operindex = VirtualMemoryManager::getIndex(operand_);
+    int resindex = VirtualMemoryManager::getIndex(result);
+    Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
+
+    resmem->operator[](result.mem)[result.type][resindex] = std::visit(unaryFunctor(operator_), operval);
+    vm->instructionPointer++;
 }
 
 unaryOperation::unaryOperation(): quad(), operand_(operand()), result(operand()) {}
@@ -47,7 +65,7 @@ void goto_::printQuad() {
 }
 
 void goto_::execute(Machine* vm) {
-    
+    vm->instructionPointer = jump;
 }
 
 goto_::goto_(): quad(operatortype::goto_), jump(-1) {}
@@ -63,7 +81,30 @@ void condGoto::printQuad() {
 }
 
 void condGoto::execute(Machine* vm) {
-    
+    int condindex = VirtualMemoryManager::getIndex(condition);
+    Memory* condmem = (condition.mem == memorytype::global || condition.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    datatypes condval = condmem->operator[](condition.mem)[condition.type][condindex];
+
+    bool cond = std::get<bool>(condval);
+
+    switch (operator_) {
+        case operatortype::gotof:
+            if (!cond) 
+                vm->instructionPointer = jump;
+            else 
+                vm->instructionPointer++;     
+            break;
+
+        case operatortype::gotot:
+            if (cond) 
+                vm->instructionPointer = jump;
+            else 
+                vm->instructionPointer++;
+
+        default:
+            throw std::runtime_error("Invalid operator");
+            break;
+    }
 }
 
 condGoto::condGoto(): goto_(operatortype::unknown, -1), condition(operand()) {}
@@ -76,7 +117,12 @@ void print::printQuad() {
 }
 
 void print::execute(Machine* vm) {
-    
+    int operindex = VirtualMemoryManager::getIndex(operand_);
+    Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
+    datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
+
+    std::visit(printFunctor(), operval);
+    vm->instructionPointer++;
 }
 
 print::print(): quad(operatortype::unknown), operand_(operand()) {}
@@ -104,7 +150,11 @@ void reserve::printQuad() {
 }
 
 void reserve::execute(Machine* vm) {
-    
+    if (memory->global) {
+        vm->globalMemory = new Memory(memory);
+        vm->memoryStack.push(vm->globalMemory);
+        vm->instructionPointer++;
+    }
 }
 
 reserve::reserve(): quad(operatortype::unknown), memory(nullptr) {}
