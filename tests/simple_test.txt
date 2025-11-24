@@ -1,7 +1,7 @@
 program myProgram;
 var x: bool; y: bool; z: int; f: float;
 
-int suma(i: int, f: int) [{
+float suma(i: float, f: float) [{
     return i + f;
 }];
 

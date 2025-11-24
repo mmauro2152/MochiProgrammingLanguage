@@ -532,7 +532,7 @@ arg_loop:
             std::cerr << "Error: Expected expression" << std::endl;
         }
         else {
-            operand exp_result = quadManager.operands.top(); 
+            operand arg_ = quadManager.operands.top(); 
             quadManager.operands.pop();
 
             std::vector<operand> params = funcStack.top()->parameters;
@@ -541,17 +541,21 @@ arg_loop:
                 semanticErrors++;
                 std::cerr << "Argument count mismatch for function '" << funcStack.top()->name << "'" << std::endl;
             }
-            else if (params[argCounters.top()].type != exp_result.type) {
+
+            CubeEntry entry = CubeEntry(params[argCounters.top()].type, arg_.type, operatortype::assign);
+            vartype restype = SemanticCube::resultingType(entry);
+
+            if (!SemanticCube::possibleOperation(entry)) {
                 semanticErrors++;
 
                 std::cerr << "Argument type mismatch, expected '" << 
                 vartype_string[params[argCounters.top()].type] <<
                 "' and received '" <<
-                vartype_string[exp_result.type] << 
+                vartype_string[arg_.type] << 
                 "'" << std::endl;
             }
 
-            quad* q = new arg(exp_result, argCounters.top(), params[argCounters.top()]);
+            quad* q = new arg(arg_, argCounters.top(), params[argCounters.top()]);
             quadManager.push(q);
 
             argCounters.top() = argCounters.top() + 1;
