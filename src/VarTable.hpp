@@ -5,17 +5,7 @@
 #include <iostream>
 #include "proxyarr.hpp"
 #include "memorytype.hpp"
-
-enum class vartype {
-    int_type,
-    float_type,
-    string_type,
-    bool_type,
-    void_type,
-    unknown,
-    none,
-    func
-};
+#include "operand.hpp"
 
 static std::string var_s[] {
     "int", "float", "string", "bool", "void", "unknown", "none", "func"
@@ -38,7 +28,8 @@ struct VarEntry
 
 class VarTable {
 private:
-    std::unordered_map<int, VarEntry> table;
+    std::string scope;
+    std::unordered_map<int, operand> table;
     std::unordered_map<std::string, int> nameToAddr;
 
 public:
@@ -48,9 +39,9 @@ public:
 
     bool exists(const std::string& name);
 
-    VarEntry* getVar(const int& addr);
+    operand getVar(const int& addr);
 
-    VarEntry* getVar(const std::string& name);
+    operand getVar(const std::string& name);
 
     bool empty();
 

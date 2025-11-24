@@ -11,7 +11,7 @@ bool VarTable::insert(const int& addr, vartype type, std::string name, memorytyp
     }
 
     nameToAddr[name] = addr;
-    table[addr] = VarEntry(type, addr, name, mem);
+    table[addr] = operand(type, scope, addr, mem, name);
     return true;
 }
 
@@ -23,22 +23,22 @@ bool VarTable::exists(const std::string& name) {
     return nameToAddr.find(name) != nameToAddr.end();
 }
 
-VarEntry* VarTable::getVar(const int& addr) {
+operand VarTable::getVar(const int& addr) {
     if (exists(addr)) {
-        return &table[addr];
+        return table[addr];
     }
     
     std::cerr << "Error: Variable '" << addr << "' does not exist.\n";
-    return nullptr;
+    return operand();
 }
 
-VarEntry* VarTable::getVar(const std::string& name) {
+operand VarTable::getVar(const std::string& name) {
     if (exists(name)) {
-        return &table[nameToAddr[name]];
+        return table[nameToAddr[name]];
     }
     
     std::cerr << "Error: Variable '" << name << "' does not exist.\n";
-    return nullptr;
+    return operand();
 }
 
 bool VarTable::empty() {
@@ -46,9 +46,8 @@ bool VarTable::empty() {
 }
 
 void VarTable::printAll() {
-    std::unordered_map<int, VarEntry>::iterator it;
-    for (it = table.begin(); it != table.end(); ++it) {
-        std::cout << it->second.name << ", " << typeToString(it->second.type) << std::endl;
+    for (auto it = table.begin(); it != table.end(); ++it) {
+        std::cout << it->second.str << ", " << typeToString(it->second.type) << std::endl;
     }
 }
 

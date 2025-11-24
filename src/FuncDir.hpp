@@ -37,5 +37,5 @@ public:
 
     void setGlobalScope(const std::string& scope);
 
-    VarEntry* getVar(const std::string& scope, const std::string& varName);
+    operand getVar(const std::string& scope, const std::string& varName);
 };

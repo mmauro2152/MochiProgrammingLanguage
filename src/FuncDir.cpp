@@ -64,12 +64,12 @@ void FuncDir::printAll() {
     }
 }
 
-VarEntry* FuncDir::getVar(const std::string& scope, const std::string& varName) {
+operand FuncDir::getVar(const std::string& scope, const std::string& varName) {
     FuncEntry* func = getFunction(scope);
 
     if (func == nullptr){
         std::cerr << "Error: scope '" << scope << "' does not exist" << std::endl;
-        return nullptr;
+        return operand();
     }
     else if (!func->localVars.exists(varName)) {
         // try global scope
@@ -77,7 +77,7 @@ VarEntry* FuncDir::getVar(const std::string& scope, const std::string& varName) 
 
         if (func == nullptr) {
             std::cerr << "Scope '" << scope << "' does not exist" << std::endl;
-            return nullptr;
+            return operand();
         }
         else {
             return func->localVars.getVar(varName);

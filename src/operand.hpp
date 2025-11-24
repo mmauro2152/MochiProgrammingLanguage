@@ -1,6 +1,8 @@
 #pragma once
 
-#include "VarTable.hpp"
+#include "vartype.hpp"
+#include <string>
+#include "memorytype.hpp"
 
 struct operand {
     vartype type;

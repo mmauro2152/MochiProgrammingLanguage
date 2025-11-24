@@ -1,7 +1,6 @@
 #include "quads.hpp"
 #include "MochiVM/Machine.hpp"
 #include "VirtualMemoryManager.hpp"
-#include "SemanticCube.hpp"
 #include "MochiVM/functors.hpp"
 
 

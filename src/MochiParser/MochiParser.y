@@ -253,8 +253,7 @@ return_statement:
             operand exp_result = quadManager.operands.top();
             quadManager.operands.pop();
 
-            VarEntry* funcVar = globalContext->localVars.getVar(currScope);
-            operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
+            operand funcVarOper = globalContext->localVars.getVar(currScope);
 
             if (funcVarOper.type != exp_result.type) {
                 semanticErrors++;
@@ -277,12 +276,11 @@ opt_expression:
 
 assign_statement:
     id {
-        VarEntry* var = funcDir.getVar(currScope, $1);
-        if (var == nullptr) {
+        operand var = funcDir.getVar(currScope, $1);
+        if (var.type == vartype::unknown) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
-            quadManager.operands.push(op);
+            quadManager.operands.push(var);
         }
     }
     assign { quadManager.operators.push(operatortype::assign); }
@@ -311,12 +309,11 @@ assign_statement:
 assign_statement_:
     expression
     | id {
-        VarEntry* var = funcDir.getVar(currScope, $1);
-        if (var == nullptr) {
+        operand var = funcDir.getVar(currScope, $1);
+        if (var.type == vartype::unknown) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
-            quadManager.operands.push(op);
+            quadManager.operands.push(var);
         }
     }
     assign { quadManager.operators.push(operatortype::assign); }
@@ -502,9 +499,7 @@ func_call:
 
                 if (func->returnType != vartype::void_type) {
                     FuncEntry* globalContext = funcDir.getFunction(globalScope);
-                    VarEntry* funcVar = globalContext->localVars.getVar(func->name);
-                    operand funcVarOper = operand(funcVar->type, globalScope, funcVar->addr, funcVar->mem, funcVar->name);
-    
+                    operand funcVarOper = globalContext->localVars.getVar(func->name);
                     operand t = globalContext->memManager->getTemp(func->returnType);
     
                     quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
@@ -735,12 +730,11 @@ unary_oper:
 
 factor_element:
     id { 
-        VarEntry* var = funcDir.getVar(currScope, $1);
-        if (var == nullptr) {
+        operand var = funcDir.getVar(currScope, $1);
+        if (var.type == vartype::unknown) {
             semanticErrors++;
         } else {
-            operand op = operand(var->type, currScope, var->addr, var->mem, var->name);
-            quadManager.operands.push(op);
+            quadManager.operands.push(var);
         }
     }
     | constants
