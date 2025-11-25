@@ -7,7 +7,7 @@ bool FuncDir::insertFunction(const std::string& name, vartype returnType) {
     }
 
     table[name] = FuncEntry(name, returnType);
-    table[name].memManager->setscope(name);
+    table[name].addrManager->setscope(name);
     return true;
 }
 
@@ -22,7 +22,7 @@ bool FuncDir::addParameter(const std::string& name, const std::string& paramName
     }
     
     memorytype mem = (name == globalScope) ? memorytype::global : memorytype::local;
-    operand param = operand(paramType, name, table[name].memManager->getAddress(mem, paramType), mem, paramName);
+    operand param = operand(paramType, name, table[name].addrManager->getAddress(mem, paramType), mem, paramName);
 
     table[name].parameters.push_back(param);
     table[name].localVars.insert(param.addr, param.type, param.str, param.mem);

@@ -8,15 +8,15 @@
 struct FuncEntry {
     VarTable localVars;
     ConstTable localConsts;
-    VirtualAddressManager* memManager;
+    VirtualAddressManager* addrManager;
 
     int start;
     std::string name;
     vartype returnType;
     std::vector<operand> parameters;
 
-    FuncEntry(): returnType(vartype::void_type), memManager(nullptr) {}
-    FuncEntry(std::string n, vartype r) : name(n), returnType(r), memManager(new VirtualAddressManager()) {}
+    FuncEntry(): returnType(vartype::void_type), addrManager(nullptr) {}
+    FuncEntry(std::string n, vartype r) : name(n), returnType(r), addrManager(new VirtualAddressManager()) {}
 };
 
 class FuncDir{

@@ -5,7 +5,7 @@ void QuadManager::push(quad* q) {
     instructionPointer++;
 }
 
-bool QuadManager::generateBinaryQuad(VirtualAddressManager* memManager){
+bool QuadManager::generateBinaryQuad(VirtualAddressManager* addrManager){
     if (operands.size() < 2 || operators.empty()) {
         return false;
     }
@@ -24,7 +24,7 @@ bool QuadManager::generateBinaryQuad(VirtualAddressManager* memManager){
         return false;
     }
 
-    operand temp = memManager->getTemp(restype);
+    operand temp = addrManager->getTemp(restype);
     quad* q = new binaryOperation(op, lOperand, rOperand, temp);
 
     push(q);
@@ -33,7 +33,7 @@ bool QuadManager::generateBinaryQuad(VirtualAddressManager* memManager){
     return true;
 }
 
-bool QuadManager::generateUnaryQuad(VirtualAddressManager* memManager){
+bool QuadManager::generateUnaryQuad(VirtualAddressManager* addrManager){
     if (operands.empty() || operators.empty()) {
         return false;
     }
@@ -50,7 +50,7 @@ bool QuadManager::generateUnaryQuad(VirtualAddressManager* memManager){
         return false;
     }
 
-    operand temp = memManager->getTemp(restype);
+    operand temp = addrManager->getTemp(restype);
     quad* q = new unaryOperation(op, rOperand, temp);
 
     push(q);

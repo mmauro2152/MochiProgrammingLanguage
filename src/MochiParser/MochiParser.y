@@ -77,8 +77,8 @@ program_declaration:
             semanticErrors++;
         }
 
-        funcDir.getFunction(globalScope)->memManager->setAsGlobal();
-        quad* q = new reserve(funcDir.getFunction(globalScope)->memManager);
+        funcDir.getFunction(globalScope)->addrManager->setAsGlobal();
+        quad* q = new reserve(funcDir.getFunction(globalScope)->addrManager);
         quadManager.push(q);
 
         q = new goto_(-1);
@@ -137,9 +137,9 @@ var_loop:
             int addr = 0;
             memorytype mem = (currScope == globalScope) ? memorytype::global : memorytype::local;
             if (currScope == globalScope) {
-                addr = funcDir.getFunction(currScope)->memManager->getAddress(mem, currType);
+                addr = funcDir.getFunction(currScope)->addrManager->getAddress(mem, currType);
             } else {
-                addr = funcDir.getFunction(currScope)->memManager->getAddress(mem, currType);
+                addr = funcDir.getFunction(currScope)->addrManager->getAddress(mem, currType);
             }
 
             if (!funcDir.getFunction(currScope)->localVars.insert(addr, currType, idQueue.front(), mem)) {
@@ -186,7 +186,7 @@ funcs:
         } else {
             FuncEntry* globalContext = funcDir.getFunction(globalScope);
 
-            int addr = globalContext->memManager->getAddress(memorytype::global, currType);
+            int addr = globalContext->addrManager->getAddress(memorytype::global, currType);
             globalContext->localVars.insert(addr, currType, currScope, memorytype::global);
         }
     } 
@@ -471,7 +471,7 @@ func_call:
 
             quadManager.operators.push(operatortype::fake_bottom);
 
-            quad* q = new reserve(func->memManager);
+            quad* q = new reserve(func->addrManager);
             quadManager.push(q);
         }
     } 
@@ -503,7 +503,7 @@ func_call:
                 if (func->returnType != vartype::void_type) {
                     FuncEntry* globalContext = funcDir.getFunction(globalScope);
                     operand funcVarOper = globalContext->localVars.getVar(func->name);
-                    operand t = globalContext->memManager->getTemp(func->returnType);
+                    operand t = globalContext->addrManager->getTemp(func->returnType);
     
                     quad* aq = new unaryOperation(operatortype::assign, funcVarOper, t);
                     quadManager.push(aq);
@@ -570,7 +570,7 @@ arg_loop_:
 expression:
     or_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::or_)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -586,7 +586,7 @@ or_exp_:
 or_exp:
     and_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::and_)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -602,7 +602,7 @@ and_exp_:
 and_exp:
     eq_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal || quadManager.operators.top() == operatortype::not_equal)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -623,7 +623,7 @@ eq_exp_:
 eq_exp:
     rel_exp {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::equal_greater_than || quadManager.operators.top() == operatortype::greater_than || quadManager.operators.top() == operatortype::equal_smaller_than || quadManager.operators.top() == operatortype::smaller_than)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -646,7 +646,7 @@ rel_oper:
 rel_exp:
     term {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::plus || quadManager.operators.top() == operatortype::minus)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -667,7 +667,7 @@ term_operator:
 term:
     factor {
         if (!quadManager.operators.empty() && !quadManager.operands.empty() && (quadManager.operators.top() == operatortype::asterisk || quadManager.operators.top() == operatortype::slash)) {
-            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -710,7 +710,7 @@ factor:
             // discard fake bottom
             quadManager.operators.pop();
 
-            if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->memManager)){
+            if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->addrManager)){
                 semanticErrors++;
             }
         }
@@ -719,7 +719,7 @@ factor:
     | factor_element
     
     | unary_oper factor_element {
-        if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->memManager)){
+        if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->addrManager)){
             semanticErrors++;
         }
     }
@@ -746,7 +746,7 @@ factor_element:
 
 constants: 
     string_constant {
-        operand op = funcDir.getFunction(globalScope)->memManager->getConst($1, $1, vartype::string_type);
+        operand op = funcDir.getFunction(globalScope)->addrManager->getConst($1, $1, vartype::string_type);
         quadManager.operands.push(op);
     }
     | num_constant
@@ -755,23 +755,23 @@ constants:
 
 num_constant:
     int_constant {
-        operand op = funcDir.getFunction(globalScope)->memManager->getConst(std::to_string($1), $1, vartype::int_type);
+        operand op = funcDir.getFunction(globalScope)->addrManager->getConst(std::to_string($1), $1, vartype::int_type);
         quadManager.operands.push(op);
     }
     | float_constant {
-        operand op = funcDir.getFunction(globalScope)->memManager->getConst(std::to_string($1), $1, vartype::float_type);
+        operand op = funcDir.getFunction(globalScope)->addrManager->getConst(std::to_string($1), $1, vartype::float_type);
         quadManager.operands.push(op);
     }
 ;
 
 bool_constant:
     true_constant {
-        operand op = funcDir.getFunction(globalScope)->memManager->getConst("true", true, vartype::bool_type);
+        operand op = funcDir.getFunction(globalScope)->addrManager->getConst("true", true, vartype::bool_type);
         quadManager.operands.push(op);
     }
 
     | false_constant {
-        operand op = funcDir.getFunction(globalScope)->memManager->getConst("false", false, vartype::bool_type);
+        operand op = funcDir.getFunction(globalScope)->addrManager->getConst("false", false, vartype::bool_type);
         quadManager.operands.push(op);
     }
 ;

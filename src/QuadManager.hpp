@@ -22,6 +22,6 @@ class QuadManager {
         operand getTemp(vartype type);
 
         void push(quad* q);
-        bool generateBinaryQuad(VirtualAddressManager* memManager);
-        bool generateUnaryQuad(VirtualAddressManager* memManager);
+        bool generateBinaryQuad(VirtualAddressManager* addrManager);
+        bool generateUnaryQuad(VirtualAddressManager* addrManager);
 };

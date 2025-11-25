@@ -149,22 +149,22 @@ call::call(std::string n, int j): quad(operatortype::call), funcName(n), jump(j)
 
 // reserve - era
 void reserve::printQuad() {
-    std::cout << operatortype_string[operator_] << ", " << memory->getscope();
+    std::cout << operatortype_string[operator_] << ", " << addrManager->getscope();
 }
 
 void reserve::execute(Machine* vm) {
-    if (memory->global) {
-        vm->globalMemory = new Memory(memory);
+    if (addrManager->global) {
+        vm->globalMemory = new Memory(addrManager);
         vm->memoryStack.push(vm->globalMemory);
     }else {
-        vm->reservedMemory.push(new Memory(memory));
+        vm->reservedMemory.push(new Memory(addrManager));
     }
 
     vm->instructionPointer++;
 }
 
-reserve::reserve(): quad(operatortype::unknown), memory(nullptr) {}
-reserve::reserve(VirtualAddressManager* m): quad(operatortype::reserve), memory(m) {}
+reserve::reserve(): quad(operatortype::unknown), addrManager(nullptr) {}
+reserve::reserve(VirtualAddressManager* m): quad(operatortype::reserve), addrManager(m) {}
 
 
 // arg - param

@@ -87,7 +87,7 @@ struct call : quad {
 };
 
 struct reserve : quad {
-    VirtualAddressManager* memory;
+    VirtualAddressManager* addrManager;
 
     void printQuad() override;
     void execute(Machine* vm) override;
