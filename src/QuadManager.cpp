@@ -5,7 +5,7 @@ void QuadManager::push(quad* q) {
     instructionPointer++;
 }
 
-bool QuadManager::generateBinaryQuad(VirtualMemoryManager* memManager){
+bool QuadManager::generateBinaryQuad(VirtualAddressManager* memManager){
     if (operands.size() < 2 || operators.empty()) {
         return false;
     }
@@ -33,7 +33,7 @@ bool QuadManager::generateBinaryQuad(VirtualMemoryManager* memManager){
     return true;
 }
 
-bool QuadManager::generateUnaryQuad(VirtualMemoryManager* memManager){
+bool QuadManager::generateUnaryQuad(VirtualAddressManager* memManager){
     if (operands.empty() || operators.empty()) {
         return false;
     }

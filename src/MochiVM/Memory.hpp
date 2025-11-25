@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../VirtualMemoryManager.hpp"
+#include "../VirtualAddressManager.hpp"
 #include "datatypes.hpp"
 
 
 class Memory {
     private:
         proxyarr<proxyarr<proxyarr<datatypes>>> mem;
-        VirtualMemoryManager* virtualMem;
+        VirtualAddressManager* virtualMem;
 
     public:
         Memory();
-        Memory(VirtualMemoryManager* virtualMem);
+        Memory(VirtualAddressManager* virtualMem);
 
         proxyarr<proxyarr<datatypes>>& operator[](int i) {
             return mem[i];

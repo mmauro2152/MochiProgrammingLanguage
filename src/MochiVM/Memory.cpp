@@ -4,7 +4,7 @@ Memory::Memory() {
     
 }
 
-Memory::Memory(VirtualMemoryManager* virtualMem) {
+Memory::Memory(VirtualAddressManager* virtualMem) {
     mem = proxyarr<proxyarr<proxyarr<datatypes>>>(4);  // global local temps const = 4
 
     for (int i = 0; i < 4; i++){

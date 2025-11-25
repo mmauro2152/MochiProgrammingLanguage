@@ -4,7 +4,7 @@
 #include <queue>
 #include "SemanticCube.hpp"
 #include "operand.hpp"
-#include "VirtualMemoryManager.hpp"
+#include "VirtualAddressManager.hpp"
 #include "FuncDir.hpp"
 #include "quads.hpp"
 
@@ -22,6 +22,6 @@ class QuadManager {
         operand getTemp(vartype type);
 
         void push(quad* q);
-        bool generateBinaryQuad(VirtualMemoryManager* memManager);
-        bool generateUnaryQuad(VirtualMemoryManager* memManager);
+        bool generateBinaryQuad(VirtualAddressManager* memManager);
+        bool generateUnaryQuad(VirtualAddressManager* memManager);
 };

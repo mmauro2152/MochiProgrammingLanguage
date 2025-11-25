@@ -3,11 +3,11 @@
 #include <unordered_map>
 #include "MochiVM/datatypes.hpp"
 
-class VirtualMemoryManager;
+class VirtualAddressManager;
 class Memory;
 
 class ConstTable {
-    friend class VirtualMemoryManager;
+    friend class VirtualAddressManager;
     friend class Memory;
 
     private:

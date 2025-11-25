@@ -1,6 +1,6 @@
 #include "quads.hpp"
 #include "MochiVM/Machine.hpp"
-#include "VirtualMemoryManager.hpp"
+#include "VirtualAddressManager.hpp"
 #include "MochiVM/functors.hpp"
 
 
@@ -19,9 +19,9 @@ void binaryOperation::printQuad() {
 }
 
 void binaryOperation::execute(Machine* vm) {
-    int leftindex = VirtualMemoryManager::getIndex(leftOperand);
-    int rightindex = VirtualMemoryManager::getIndex(rightOperand);
-    int resindex = VirtualMemoryManager::getIndex(result);
+    int leftindex = VirtualAddressManager::getIndex(leftOperand);
+    int rightindex = VirtualAddressManager::getIndex(rightOperand);
+    int resindex = VirtualAddressManager::getIndex(result);
     Memory* leftmem = (leftOperand.mem == memorytype::global || leftOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* rightmem = (rightOperand.mem == memorytype::global || rightOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
@@ -44,8 +44,8 @@ void unaryOperation::printQuad() {
 }
 
 void unaryOperation::execute(Machine* vm) {
-    int operindex = VirtualMemoryManager::getIndex(operand_);
-    int resindex = VirtualMemoryManager::getIndex(result);
+    int operindex = VirtualAddressManager::getIndex(operand_);
+    int resindex = VirtualAddressManager::getIndex(result);
     Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
@@ -80,7 +80,7 @@ void condGoto::printQuad() {
 }
 
 void condGoto::execute(Machine* vm) {
-    int condindex = VirtualMemoryManager::getIndex(condition);
+    int condindex = VirtualAddressManager::getIndex(condition);
     Memory* condmem = (condition.mem == memorytype::global || condition.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     datatypes condval = condmem->operator[](condition.mem)[condition.type][condindex];
 
@@ -116,7 +116,7 @@ void print::printQuad() {
 }
 
 void print::execute(Machine* vm) {
-    int operindex = VirtualMemoryManager::getIndex(operand_);
+    int operindex = VirtualAddressManager::getIndex(operand_);
     Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
 
@@ -164,7 +164,7 @@ void reserve::execute(Machine* vm) {
 }
 
 reserve::reserve(): quad(operatortype::unknown), memory(nullptr) {}
-reserve::reserve(VirtualMemoryManager* m): quad(operatortype::reserve), memory(m) {}
+reserve::reserve(VirtualAddressManager* m): quad(operatortype::reserve), memory(m) {}
 
 
 // arg - param
@@ -175,8 +175,8 @@ void arg::printQuad() {
 }
 
 void arg::execute(Machine* vm) {
-    int argindex = VirtualMemoryManager::getIndex(argument);
-    int paramindex = VirtualMemoryManager::getIndex(param);
+    int argindex = VirtualAddressManager::getIndex(argument);
+    int paramindex = VirtualAddressManager::getIndex(param);
     Memory* argmem = (argument.mem == memorytype::global || argument.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* parammem = vm->reservedMemory.top();
     datatypes argval = argmem->operator[](argument.mem)[argument.type][argindex];

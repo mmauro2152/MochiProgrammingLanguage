@@ -2,13 +2,13 @@
 
 #include <vector>
 #include "VarTable.hpp"
-#include "VirtualMemoryManager.hpp"
+#include "VirtualAddressManager.hpp"
 #include "ConstTable.hpp"
 
 struct FuncEntry {
     VarTable localVars;
     ConstTable localConsts;
-    VirtualMemoryManager* memManager;
+    VirtualAddressManager* memManager;
 
     int start;
     std::string name;
@@ -16,7 +16,7 @@ struct FuncEntry {
     std::vector<operand> parameters;
 
     FuncEntry(): returnType(vartype::void_type), memManager(nullptr) {}
-    FuncEntry(std::string n, vartype r) : name(n), returnType(r), memManager(new VirtualMemoryManager()) {}
+    FuncEntry(std::string n, vartype r) : name(n), returnType(r), memManager(new VirtualAddressManager()) {}
 };
 
 class FuncDir{

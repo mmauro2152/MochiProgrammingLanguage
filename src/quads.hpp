@@ -8,7 +8,7 @@ template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
 template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
 class Machine;
-class VirtualMemoryManager;
+class VirtualAddressManager;
 
 struct quad {
     operatortype operator_;
@@ -87,13 +87,13 @@ struct call : quad {
 };
 
 struct reserve : quad {
-    VirtualMemoryManager* memory;
+    VirtualAddressManager* memory;
 
     void printQuad() override;
     void execute(Machine* vm) override;
 
     reserve();
-    reserve(VirtualMemoryManager* m);
+    reserve(VirtualAddressManager* m);
 };
 
 struct arg : quad {

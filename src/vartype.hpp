@@ -8,5 +8,4 @@ enum class vartype {
     void_type,
     unknown,
     none,
-    func
 };

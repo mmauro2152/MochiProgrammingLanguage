@@ -36,7 +36,7 @@ struct counter {
     }
 };
 
-class VirtualMemoryManager
+class VirtualAddressManager
 {
 private:
     static proxyarr<int> pads;
@@ -57,7 +57,7 @@ private:
     friend struct reserve;
 
 public:
-    VirtualMemoryManager();
+    VirtualAddressManager();
 
     int getAddress(memorytype memytype, vartype datatype);
 
