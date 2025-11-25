@@ -430,7 +430,10 @@ cycle_statement:
 ;
 
 print_statement:
-    print_token l_parenthesis print_arg_loop r_parenthesis semicolon 
+    print_token l_parenthesis print_arg_loop r_parenthesis semicolon {
+        print* p = dynamic_cast<print*>(quadManager.quads[quadManager.quads.size() - 1]);
+        p->endl = true;
+    }
 ;
 
 print_arg_loop:

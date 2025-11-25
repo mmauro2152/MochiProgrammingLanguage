@@ -120,7 +120,7 @@ void print::execute(Machine* vm) {
     Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
 
-    std::visit(printFunctor(), operval);
+    std::visit(printFunctor(endl), operval);
     vm->instructionPointer++;
 }
 

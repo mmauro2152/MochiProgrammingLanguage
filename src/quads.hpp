@@ -66,6 +66,7 @@ struct condGoto : goto_ {
 
 struct print : quad {
     operand operand_;
+    bool endl = false;
 
     void printQuad() override;
     void execute(Machine* vm) override;

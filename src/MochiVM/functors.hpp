@@ -315,14 +315,36 @@ struct binaryFunctor {
 };
 
 
-void applyPrintOperator(int i) { std::cout << i << std::endl; }
-void applyPrintOperator(float f) { std::cout << f << std::endl; }
-void applyPrintOperator(std::string s) { std::cout << s << std::endl; }
-void applyPrintOperator(bool b) { std::cout << ((b) ? "true" : "false") << std::endl; }
+void applyPrintOperator(int i, bool e) { 
+    std::cout << i; 
+
+    if (e)
+        std::cout << std::endl;
+}
+void applyPrintOperator(float f, bool e) { 
+    std::cout << f; 
+
+    if (e)
+        std::cout << std::endl;
+}
+void applyPrintOperator(std::string s, bool e) { 
+    std::cout << s; 
+
+    if (e)
+        std::cout << std::endl;
+}
+void applyPrintOperator(bool b, bool e) { 
+    std::cout << ((b) ? "true" : "false"); 
+
+    if (e)
+        std::cout << std::endl;
+}
 
 struct printFunctor {
-    template<typename T>
-    void operator()(T& item) { applyPrintOperator(item); }
+    bool endl;
 
-    printFunctor(){}
+    template<typename T>
+    void operator()(T& item) { applyPrintOperator(item, endl); }
+
+    printFunctor(bool e): endl(e) {}
 };
