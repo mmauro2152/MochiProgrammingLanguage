@@ -66,8 +66,12 @@ struct unaryFunctor {
     unaryFunctor(operatortype o): operator_(o) {}
 };
 
+// template <typename Tl, typename Tr>
+// datatypes applyBinaryOperator(Tl& left, Tr& right, operatortype o) {
+//     return applyBinaryOperator_(left, right, o);
+// }
 
-datatypes applyBinaryOperator(int left, int right, operatortype o) {
+datatypes applyBinaryOperator_(int left, int right, operatortype o) {
     switch(o) {
         case operatortype::plus:
             return left + right;
@@ -105,93 +109,7 @@ datatypes applyBinaryOperator(int left, int right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator(int left, float right, operatortype o) {
-    switch(o) {
-        case operatortype::plus:
-            return left + right;
-
-        case operatortype::minus:
-            return left - right;
-
-        case operatortype::asterisk:
-            return left * right;
-
-        case operatortype::slash:
-            return left / right;
-
-        case operatortype::equal_smaller_than:
-            return left <= right;
-
-        case operatortype::smaller_than:
-            return left < right;
-
-        case operatortype::equal_greater_than:
-            return left >= right;
-
-        case operatortype::greater_than:
-            return left > right;
-
-        case operatortype::equal:
-            return left == right;
-        
-        case operatortype::not_equal:
-            return left != right;
-
-        default:
-            throw std::runtime_error("Invalid operation");
-            return 0;
-    }
-}
-
-datatypes applyBinaryOperator(int left, bool right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(int left, std::string right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(float left, int right, operatortype o) {
-    switch(o) {
-        case operatortype::plus:
-            return left + right;
-
-        case operatortype::minus:
-            return left - right;
-
-        case operatortype::asterisk:
-            return left * right;
-
-        case operatortype::slash:
-            return left / right;
-
-        case operatortype::equal_smaller_than:
-            return left <= right;
-
-        case operatortype::smaller_than:
-            return left < right;
-
-        case operatortype::equal_greater_than:
-            return left >= right;
-
-        case operatortype::greater_than:
-            return left > right;
-
-        case operatortype::equal:
-            return left == right;
-        
-        case operatortype::not_equal:
-            return left != right;
-
-        default:
-            throw std::runtime_error("Invalid operation");
-            return 0;
-    }
-}
-
-datatypes applyBinaryOperator(float left, float right, operatortype o) {
+datatypes applyBinaryOperator_(float left, float right, operatortype o) {
     switch(o) {
         case operatortype::plus:
             return left + right;
@@ -229,27 +147,15 @@ datatypes applyBinaryOperator(float left, float right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator(float left, bool right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
+datatypes applyBinaryOperator_(int left, float right, operatortype o) {
+    return applyBinaryOperator_((float)left, right, o);
 }
 
-datatypes applyBinaryOperator(float left, std::string right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
+datatypes applyBinaryOperator_(float left, int right, operatortype o) {
+    return applyBinaryOperator_(left, (float)right, o);
 }
 
-datatypes applyBinaryOperator(bool left, int right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(bool left, float right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(bool left, bool right, operatortype o) {
+datatypes applyBinaryOperator_(bool left, bool right, operatortype o) {
     switch (o) {
         case operatortype::equal:
             return left == right;
@@ -269,27 +175,7 @@ datatypes applyBinaryOperator(bool left, bool right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator(bool left, std::string right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(std::string left, int right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(std::string left, float right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(std::string left, bool right, operatortype o) {
-    throw std::runtime_error("Invalid operation");
-    return 0;
-}
-
-datatypes applyBinaryOperator(std::string left, std::string right, operatortype o) {
+datatypes applyBinaryOperator_(std::string left, std::string right, operatortype o) {
     switch (o)
     {
         case operatortype::equal:
@@ -304,11 +190,18 @@ datatypes applyBinaryOperator(std::string left, std::string right, operatortype 
     }
 }
 
+template <typename A, typename B>
+datatypes applyBinaryOperator_(A left, B right, operatortype o) {
+    throw std::runtime_error("Invalid operation");
+}
+
 struct binaryFunctor {
     operatortype operator_;
     
-    template <typename T, typename T1>
-    datatypes operator()(T& left, T1& right) { return applyBinaryOperator(left, right, operator_); }
+    template <typename Tl, typename Tr>
+    datatypes operator()(Tl& left, Tr& right) { 
+        return applyBinaryOperator_(left, right, operator_); 
+    }
 
     binaryFunctor(): operator_(operatortype::unknown) {}
     binaryFunctor(operatortype o): operator_(o) {}
@@ -321,18 +214,21 @@ void applyPrintOperator(int i, bool e) {
     if (e)
         std::cout << std::endl;
 }
+
 void applyPrintOperator(float f, bool e) { 
     std::cout << f; 
 
     if (e)
         std::cout << std::endl;
 }
+
 void applyPrintOperator(std::string s, bool e) { 
     std::cout << s; 
 
     if (e)
         std::cout << std::endl;
 }
+
 void applyPrintOperator(bool b, bool e) { 
     std::cout << ((b) ? "true" : "false"); 
 
