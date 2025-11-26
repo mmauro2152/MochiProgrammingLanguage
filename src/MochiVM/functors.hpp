@@ -23,7 +23,7 @@ datatypes applyUnaryOperator(bool b, operatortype o) {
     switch(o) {
         case operatortype::not_:
             return !b;
-
+        
         case operatortype::assign:
             return b;
 
@@ -66,12 +66,8 @@ struct unaryFunctor {
     unaryFunctor(operatortype o): operator_(o) {}
 };
 
-// template <typename Tl, typename Tr>
-// datatypes applyBinaryOperator(Tl& left, Tr& right, operatortype o) {
-//     return applyBinaryOperator_(left, right, o);
-// }
 
-datatypes applyBinaryOperator_(int left, int right, operatortype o) {
+datatypes applyBinaryOperator(int left, int right, operatortype o) {
     switch(o) {
         case operatortype::plus:
             return left + right;
@@ -109,7 +105,7 @@ datatypes applyBinaryOperator_(int left, int right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator_(float left, float right, operatortype o) {
+datatypes applyBinaryOperator(float left, float right, operatortype o) {
     switch(o) {
         case operatortype::plus:
             return left + right;
@@ -147,15 +143,15 @@ datatypes applyBinaryOperator_(float left, float right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator_(int left, float right, operatortype o) {
-    return applyBinaryOperator_((float)left, right, o);
+datatypes applyBinaryOperator(int left, float right, operatortype o) {
+    return applyBinaryOperator((float)left, right, o);
 }
 
-datatypes applyBinaryOperator_(float left, int right, operatortype o) {
-    return applyBinaryOperator_(left, (float)right, o);
+datatypes applyBinaryOperator(float left, int right, operatortype o) {
+    return applyBinaryOperator(left, (float)right, o);
 }
 
-datatypes applyBinaryOperator_(bool left, bool right, operatortype o) {
+datatypes applyBinaryOperator(bool left, bool right, operatortype o) {
     switch (o) {
         case operatortype::equal:
             return left == right;
@@ -175,7 +171,7 @@ datatypes applyBinaryOperator_(bool left, bool right, operatortype o) {
     }
 }
 
-datatypes applyBinaryOperator_(std::string left, std::string right, operatortype o) {
+datatypes applyBinaryOperator(std::string left, std::string right, operatortype o) {
     switch (o)
     {
         case operatortype::equal:
@@ -191,7 +187,7 @@ datatypes applyBinaryOperator_(std::string left, std::string right, operatortype
 }
 
 template <typename A, typename B>
-datatypes applyBinaryOperator_(A left, B right, operatortype o) {
+datatypes applyBinaryOperator(A left, B right, operatortype o) {
     throw std::runtime_error("Invalid operation");
 }
 
@@ -200,7 +196,7 @@ struct binaryFunctor {
     
     template <typename Tl, typename Tr>
     datatypes operator()(Tl& left, Tr& right) { 
-        return applyBinaryOperator_(left, right, operator_); 
+        return applyBinaryOperator(left, right, operator_); 
     }
 
     binaryFunctor(): operator_(operatortype::unknown) {}
