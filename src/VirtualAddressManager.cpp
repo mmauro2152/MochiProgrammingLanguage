@@ -1,22 +1,26 @@
 #include "VirtualAddressManager.hpp"
 
-proxyarr<int> VirtualAddressManager::pads{};
+proxyarr<int> VirtualAddressManager::memOffset{};
 
 VirtualAddressManager::VirtualAddressManager() {
     count = counter(4, dataTypes);
     
-    if (VirtualAddressManager::pads.isnull()) {
+    if (memOffset.isnull()) {
         int* p = new int[5]{0, 5000, 10000, 14000, 15000};
-        VirtualAddressManager::pads = proxyarr<int>(p);
+        memOffset = proxyarr<int>(p);
     }
 }
 
 int VirtualAddressManager::getAddress(memorytype memtype, vartype datatype) {
-    int memRange = getMemoryRange(memtype);
-    int typePad = (memRange / dataTypes) * static_cast<int>(datatype);
-    int address = count[memtype][datatype]++ + VirtualAddressManager::pads[memtype] + typePad;
+    if (datatype == vartype::void_type) {
+        std::cout << "error" << std::endl;
+    }
 
-    if (address >= VirtualAddressManager::pads[memtype] + memRange) {
+    int memRange = getMemoryRange(memtype);
+    int typeOffset = (memRange / dataTypes) * static_cast<int>(datatype);
+    int address = count[memtype][datatype]++ + memOffset[memtype] + typeOffset;
+
+    if (address >= memOffset[memtype] + memRange) {
         std::cerr << "Ran out of " << memtype_string[memtype] << "memory" << std::endl;
     }
 
@@ -24,7 +28,7 @@ int VirtualAddressManager::getAddress(memorytype memtype, vartype datatype) {
 }
 
 int VirtualAddressManager::getMemoryRange(memorytype memtype) {
-    return VirtualAddressManager::pads[static_cast<int>(memtype) + 1] - VirtualAddressManager::pads[memtype];
+    return memOffset[static_cast<int>(memtype) + 1] - memOffset[memtype];
 }
 
 operand VirtualAddressManager::getTemp(vartype t) {
@@ -47,13 +51,13 @@ operand VirtualAddressManager::getConst(std::string strValue, datatypes value, v
 }
 
 std::string VirtualAddressManager::getTempStr(int addr, vartype t) {
-    int typePad = (getMemoryRange(memorytype::temp) / dataTypes) * static_cast<int>(t);
-    return "t" + std::string(1, vartype_string[t][0]) + std::to_string(addr - typePad - VirtualAddressManager::pads[memorytype::temp]);
+    int typeOffset = (getMemoryRange(memorytype::temp) / dataTypes) * static_cast<int>(t);
+    return "t" + std::string(1, vartype_string[t][0]) + std::to_string(addr - typeOffset - memOffset[memorytype::temp]);
 }
 
 int VirtualAddressManager::getIndex(operand o) {
     int memRange = getMemoryRange(o.mem);
-    int typePad = (memRange / dataTypes) * static_cast<int>(o.type);
+    int typeOffset = (memRange / dataTypes) * static_cast<int>(o.type);
 
-    return o.addr - VirtualAddressManager::pads[o.mem] - typePad;
+    return o.addr - memOffset[o.mem] - typeOffset;
 }

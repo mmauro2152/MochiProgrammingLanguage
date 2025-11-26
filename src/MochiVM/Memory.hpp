@@ -7,7 +7,7 @@
 class Memory {
     private:
         proxyarr<proxyarr<proxyarr<datatypes>>> mem;
-        VirtualAddressManager* virtualMem;
+        VirtualAddressManager* addrManager;
 
     public:
         Memory();

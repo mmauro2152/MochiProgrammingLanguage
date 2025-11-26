@@ -28,7 +28,8 @@ void binaryOperation::execute(Machine* vm) {
     datatypes leftval = leftmem->operator[](leftOperand.mem)[leftOperand.type][leftindex];
     datatypes rightval = rightmem->operator[](rightOperand.mem)[rightOperand.type][rightindex];
 
-    resmem->operator[](result.mem)[result.type][resindex] = std::visit(binaryFunctor(operator_), leftval, rightval);
+    datatypes r = std::visit(binaryFunctor(operator_), leftval, rightval);
+    resmem->operator[](result.mem)[result.type][resindex] = r;
     vm->instructionPointer++;
 }
 

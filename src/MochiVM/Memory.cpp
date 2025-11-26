@@ -5,17 +5,19 @@ Memory::Memory() {
 }
 
 Memory::Memory(VirtualAddressManager* virtualMem) {
-    mem = proxyarr<proxyarr<proxyarr<datatypes>>>(4);  // global local temps const = 4
+    // global local temps const = 4 segmentos de memoria
+    mem = proxyarr<proxyarr<proxyarr<datatypes>>>(4);  
 
     for (int i = 0; i < 4; i++){
-        mem[i] = proxyarr<proxyarr<datatypes>>(virtualMem->dataTypes - 1);
-    
-        for (int j = 0; j < virtualMem->dataTypes - 1; j++){
+        // int, float, string, bool = 4 tipos de datos
+        mem[i] = proxyarr<proxyarr<datatypes>>(virtualMem->dataTypes);
+        
+        for (int j = 0; j < virtualMem->dataTypes; j++){
             mem[i][j] = proxyarr<datatypes>(virtualMem->count[i][j]);
         }
     }
 
-    this->virtualMem = virtualMem;
+    this->addrManager = virtualMem;
 
     if (virtualMem->global) {
         for (auto it = virtualMem->constTable.check.begin(); it != virtualMem->constTable.check.end(); ++it) {

@@ -39,10 +39,10 @@ struct counter {
 class VirtualAddressManager
 {
 private:
-    static proxyarr<int> pads;
+    static proxyarr<int> memOffset;
     const static int memSize = 15000;
 
-    const static int dataTypes = 5;
+    const static int dataTypes = 4;
     counter count;
 
     std::string scope;
@@ -64,9 +64,7 @@ public:
     operand getTemp(vartype t);
     operand getConst(std::string strValue, datatypes value, vartype t);
 
-    void setscope(std::string s) {
-        scope = s;
-    }
+    void setscope(std::string s) { scope = s; }
 
     std::string getscope() { return scope; }
 
