@@ -9,7 +9,7 @@ class VirtualAddressManager;
 struct quad {
     operatortype operator_;
 
-    virtual void printQuad();
+    virtual void printQuad() = 0;
     virtual void execute(Machine* vm) = 0;
 
     quad();

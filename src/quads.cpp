@@ -5,7 +5,6 @@
 
 
 // empty parent class
-void quad::printQuad() {}
 quad::quad(): operator_(operatortype::unknown) {}
 quad::quad(operatortype o): operator_(o) {}
 
