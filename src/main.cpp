@@ -28,7 +28,7 @@ bool check_parsing_case(std::string c)
     return !result;
 }
 
-void test_parser(int argc, char** argv){
+void test_parser(int argc, char** argv, bool execute){
     SemanticCube::populate();
 
     if (argc > 2)
@@ -48,10 +48,12 @@ void test_parser(int argc, char** argv){
         {
             std::cout << "Parse successful!" << std::endl;
 
-            std::cout << "Executing..." << std::endl;
-
-            Machine vm = Machine(quadManager.quads);
-            vm.execute();
+            if (execute) {
+                std::cout << "Executing..." << std::endl;
+                
+                Machine vm = Machine(quadManager.quads);
+                vm.execute();
+            }
         }
         else
         {
@@ -431,8 +433,12 @@ int main(int argc, char **argv)
 
     std::string test_case = argv[1]; // parser/lexer
 
-    if (test_case == "parser") {
-        test_parser(argc, argv);
+    if (test_case == "vm") {
+        test_parser(argc, argv, true);
+    }
+
+    else if (test_case == "parser") {
+        test_parser(argc, argv, false);
     }
 
     else if (test_case == "lexer"){
