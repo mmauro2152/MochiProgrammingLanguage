@@ -4,6 +4,8 @@
 #include "proxyarr.hpp"
 
 enum class operatortype {
+    plusplus,
+    minusminus,
     plus,
     minus,
     asterisk,
@@ -55,8 +57,8 @@ struct CubeEntryHash {
     }
 };
 
-static std::string* oper_s = new std::string[24] {
-    "+", "-", "*", "/", "<=", "<", ">=", ">",
+static std::string* oper_s = new std::string[26] {
+    "++", "--", "+", "-", "*", "/", "<=", "<", ">=", ">",
     "==", "=", "!=", "!", "&&", "||", "unknown", "call", "arg", "fake_bottom",
     "gotof", "gotot", "goto", "print", "reserve", "endfunc"
 };

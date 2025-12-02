@@ -5,20 +5,18 @@ main {
     n = 10;          
 
     a = 0;           
-    b = 1;           
+    b = 1; 
+    i = 0;          
 
-    print(a);        
-    print(b);        
+    print(i++, ": ", a);        
+    print(i++, ": ", b);        
 
-    i = 2;
     while (i < n) do {
         temp = a + b;
-        print(temp);
+        print(i++, ": ", temp);
 
         a = b;
         b = temp;
-
-        i = i + 1;
     };
 }
 end

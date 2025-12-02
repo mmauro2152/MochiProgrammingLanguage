@@ -58,7 +58,7 @@ void printQuads(){
 %token semicolon comma colon 
 %token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
-%token plus minus asterisk slash equal_smaller_than l_angle_bracket equal_greater_than r_angle_bracket
+%token plusplus minusminus plus minus asterisk slash equal_smaller_than l_angle_bracket equal_greater_than r_angle_bracket
 %token equal assign not_equal not_ and_ or_
 %token <s> id
 %token <i> int_constant
@@ -231,6 +231,46 @@ statement:
     | print_statement
     | func_call_statement
     | return_statement 
+    | pre_post_fix_statement
+;
+
+pre_post_fix_statement:
+    id { 
+        operand var = funcDir.getVar(currScope, $1);
+        if (var.type == vartype::unknown) {
+            semanticErrors++;
+        } else {
+            quadManager.operands.push(var);
+        }
+    }
+    postfix_oper {
+        operand var = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        operatortype op = quadManager.operators.top();
+        quadManager.operators.pop();
+
+        if (var.mem != memorytype::local && var.mem != memorytype::global) {
+            semanticErrors++;
+            std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for variables" << std::endl;
+        } 
+        else if (var.type != vartype::int_type) {
+            semanticErrors++;
+            std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for int variables" << std::endl;
+        }
+        else {
+            operand temp = funcDir.getFunction(currScope)->addrManager->getTemp(var.type);
+            quad* q = new unaryOperation(operatortype::assign, var, temp);
+            quadManager.push(q);
+
+            quadManager.operands.push(temp);
+            
+            quad* q1 = new unaryOperation(op, var, var);
+            quadManager.push(q1);
+        }
+
+    }
+    semicolon
 ;
 
 return_statement:
@@ -731,6 +771,42 @@ unary_oper:
     | not_ { quadManager.operators.push(operatortype::not_); }
 ;
 
+postfix_oper:
+    plusplus { quadManager.operators.push(operatortype::plusplus); }
+    | minusminus { quadManager.operators.push(operatortype::minusminus); }
+;
+
+opt_postfix_oper:
+
+    | postfix_oper {
+        operand var = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        operatortype op = quadManager.operators.top();
+        quadManager.operators.pop();
+
+        if (var.mem != memorytype::local && var.mem != memorytype::global) {
+            semanticErrors++;
+            std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for variables" << std::endl;
+        } 
+        else if (var.type != vartype::int_type) {
+            semanticErrors++;
+            std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for int variables" << std::endl;
+        }
+        else {
+            operand temp = funcDir.getFunction(currScope)->addrManager->getTemp(var.type);
+            quad* q = new unaryOperation(operatortype::assign, var, temp);
+            quadManager.push(q);
+
+            quadManager.operands.push(temp);
+            
+            quad* q1 = new unaryOperation(op, var, var);
+            quadManager.push(q1);
+        }
+
+    }
+;
+
 factor_element:
     id { 
         operand var = funcDir.getVar(currScope, $1);
@@ -740,6 +816,8 @@ factor_element:
             quadManager.operands.push(var);
         }
     }
+    opt_postfix_oper
+
     | constants
     | func_call
 ;

@@ -39,6 +39,8 @@ extern int yylex();
 "]"                         { token_name = NAMEOF(r_square_bracket); return r_square_bracket; }
 "("                         { token_name = NAMEOF(l_parenthesis); return l_parenthesis; }
 ")"                         { token_name = NAMEOF(r_parenthesis); return r_parenthesis; }
+"++"                        { token_name = NAMEOF(plusplus); return plusplus; }
+"--"                        { token_name = NAMEOF(minusminus); return minusminus; }
 "+"                         { token_name = NAMEOF(plus); return plus; }
 "-"                         { token_name = NAMEOF(minus); return minus; }
 "*"                         { token_name = NAMEOF(asterisk); return asterisk; }

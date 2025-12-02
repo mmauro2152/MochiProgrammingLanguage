@@ -13,6 +13,12 @@ datatypes applyUnaryOperator(int i, operatortype o) {
         case operatortype::assign:
             return i;
 
+        case operatortype::plusplus:
+            return i + 1;
+
+        case operatortype::minusminus:
+            return i - 1;
+
         default:
             throw std::runtime_error("Invalid operation");
             return i;
