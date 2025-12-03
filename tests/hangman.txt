@@ -1,0 +1,83 @@
+program hangman;
+var in, word, user_word: string; i, hp: int;
+
+void print_hearts() [
+var temp, h: string;
+{
+    h = "<3";
+    temp = "";
+
+    for (i = 0; i < hp; i++) {
+        temp = temp + h + " ";
+    };
+
+    print(temp);
+}];
+
+void reserve_user_word() [{
+    user_word = "";
+    for (i = 0; i < len(word); i++) {
+        user_word = user_word + "_";
+    };
+}];
+
+bool is_complete() [{
+    return user_word == word;
+}];
+
+void fill(c: string) [
+var temp: string;
+{
+    temp = "";
+
+    for (i = 0; i < len(user_word); i++) {
+        if (word[i] == upper(c) || word[i] == lower(c)) {
+            temp = temp + word[i];
+        } else {
+            temp = temp + user_word[i];
+        };
+    };
+
+    if (user_word == temp) {
+        hp--;
+    };
+
+    user_word = temp;
+}];
+
+void clear_console() [
+{
+    for (i = 0; i < 100; i++) {
+        print("");
+    };
+}];
+
+main {
+    clear_console();
+
+    word = "compiladores";
+    hp = 10;
+    reserve_user_word();
+
+    print_hearts();
+    print("adivina la palabra: ", user_word);
+    print("");
+
+    while (!is_complete() && hp > 0) do {
+        input(in);
+        fill(in);
+
+        clear_console();
+        print_hearts();
+        print("adivina la palabra: ", user_word);
+        print("");
+    };
+
+    if (hp == 0) {
+        print("¡Perdiste!");
+        print("La palabra era: ", word);
+    } else {
+        print("¡Felicidades! Adivinaste la palabra");
+    };
+}
+end
