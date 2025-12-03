@@ -1,14 +1,20 @@
 program myProgram;
-var x: bool; y: bool; z: int; f: float;
+var x: bool; y: bool; i, j: int; f: float; s: string;
 
 float suma(i: float, f: float) [{
     return i + f;
 }];
 
 main {
-    z = -1;
     f = 3.14;
 
-    print(suma(1, suma(2, 3)));
+    for (i = 0; i < 10; i++) {
+        s = "";
+        for (j = 0; j < 10; j++) {
+            s = s + ".";
+        };
+
+        print(s);
+    };
 }
 end

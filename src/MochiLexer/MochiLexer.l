@@ -19,6 +19,7 @@ extern int yylex();
 "end"                       { token_name = NAMEOF(end_token); return end_token; }
 "print"                     { token_name = NAMEOF(print_token); return print_token; }
 "while"                     { token_name = NAMEOF(while_token); return while_token; }
+"for"                       { token_name = NAMEOF(for_token); return for_token; }
 "do"                        { token_name = NAMEOF(do_token); return do_token; }
 "if"                        { token_name = NAMEOF(if_token); return if_token; }
 "else"                      { token_name = NAMEOF(else_token); return else_token; }

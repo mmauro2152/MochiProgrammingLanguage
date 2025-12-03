@@ -18,10 +18,14 @@ class QuadManager {
         std::stack<operatortype> operators;
         std::stack<operand> operands;
         std::stack<int> jumps;
+        std::stack<std::vector<quad*>> tempQuads;
+        bool pushToTempQuads = false;
 
         operand getTemp(vartype type);
 
         void push(quad* q);
         bool generateBinaryQuad(VirtualAddressManager* addrManager);
         bool generateUnaryQuad(VirtualAddressManager* addrManager);
+        void newTempQuads();
+        void emptyTempQuads();
 };

@@ -29,6 +29,7 @@ std::stack<int> argCounters;
 std::stack<FuncEntry*> funcStack;
 std::stack<std::vector<operand>> args;
 bool hasReturnExpression = false;
+std::stack<std::vector<quad*>> pendingQuads;
 
 
 QuadManager quadManager;
@@ -54,7 +55,7 @@ void printQuads(){
 }
 
 %token invalid_character
-%token program_token main_token end_token print_token while_token do_token if_token else_token var_token void_token return_token
+%token program_token main_token end_token print_token for_token while_token do_token if_token else_token var_token void_token return_token
 %token semicolon comma colon 
 %token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
@@ -404,8 +405,6 @@ condition_statement:
             semanticErrors++;
             std::cerr << "Incorrect jump to quad " << end << " expected instruction" << std::endl;
         }
-
-        //quadManager.quads[end].rightOperand = jumpOperand;
     }
 ;
 
@@ -427,13 +426,60 @@ opt_else:
             semanticErrors++;
             std::cerr << "Incorrect jump to quad " << false_ << " expected instruction" << std::endl;
         }
-
-        //quadManager.quads[false_].rightOperand = jumpOperand;
     } 
     body
 ;
 
 cycle_statement:
+    while_statement
+    | for_statement
+;
+
+for_statement:
+    for_token l_parenthesis 
+    assign_statement_ semicolon {
+        quadManager.jumps.push(quadManager.instructionPointer);
+    }
+    expression semicolon {
+        operand condition = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        if (condition.type != vartype::bool_type){
+            semanticErrors++;
+            std::cerr << "Expected expression of type bool, received expression of type '" << vartype_string[condition.type] << "'" << std::endl;
+        }
+
+        quad* q = new condGoto(operatortype::gotof, condition, -1);
+        quadManager.push(q);
+        quadManager.jumps.push(quadManager.instructionPointer - 1);
+    }
+
+    { quadManager.newTempQuads(); } assign_statement_ r_parenthesis {
+        quadManager.pushToTempQuads = false;
+    }
+
+    body semicolon {
+        quadManager.emptyTempQuads();
+
+        int end = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        int return_ = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        quad* q = new goto_(return_);
+        quadManager.push(q);
+
+        if (goto_* g = dynamic_cast<goto_*>(quadManager.quads[end])) {
+            g->jump = quadManager.instructionPointer;
+        } else {
+            semanticErrors++;
+            std::cerr << "Incorrect jump to quad " << end << " expected instruction" << std::endl;
+        }
+    }
+;
+
+while_statement:
     while_token {
         quadManager.jumps.push(quadManager.instructionPointer);
     }

@@ -185,6 +185,9 @@ datatypes applyBinaryOperator(std::string left, std::string right, operatortype 
         
         case operatortype::not_equal:
             return left != right;
+
+        case operatortype::plus:
+            return left + right;
     
         default:
             throw std::runtime_error("Invalid operation");

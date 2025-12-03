@@ -1,0 +1,21 @@
+program fibProgram;
+var n: int; i: int; a: int; b: int; temp: int;
+
+main {
+    n = 10;          
+
+    a = 0;           
+    b = 1;       
+
+    print(i++, ": ", a);        
+    print(i++, ": ", b);        
+
+    for (i = 0; i < n; i++) {
+        temp = a + b;
+        print(i, ": ", temp);
+
+        a = b;
+        b = temp;
+    };
+}
+end

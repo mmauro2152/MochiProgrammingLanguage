@@ -1,8 +1,12 @@
 #include "QuadManager.hpp"
 
 void QuadManager::push(quad* q) {
-    quads.push_back(q);
-    instructionPointer++;
+    if (pushToTempQuads) {
+        tempQuads.top().push_back(q);
+    } else {
+        quads.push_back(q);
+        instructionPointer++;
+    }
 }
 
 bool QuadManager::generateBinaryQuad(VirtualAddressManager* addrManager){
@@ -57,4 +61,19 @@ bool QuadManager::generateUnaryQuad(VirtualAddressManager* addrManager){
     operands.push(temp);
     
     return true;
+}
+
+void QuadManager::newTempQuads(){
+    pushToTempQuads = true;
+    tempQuads.push({});
+}
+
+void QuadManager::emptyTempQuads() {
+    pushToTempQuads = false;
+
+    for (auto q : tempQuads.top()) {
+        push(q);
+    }
+
+    tempQuads.pop();
 }
