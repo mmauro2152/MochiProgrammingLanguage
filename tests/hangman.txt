@@ -26,19 +26,21 @@ bool is_complete() [{
 }];
 
 void fill(c: string) [
-var temp: string;
+var temp: string; correct: bool;
 {
     temp = "";
+    correct = false;
 
     for (i = 0; i < len(user_word); i++) {
         if (word[i] == upper(c) || word[i] == lower(c)) {
             temp = temp + word[i];
+            correct = true;
         } else {
             temp = temp + user_word[i];
         };
     };
 
-    if (user_word == temp) {
+    if (!correct) {
         hp--;
     };
 
@@ -55,7 +57,7 @@ void clear_console() [
 main {
     clear_console();
 
-    word = "compiladores";
+    word = "Compilador";
     hp = 10;
     reserve_user_word();
 
@@ -65,12 +67,21 @@ main {
 
     while (!is_complete() && hp > 0) do {
         input(in);
-        fill(in);
 
-        clear_console();
-        print_hearts();
-        print("adivina la palabra: ", user_word);
-        print("");
+        if (len(in) > 1) {
+            clear_console();
+            print_hearts();
+            print("adivina la palabra: ", user_word);
+            print("¡escribe solo una letra!");
+            print("");
+        } else {
+            fill(in);
+
+            clear_console();
+            print_hearts();
+            print("adivina la palabra: ", user_word);
+            print("");
+        };
     };
 
     if (hp == 0) {
