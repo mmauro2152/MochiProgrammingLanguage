@@ -132,6 +132,7 @@ void condGoto::execute(Machine* vm) {
                 vm->instructionPointer = jump;
             else 
                 vm->instructionPointer++;
+            break;
 
         default:
             throw std::runtime_error("Invalid operator");

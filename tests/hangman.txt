@@ -65,7 +65,7 @@ main {
     print("adivina la palabra: ", user_word);
     print("");
 
-    while (!is_complete() && hp > 0) do {
+    do {
         input(in);
 
         if (len(in) > 1) {
@@ -82,7 +82,8 @@ main {
             print("adivina la palabra: ", user_word);
             print("");
         };
-    };
+
+    } while (!is_complete() && hp > 0);
 
     if (hp == 0) {
         print("¡Perdiste!");

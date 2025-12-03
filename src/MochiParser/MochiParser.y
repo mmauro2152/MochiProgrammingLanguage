@@ -452,6 +452,30 @@ opt_else:
 cycle_statement:
     while_statement
     | for_statement
+    | do_while_statement
+;
+
+do_while_statement:
+    { quadManager.jumps.push(quadManager.instructionPointer); }
+    do_token body while_token 
+    { quadManager.operators.push(operatortype::fake_bottom); } 
+    l_parenthesis expression r_parenthesis semicolon {
+        quadManager.operators.pop(); // discard fake_bottom
+
+        operand condition = quadManager.operands.top();
+        quadManager.operands.pop();
+
+        int return_ = quadManager.jumps.top();
+        quadManager.jumps.pop();
+
+        if (condition.type != vartype::bool_type){
+            semanticErrors++;
+            std::cerr << "Expected bool expression instead of " << vartype_string[condition.type] << std::endl; 
+        } else {
+            quad* q = new condGoto(operatortype::gotot, condition, return_);
+            quadManager.push(q);
+        }
+    }
 ;
 
 for_statement:
