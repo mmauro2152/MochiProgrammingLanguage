@@ -18,6 +18,7 @@ extern int yylex();
 "return"                    { token_name = NAMEOF(return_token); return return_token; }
 "end"                       { token_name = NAMEOF(end_token); return end_token; }
 "print"                     { token_name = NAMEOF(print_token); return print_token; }
+"input"                     { token_name = NAMEOF(input_token); return input_token; }
 "len"                       { token_name = NAMEOF(len_token); return len_token; }
 "upper"                     { token_name = NAMEOF(upper_token); return upper_token; }
 "lower"                     { token_name = NAMEOF(lower_token); return lower_token; }

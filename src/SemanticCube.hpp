@@ -32,6 +32,7 @@ enum class operatortype {
     gotot,
     goto_,
     print,
+    input,
     reserve,
     endfunc
 };
@@ -61,11 +62,11 @@ struct CubeEntryHash {
     }
 };
 
-static std::string* oper_s = new std::string[30] {
+static std::string* oper_s = new std::string[31] {
     "++", "--", "+", "-", "*", "/", "<=", "<", ">=", ">",
     "==", "=", "!=", "!", "&&", "||", "[]", "len", "upper", 
     "lower", "unknown", "call", "arg", "fake_bottom",
-    "gotof", "gotot", "goto", "print", "reserve", "endfunc"
+    "gotof", "gotot", "goto", "print", "input", "reserve", "endfunc"
 };
 
 static proxyarr<std::string> operatortype_string = proxyarr(oper_s);

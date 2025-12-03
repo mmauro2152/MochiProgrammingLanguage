@@ -5,6 +5,8 @@
 #include "datatypes.hpp"
 
 datatypes applyUnaryOperator(int i, operatortype o) {
+    std::string temp;
+
     switch(o) {
         case operatortype::minus:
             return -i;
@@ -19,6 +21,10 @@ datatypes applyUnaryOperator(int i, operatortype o) {
         case operatortype::minusminus:
             return i - 1;
 
+        case operatortype::input:
+            std::getline(std::cin, temp);
+            return std::stoi(temp); 
+
         default:
             throw std::runtime_error("Invalid operation");
             return i;
@@ -26,12 +32,18 @@ datatypes applyUnaryOperator(int i, operatortype o) {
 }
 
 datatypes applyUnaryOperator(bool b, operatortype o) {
+    std::string temp;
+
     switch(o) {
         case operatortype::not_:
             return !b;
         
         case operatortype::assign:
             return b;
+
+        case operatortype::input:
+            std::getline(std::cin, temp);
+            return temp == "true";
 
         default:
             throw std::runtime_error("Invalid operation");
@@ -40,6 +52,8 @@ datatypes applyUnaryOperator(bool b, operatortype o) {
 }
 
 datatypes applyUnaryOperator(float f, operatortype o) {
+    std::string temp;
+
     switch(o) {
         case operatortype::minus:
             return -f;
@@ -47,6 +61,10 @@ datatypes applyUnaryOperator(float f, operatortype o) {
         case operatortype::plus:
         case operatortype::assign:
             return f;
+
+        case operatortype::input:
+            std::getline(std::cin, temp);
+            return std::stof(temp);
 
         default:
             throw std::runtime_error("Invalid operation");
@@ -81,6 +99,10 @@ datatypes applyUnaryOperator(std::string s, operatortype o) {
             }
 
             return temp;
+
+        case operatortype::input:
+            std::getline(std::cin, s);
+            return s;
 
         default:
             throw std::runtime_error("Invalid operation");

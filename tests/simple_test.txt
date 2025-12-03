@@ -2,7 +2,7 @@ program myProgram;
 var s: string; i: int;
 
 main {
-    s = "HolAaAa";
+    input(s);
     
     print(upper(s));
     print(lower(s));

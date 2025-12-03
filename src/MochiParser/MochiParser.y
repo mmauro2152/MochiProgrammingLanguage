@@ -55,7 +55,7 @@ void printQuads(){
 }
 
 %token invalid_character
-%token program_token main_token end_token print_token len_token upper_token lower_token for_token while_token do_token if_token else_token var_token void_token return_token
+%token program_token main_token end_token print_token input_token len_token upper_token lower_token for_token while_token do_token if_token else_token var_token void_token return_token
 %token semicolon comma colon 
 %token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
@@ -187,8 +187,10 @@ funcs:
         } else {
             FuncEntry* globalContext = funcDir.getFunction(globalScope);
 
-            int addr = globalContext->addrManager->getAddress(memorytype::global, currType);
-            globalContext->localVars.insert(addr, currType, currScope, memorytype::global);
+            if (currType != vartype::void_type) {
+                int addr = globalContext->addrManager->getAddress(memorytype::global, currType);
+                globalContext->localVars.insert(addr, currType, currScope, memorytype::global);
+            }
         }
     } 
     l_parenthesis params r_parenthesis l_square_bracket opt_vars {
@@ -233,6 +235,23 @@ statement:
     | func_call_statement
     | return_statement 
     | pre_post_fix_statement
+    | input_statement
+;
+
+input_statement:
+    input_token l_parenthesis id { 
+        operand var = funcDir.getVar(currScope, $3);
+        if (var.type == vartype::unknown) {
+            semanticErrors++;
+        } else {
+            quadManager.operands.push(var);
+        }
+    } r_parenthesis semicolon {
+        operand var = quadManager.operands.top();
+        operatortype op = operatortype::input;
+        quad* q = new unaryOperation(op, var, var);
+        quadManager.push(q);
+    }
 ;
 
 pre_post_fix_statement:
@@ -843,7 +862,9 @@ opt_post_oper:
 
     }
 
-    | l_square_bracket expression r_square_bracket {
+    | {quadManager.operators.push(operatortype::fake_bottom);} 
+    l_square_bracket expression r_square_bracket {
+        quadManager.operators.pop();
         quadManager.operators.push(operatortype::subscript);
 
         if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
