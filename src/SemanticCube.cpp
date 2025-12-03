@@ -137,6 +137,9 @@ void SemanticCube::populate() {
     table.insert({CubeEntry(vartype::int_type, vartype::none, operatortype::plusplus), vartype::int_type});
     table.insert({CubeEntry(vartype::int_type, vartype::none, operatortype::minusminus), vartype::int_type});
     table.insert({CubeEntry(vartype::string_type, vartype::int_type, operatortype::subscript), vartype::string_type});
+    table.insert({CubeEntry(vartype::none, vartype::string_type, operatortype::len), vartype::int_type});
+    table.insert({CubeEntry(vartype::none, vartype::string_type, operatortype::upper), vartype::string_type});
+    table.insert({CubeEntry(vartype::none, vartype::string_type, operatortype::lower), vartype::string_type});
 
     populated = true;
     return;

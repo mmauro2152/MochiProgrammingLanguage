@@ -1,16 +1,14 @@
 program myProgram;
-var x: bool; y: bool; i, j: int; f: float; s: string;
-
-string suma() [{
-    return "hola como estas";
-}];
+var s: string; i: int;
 
 main {
-    f = 3.14;
-    s = "hola como estas";
+    s = "HolAaAa";
+    
+    print(upper(s));
+    print(lower(s));
 
-    for (i = 0; i < 15; i++) {
-        print(suma()[i]);
+    for (i = 0; i < len(s); i++) {
+        print(s[i]);
     };
 }
 end

@@ -55,11 +55,37 @@ datatypes applyUnaryOperator(float f, operatortype o) {
 }
 
 datatypes applyUnaryOperator(std::string s, operatortype o) {
-    if (o == operatortype::assign)
-        return s;
+    std::string temp;
 
-    throw std::runtime_error("Invalid operation");
-    return s;
+    switch (o) {
+        case operatortype::assign:
+            return s;
+
+        case operatortype::len:
+            return static_cast<int>(s.size());
+
+        case operatortype::upper:
+            temp.reserve(s.size());
+
+            for (char c : s) {
+                temp.push_back(std::toupper(static_cast<unsigned char>(c)));
+            }
+
+            return temp;
+
+        case operatortype::lower:
+            temp.reserve(s.size());
+
+            for (char c : s) {
+                temp.push_back(std::tolower(static_cast<unsigned char>(c)));
+            }
+
+            return temp;
+
+        default:
+            throw std::runtime_error("Invalid operation");
+            return s;
+    }
 }
 
 struct unaryFunctor {

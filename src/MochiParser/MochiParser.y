@@ -55,7 +55,7 @@ void printQuads(){
 }
 
 %token invalid_character
-%token program_token main_token end_token print_token for_token while_token do_token if_token else_token var_token void_token return_token
+%token program_token main_token end_token print_token len_token upper_token lower_token for_token while_token do_token if_token else_token var_token void_token return_token
 %token semicolon comma colon 
 %token string_token int_token float_token bool_token
 %token l_curly_brace r_curly_brace l_square_bracket r_square_bracket l_parenthesis r_parenthesis
@@ -757,7 +757,7 @@ term:
                 semanticErrors++;
             }
         }
-    }
+    } opt_post_oper
     factor_
 ;
 
@@ -874,6 +874,19 @@ factor_element:
     }
     | constants
     | func_call
+    | string_oper l_parenthesis { quadManager.operators.push(operatortype::fake_bottom); } expression r_parenthesis {
+        quadManager.operators.pop(); // discard fake bottom
+        
+        if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->addrManager)){
+            semanticErrors++;
+        }
+    } 
+;
+
+string_oper:
+    len_token { quadManager.operators.push(operatortype::len); }
+    | upper_token { quadManager.operators.push(operatortype::upper); }
+    | lower_token {quadManager.operators.push(operatortype::lower); }
 ;
 
 constants: 
