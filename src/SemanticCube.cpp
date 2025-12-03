@@ -130,10 +130,13 @@ void SemanticCube::populate() {
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::equal), vartype::bool_type});
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::assign), vartype::string_type});
     table.insert({CubeEntry(vartype::string_type, vartype::string_type, operatortype::not_equal), vartype::bool_type});
-    table.insert({CubeEntry(vartype::none, vartype::string_type, operatortype::arg), vartype::void_type}),
-    table.insert({CubeEntry(vartype::none, vartype::int_type, operatortype::arg), vartype::void_type}),
-    table.insert({CubeEntry(vartype::none, vartype::float_type, operatortype::arg), vartype::void_type}),
-    table.insert({CubeEntry(vartype::none, vartype::bool_type, operatortype::arg), vartype::void_type}),
+    table.insert({CubeEntry(vartype::none, vartype::string_type, operatortype::arg), vartype::void_type});
+    table.insert({CubeEntry(vartype::none, vartype::int_type, operatortype::arg), vartype::void_type});
+    table.insert({CubeEntry(vartype::none, vartype::float_type, operatortype::arg), vartype::void_type});
+    table.insert({CubeEntry(vartype::none, vartype::bool_type, operatortype::arg), vartype::void_type});
+    table.insert({CubeEntry(vartype::int_type, vartype::none, operatortype::plusplus), vartype::int_type});
+    table.insert({CubeEntry(vartype::int_type, vartype::none, operatortype::minusminus), vartype::int_type});
+    table.insert({CubeEntry(vartype::string_type, vartype::int_type, operatortype::subscript), vartype::string_type});
 
     populated = true;
     return;

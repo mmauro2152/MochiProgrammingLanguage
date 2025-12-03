@@ -811,18 +811,7 @@ factor:
     }
 ;
 
-unary_oper:
-    plus { quadManager.operators.push(operatortype::plus); }
-    | minus { quadManager.operators.push(operatortype::minus); }
-    | not_ { quadManager.operators.push(operatortype::not_); }
-;
-
-postfix_oper:
-    plusplus { quadManager.operators.push(operatortype::plusplus); }
-    | minusminus { quadManager.operators.push(operatortype::minusminus); }
-;
-
-opt_postfix_oper:
+opt_post_oper:
 
     | postfix_oper {
         operand var = quadManager.operands.top();
@@ -831,13 +820,15 @@ opt_postfix_oper:
         operatortype op = quadManager.operators.top();
         quadManager.operators.pop();
 
+        CubeEntry entry(var.type, vartype::none, op);
+
         if (var.mem != memorytype::local && var.mem != memorytype::global) {
             semanticErrors++;
             std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for variables" << std::endl;
         } 
-        else if (var.type != vartype::int_type) {
+        else if (!SemanticCube::possibleOperation(entry)) {
             semanticErrors++;
-            std::cerr << "Operand '" << operatortype_string[op] << "' is only valid for int variables" << std::endl;
+            std::cerr << "Operand '" << operatortype_string[op] << "' not valid for type '" << vartype_string[var.type] << "'" << std::endl;
         }
         else {
             operand temp = funcDir.getFunction(currScope)->addrManager->getTemp(var.type);
@@ -851,6 +842,25 @@ opt_postfix_oper:
         }
 
     }
+
+    | l_square_bracket expression r_square_bracket {
+        quadManager.operators.push(operatortype::subscript);
+
+        if (!quadManager.generateBinaryQuad(funcDir.getFunction(currScope)->addrManager)){
+            semanticErrors++;
+        }
+    }
+;
+
+unary_oper:
+    plus { quadManager.operators.push(operatortype::plus); }
+    | minus { quadManager.operators.push(operatortype::minus); }
+    | not_ { quadManager.operators.push(operatortype::not_); }
+;
+
+postfix_oper:
+    plusplus { quadManager.operators.push(operatortype::plusplus); }
+    | minusminus { quadManager.operators.push(operatortype::minusminus); }
 ;
 
 factor_element:
@@ -862,8 +872,6 @@ factor_element:
             quadManager.operands.push(var);
         }
     }
-    opt_postfix_oper
-
     | constants
     | func_call
 ;

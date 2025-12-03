@@ -195,6 +195,18 @@ datatypes applyBinaryOperator(std::string left, std::string right, operatortype 
     }
 }
 
+datatypes applyBinaryOperator(std::string left, int right, operatortype o) {
+    switch (o)
+    {
+        case operatortype::subscript:
+            return std::string(1, left[right]);
+        
+        default:
+            throw std::runtime_error("Invalid operation");
+            return "";
+    }
+}
+
 template <typename A, typename B>
 datatypes applyBinaryOperator(A left, B right, operatortype o) {
     throw std::runtime_error("Invalid operation");

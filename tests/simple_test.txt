@@ -1,20 +1,16 @@
 program myProgram;
 var x: bool; y: bool; i, j: int; f: float; s: string;
 
-float suma(i: float, f: float) [{
-    return i + f;
+string suma() [{
+    return "hola como estas";
 }];
 
 main {
     f = 3.14;
+    s = "hola como estas";
 
-    for (i = 0; i < 10; i++) {
-        s = "";
-        for (j = 0; j < 10; j++) {
-            s = s + ".";
-        };
-
-        print(s);
+    for (i = 0; i < 15; i++) {
+        print(suma()[i]);
     };
 }
 end

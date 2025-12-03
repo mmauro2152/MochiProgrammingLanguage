@@ -20,6 +20,7 @@ enum class operatortype {
     not_,
     and_,
     or_,
+    subscript,
     unknown,
     call,
     arg,
@@ -57,9 +58,9 @@ struct CubeEntryHash {
     }
 };
 
-static std::string* oper_s = new std::string[26] {
+static std::string* oper_s = new std::string[27] {
     "++", "--", "+", "-", "*", "/", "<=", "<", ">=", ">",
-    "==", "=", "!=", "!", "&&", "||", "unknown", "call", "arg", "fake_bottom",
+    "==", "=", "!=", "!", "&&", "||", "[]", "unknown", "call", "arg", "fake_bottom",
     "gotof", "gotot", "goto", "print", "reserve", "endfunc"
 };
 
