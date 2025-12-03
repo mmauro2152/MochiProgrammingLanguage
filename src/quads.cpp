@@ -24,11 +24,27 @@ void binaryOperation::execute(Machine* vm) {
     Memory* leftmem = (leftOperand.mem == memorytype::global || leftOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* rightmem = (rightOperand.mem == memorytype::global || rightOperand.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
-    datatypes leftval = leftmem->operator[](leftOperand.mem)[leftOperand.type][leftindex];
-    datatypes rightval = rightmem->operator[](rightOperand.mem)[rightOperand.type][rightindex];
+    cell leftcell = leftmem->operator[](leftOperand.mem)[leftOperand.type][leftindex];
+    cell rightcell = rightmem->operator[](rightOperand.mem)[rightOperand.type][rightindex];
 
-    datatypes r = std::visit(binaryFunctor(operator_), leftval, rightval);
-    resmem->operator[](result.mem)[result.type][resindex] = r;
+    if (!leftcell.initialized) {
+        if (leftOperand.mem == memorytype::global || leftOperand.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + leftOperand.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + leftOperand.str + "'");
+        } 
+    }
+
+    if (!rightcell.initialized) {
+        if (rightOperand.mem == memorytype::global || rightOperand.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + rightOperand.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + rightOperand.str + "'");
+        } 
+    }
+
+    datatypes r = std::visit(binaryFunctor(operator_), leftcell.value, rightcell.value);
+    resmem->operator[](result.mem)[result.type][resindex].setvalue(r);
     vm->instructionPointer++;
 }
 
@@ -48,9 +64,18 @@ void unaryOperation::execute(Machine* vm) {
     int resindex = VirtualAddressManager::getIndex(result);
     Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* resmem = (result.mem == memorytype::global || result.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
-    datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
+    cell opercell = opermem->operator[](operand_.mem)[operand_.type][operindex];
 
-    resmem->operator[](result.mem)[result.type][resindex] = std::visit(unaryFunctor(operator_), operval);
+    if (!opercell.initialized && operator_ != operatortype::input) {
+        if (operand_.mem == memorytype::global || operand_.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + operand_.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + operand_.str + "'");
+        }
+    }
+
+    datatypes r = std::visit(unaryFunctor(operator_), opercell.value);
+    resmem->operator[](result.mem)[result.type][resindex].setvalue(r);
     vm->instructionPointer++;
 }
 
@@ -82,9 +107,17 @@ void condGoto::printQuad() {
 void condGoto::execute(Machine* vm) {
     int condindex = VirtualAddressManager::getIndex(condition);
     Memory* condmem = (condition.mem == memorytype::global || condition.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
-    datatypes condval = condmem->operator[](condition.mem)[condition.type][condindex];
+    cell condcell = condmem->operator[](condition.mem)[condition.type][condindex];
 
-    bool cond = std::get<bool>(condval);
+    if (!condcell.initialized) {
+        if (condition.mem == memorytype::global || condition.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + condition.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + condition.str + "'");
+        }
+    }
+
+    bool cond = std::get<bool>(condcell.value);
 
     switch (operator_) {
         case operatortype::gotof:
@@ -118,9 +151,17 @@ void print::printQuad() {
 void print::execute(Machine* vm) {
     int operindex = VirtualAddressManager::getIndex(operand_);
     Memory* opermem = (operand_.mem == memorytype::global || operand_.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
-    datatypes operval = opermem->operator[](operand_.mem)[operand_.type][operindex];
+    cell opercell = opermem->operator[](operand_.mem)[operand_.type][operindex];
 
-    std::visit(printFunctor(endl), operval);
+    if (!opercell.initialized) {
+        if (operand_.mem == memorytype::global || operand_.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + operand_.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + operand_.str + "'");
+        }
+    }
+
+    std::visit(printFunctor(endl), opercell.value);
     vm->instructionPointer++;
 }
 
@@ -179,9 +220,17 @@ void arg::execute(Machine* vm) {
     int paramindex = VirtualAddressManager::getIndex(param);
     Memory* argmem = (argument.mem == memorytype::global || argument.mem == memorytype::const_) ? vm->globalMemory : vm->memoryStack.top();
     Memory* parammem = vm->reservedMemory.top();
-    datatypes argval = argmem->operator[](argument.mem)[argument.type][argindex];
+    cell argcell = argmem->operator[](argument.mem)[argument.type][argindex];
 
-    parammem->operator[](param.mem)[param.type][paramindex] = argval;
+    if (!argcell.initialized) {
+        if (argument.mem == memorytype::global || argument.mem == memorytype::local){
+            throw std::runtime_error("Uninitialized variable '" + argument.str + "'");
+        } else {
+            throw std::runtime_error("Uninitialized temp '" + argument.str + "'");
+        }
+    }
+
+    parammem->operator[](param.mem)[param.type][paramindex].setvalue(argcell.value);
     vm->instructionPointer++;
 }
 

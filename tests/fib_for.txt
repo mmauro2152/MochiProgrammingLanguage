@@ -5,12 +5,12 @@ main {
     n = 10;          
 
     a = 0;           
-    b = 1;       
+    b = 1;    
 
-    print(i++, ": ", a);        
-    print(i++, ": ", b);        
+    print(0, ": ", a);        
+    print(1, ": ", b);        
 
-    for (i = 0; i < n; i++) {
+    for (i = 2; i < n; i++) {
         temp = a + b;
         print(i, ": ", temp);
 
