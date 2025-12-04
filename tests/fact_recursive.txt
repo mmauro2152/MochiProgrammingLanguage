@@ -1,4 +1,4 @@
-program fibProgram;
+program fact_recursive;
 var i, n: int;
 
 int factorial(n:int)[{

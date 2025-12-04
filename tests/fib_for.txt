@@ -1,5 +1,5 @@
 program fibProgram;
-var n: int; i: int; a: int; b: int; temp: int;
+var n, i, a, b, temp: int;
 
 main {
     n = 10;          

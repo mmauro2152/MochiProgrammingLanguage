@@ -1,4 +1,4 @@
-program myProgram;
+program fib_recursive;
 var n, i: int;
 
 int fib(x: int) [{
@@ -9,7 +9,7 @@ int fib(x: int) [{
 }];
 
 main {
-    n = 20;
+    n = 10;
     i = 0;
 
     while (i < n) do {

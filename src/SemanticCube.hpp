@@ -78,8 +78,6 @@ private:
     static bool populated;
 
 public:
-    static operatortype tokenToOperator(yytokentype token);
-
     static bool possibleOperation(CubeEntry entry);
 
     static vartype resultingType(CubeEntry entry);

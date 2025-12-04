@@ -451,8 +451,8 @@ opt_else:
 
 cycle_statement:
     while_statement
-    | for_statement
     | do_while_statement
+    | for_statement
 ;
 
 do_while_statement:
@@ -919,7 +919,11 @@ factor_element:
     }
     | constants
     | func_call
-    | string_oper l_parenthesis { quadManager.operators.push(operatortype::fake_bottom); } expression r_parenthesis {
+    | string_operation
+;
+
+string_operation:
+    string_oper l_parenthesis { quadManager.operators.push(operatortype::fake_bottom); } expression r_parenthesis {
         quadManager.operators.pop(); // discard fake bottom
         
         if (!quadManager.generateUnaryQuad(funcDir.getFunction(currScope)->addrManager)){

@@ -15,10 +15,6 @@ class ConstTable {
         std::unordered_map<datatypes, int> check;
 
     public:
-        bool addrExists(int addr) {
-            return table.find(addr) != table.end();
-        }
-
         bool valueExists(datatypes value) {
             return check.find(value) != check.end();
         }

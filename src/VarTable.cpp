@@ -47,27 +47,6 @@ bool VarTable::empty() {
 
 void VarTable::printAll() {
     for (auto it = table.begin(); it != table.end(); ++it) {
-        std::cout << it->second.str << ", " << typeToString(it->second.type) << std::endl;
+        std::cout << it->second.str << ", " << vartype_string[it->second.type] << std::endl;
     }
 }
-
-std::string VarTable::typeToString(vartype type) {
-    switch(type){
-        case (vartype::float_type):
-            return "float";
-
-        case (vartype::int_type):
-            return "int";
-
-        case (vartype::string_type):
-            return "string";
-
-        case (vartype::void_type):
-            return "void";
-
-        default:
-            std::cerr << "Invalid var type" << std::endl;
-            return nullptr;
-    }
-}
-

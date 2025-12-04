@@ -13,19 +13,6 @@ static std::string var_s[] {
 
 static proxyarr<std::string> vartype_string = proxyarr<std::string>(var_s);
 
-
-struct VarEntry
-{
-    vartype type;
-    int addr;
-    std::string name;
-    memorytype mem;
-
-    VarEntry(): type(vartype::void_type), addr(-1), name("") {}
-    VarEntry(vartype t, int a, std::string n, memorytype m):  type(t), addr(a), name(n), mem(m) {}
-};
-
-
 class VarTable {
 private:
     std::string scope;
@@ -46,6 +33,4 @@ public:
     bool empty();
 
     void printAll();
-    
-    static std::string typeToString(vartype type);
 };

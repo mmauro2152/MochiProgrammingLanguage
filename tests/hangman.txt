@@ -86,6 +86,7 @@ main {
     } while (!is_complete() && hp > 0);
 
     if (hp == 0) {
+        clear_console();
         print("¡Perdiste!");
         print("La palabra era: ", word);
     } else {
