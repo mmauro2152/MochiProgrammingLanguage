@@ -9,12 +9,12 @@ int fib(x: int) [{
 }];
 
 main {
-    n = 10;
+    n = 20;
     i = 0;
 
     while (i < n) do {
         print(i, ": ", fib(i));
-        i = i + 1;
+        i++;
     };
 }
 end

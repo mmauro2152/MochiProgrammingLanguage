@@ -31,7 +31,7 @@ var temp: string; correct: bool;
     temp = "";
     correct = false;
 
-    for (i = 0; i < len(user_word); i++) {
+    for (i = 0; i < len(word); i++) {
         if (word[i] == upper(c) || word[i] == lower(c)) {
             temp = temp + word[i];
             correct = true;
