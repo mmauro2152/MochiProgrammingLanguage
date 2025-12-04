@@ -19,18 +19,18 @@ struct cell {
 
 class Memory {
     private:
-        proxyarr<proxyarr<proxyarr<cell>>> mem;
+        proxyarr<proxyarr<proxyarr<cell*>>> mem;
         VirtualAddressManager* addrManager;
 
     public:
         Memory();
         Memory(VirtualAddressManager* virtualMem);
 
-        proxyarr<proxyarr<cell>>& operator[](int i) {
+        proxyarr<proxyarr<cell*>>& operator[](int i) {
             return mem[i];
         }
 
-        proxyarr<proxyarr<cell>>& operator[](memorytype m) {
+        proxyarr<proxyarr<cell*>>& operator[](memorytype m) {
             return mem[static_cast<int>(m)];
         }
  };

@@ -27,5 +27,5 @@ class Machine {
         Machine(std::vector<quad*> quads);
         
         void execute();
-
+        cell* getcell(operand o, bool is_param = false);
 };
